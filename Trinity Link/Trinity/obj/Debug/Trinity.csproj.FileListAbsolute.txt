@@ -1,0 +1,56 @@
+C:\Users\askbl\Desktop\School\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Nanoleaf Replica\VS - Linkprogram MK3\Trinity\Trinity\Trinity\obj\Debug\Trinity.csproj.AssemblyReference.cache
+C:\Users\askbl\Desktop\School\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Nanoleaf Replica\VS - Linkprogram MK3\Trinity\Trinity\Trinity\obj\Debug\Trinity.Form1.resources
+C:\Users\askbl\Desktop\School\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Nanoleaf Replica\VS - Linkprogram MK3\Trinity\Trinity\Trinity\obj\Debug\Trinity.Properties.Resources.resources
+C:\Users\askbl\Desktop\School\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Nanoleaf Replica\VS - Linkprogram MK3\Trinity\Trinity\Trinity\obj\Debug\Trinity.csproj.GenerateResource.cache
+C:\Users\askbl\Desktop\School\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Nanoleaf Replica\VS - Linkprogram MK3\Trinity\Trinity\Trinity\obj\Debug\Trinity.csproj.CoreCompileInputs.cache
+C:\Users\askbl\Desktop\School\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Nanoleaf Replica\VS - Linkprogram MK3\Trinity\Trinity\Trinity\bin\Debug\Trinity.exe.config
+C:\Users\askbl\Desktop\School\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Nanoleaf Replica\VS - Linkprogram MK3\Trinity\Trinity\Trinity\bin\Debug\Trinity.exe
+C:\Users\askbl\Desktop\School\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Nanoleaf Replica\VS - Linkprogram MK3\Trinity\Trinity\Trinity\bin\Debug\Trinity.pdb
+C:\Users\askbl\Desktop\School\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Nanoleaf Replica\VS - Linkprogram MK3\Trinity\Trinity\Trinity\obj\Debug\Trinity.exe
+C:\Users\askbl\Desktop\School\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Nanoleaf Replica\VS - Linkprogram MK3\Trinity\Trinity\Trinity\obj\Debug\Trinity.pdb
+C:\Users\askbl\Desktop\Nanoleaf Restoration\VS - Linkprogram MK3\Trinity\Trinity\Trinity\bin\Debug\Trinity.exe.config
+C:\Users\askbl\Desktop\Nanoleaf Restoration\VS - Linkprogram MK3\Trinity\Trinity\Trinity\bin\Debug\Trinity.exe
+C:\Users\askbl\Desktop\Nanoleaf Restoration\VS - Linkprogram MK3\Trinity\Trinity\Trinity\bin\Debug\Trinity.pdb
+C:\Users\askbl\Desktop\Nanoleaf Restoration\VS - Linkprogram MK3\Trinity\Trinity\Trinity\obj\Debug\Trinity.csproj.AssemblyReference.cache
+C:\Users\askbl\Desktop\Nanoleaf Restoration\VS - Linkprogram MK3\Trinity\Trinity\Trinity\obj\Debug\Trinity.Form1.resources
+C:\Users\askbl\Desktop\Nanoleaf Restoration\VS - Linkprogram MK3\Trinity\Trinity\Trinity\obj\Debug\Trinity.Properties.Resources.resources
+C:\Users\askbl\Desktop\Nanoleaf Restoration\VS - Linkprogram MK3\Trinity\Trinity\Trinity\obj\Debug\Trinity.csproj.GenerateResource.cache
+C:\Users\askbl\Desktop\Nanoleaf Restoration\VS - Linkprogram MK3\Trinity\Trinity\Trinity\obj\Debug\Trinity.csproj.CoreCompileInputs.cache
+C:\Users\askbl\Desktop\Nanoleaf Restoration\VS - Linkprogram MK3\Trinity\Trinity\Trinity\obj\Debug\Trinity.exe
+C:\Users\askbl\Desktop\Nanoleaf Restoration\VS - Linkprogram MK3\Trinity\Trinity\Trinity\obj\Debug\Trinity.pdb
+C:\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Trinity\VS - Linkprogram MK3\Trinity\Trinity\bin\Debug\Trinity.exe.config
+C:\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Trinity\VS - Linkprogram MK3\Trinity\Trinity\bin\Debug\Trinity.exe
+C:\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Trinity\VS - Linkprogram MK3\Trinity\Trinity\bin\Debug\Trinity.pdb
+C:\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Trinity\VS - Linkprogram MK3\Trinity\Trinity\obj\Debug\Trinity.csproj.AssemblyReference.cache
+C:\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Trinity\VS - Linkprogram MK3\Trinity\Trinity\obj\Debug\Trinity.Form1.resources
+C:\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Trinity\VS - Linkprogram MK3\Trinity\Trinity\obj\Debug\Trinity.Properties.Resources.resources
+C:\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Trinity\VS - Linkprogram MK3\Trinity\Trinity\obj\Debug\Trinity.csproj.GenerateResource.cache
+C:\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Trinity\VS - Linkprogram MK3\Trinity\Trinity\obj\Debug\Trinity.csproj.CoreCompileInputs.cache
+C:\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Trinity\VS - Linkprogram MK3\Trinity\Trinity\obj\Debug\Trinity.exe
+C:\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Trinity\VS - Linkprogram MK3\Trinity\Trinity\obj\Debug\Trinity.pdb
+C:\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Trinity\VS - Linkprogram MK3\Trinity\Trinity\bin\Debug\Newtonsoft.Json.dll
+C:\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Trinity\VS - Linkprogram MK3\Trinity\Trinity\bin\Debug\Newtonsoft.Json.xml
+C:\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Trinity\VS - Trinity Link 1.1\Trinity\Trinity\bin\Debug\Trinity.exe.config
+C:\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Trinity\VS - Trinity Link 1.1\Trinity\Trinity\bin\Debug\Trinity.exe
+C:\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Trinity\VS - Trinity Link 1.1\Trinity\Trinity\bin\Debug\Trinity.pdb
+C:\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Trinity\VS - Trinity Link 1.1\Trinity\Trinity\bin\Debug\Newtonsoft.Json.dll
+C:\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Trinity\VS - Trinity Link 1.1\Trinity\Trinity\bin\Debug\Newtonsoft.Json.xml
+C:\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Trinity\VS - Trinity Link 1.1\Trinity\Trinity\obj\Debug\Trinity.csproj.AssemblyReference.cache
+C:\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Trinity\VS - Trinity Link 1.1\Trinity\Trinity\obj\Debug\Trinity.Form1.resources
+C:\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Trinity\VS - Trinity Link 1.1\Trinity\Trinity\obj\Debug\Trinity.Properties.Resources.resources
+C:\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Trinity\VS - Trinity Link 1.1\Trinity\Trinity\obj\Debug\Trinity.csproj.GenerateResource.cache
+C:\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Trinity\VS - Trinity Link 1.1\Trinity\Trinity\obj\Debug\Trinity.csproj.CoreCompileInputs.cache
+C:\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Trinity\VS - Trinity Link 1.1\Trinity\Trinity\obj\Debug\Trinity.exe
+C:\GitHub\t-db2-nj2021-askblommaert\4 - Persoonlijke Opdrachten\Trinity\VS - Trinity Link 1.1\Trinity\Trinity\obj\Debug\Trinity.pdb
+C:\GitHub\t-db3-vj2022-askblommaert\1 - Persoonlijke opdrachten\VS - Trinity Link 1.1\Trinity\Trinity\bin\Debug\Trinity.exe.config
+C:\GitHub\t-db3-vj2022-askblommaert\1 - Persoonlijke opdrachten\VS - Trinity Link 1.1\Trinity\Trinity\bin\Debug\Trinity.exe
+C:\GitHub\t-db3-vj2022-askblommaert\1 - Persoonlijke opdrachten\VS - Trinity Link 1.1\Trinity\Trinity\bin\Debug\Trinity.pdb
+C:\GitHub\t-db3-vj2022-askblommaert\1 - Persoonlijke opdrachten\VS - Trinity Link 1.1\Trinity\Trinity\bin\Debug\Newtonsoft.Json.dll
+C:\GitHub\t-db3-vj2022-askblommaert\1 - Persoonlijke opdrachten\VS - Trinity Link 1.1\Trinity\Trinity\bin\Debug\Newtonsoft.Json.xml
+C:\GitHub\t-db3-vj2022-askblommaert\1 - Persoonlijke opdrachten\VS - Trinity Link 1.1\Trinity\Trinity\obj\Debug\Trinity.csproj.AssemblyReference.cache
+C:\GitHub\t-db3-vj2022-askblommaert\1 - Persoonlijke opdrachten\VS - Trinity Link 1.1\Trinity\Trinity\obj\Debug\Trinity.Form1.resources
+C:\GitHub\t-db3-vj2022-askblommaert\1 - Persoonlijke opdrachten\VS - Trinity Link 1.1\Trinity\Trinity\obj\Debug\Trinity.Properties.Resources.resources
+C:\GitHub\t-db3-vj2022-askblommaert\1 - Persoonlijke opdrachten\VS - Trinity Link 1.1\Trinity\Trinity\obj\Debug\Trinity.csproj.GenerateResource.cache
+C:\GitHub\t-db3-vj2022-askblommaert\1 - Persoonlijke opdrachten\VS - Trinity Link 1.1\Trinity\Trinity\obj\Debug\Trinity.csproj.CoreCompileInputs.cache
+C:\GitHub\t-db3-vj2022-askblommaert\1 - Persoonlijke opdrachten\VS - Trinity Link 1.1\Trinity\Trinity\obj\Debug\Trinity.exe
+C:\GitHub\t-db3-vj2022-askblommaert\1 - Persoonlijke opdrachten\VS - Trinity Link 1.1\Trinity\Trinity\obj\Debug\Trinity.pdb
