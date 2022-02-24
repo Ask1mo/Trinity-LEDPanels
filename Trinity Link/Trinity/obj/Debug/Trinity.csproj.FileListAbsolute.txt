@@ -54,3 +54,16 @@ C:\GitHub\t-db3-vj2022-askblommaert\1 - Persoonlijke opdrachten\VS - Trinity Lin
 C:\GitHub\t-db3-vj2022-askblommaert\1 - Persoonlijke opdrachten\VS - Trinity Link 1.1\Trinity\Trinity\obj\Debug\Trinity.csproj.CoreCompileInputs.cache
 C:\GitHub\t-db3-vj2022-askblommaert\1 - Persoonlijke opdrachten\VS - Trinity Link 1.1\Trinity\Trinity\obj\Debug\Trinity.exe
 C:\GitHub\t-db3-vj2022-askblommaert\1 - Persoonlijke opdrachten\VS - Trinity Link 1.1\Trinity\Trinity\obj\Debug\Trinity.pdb
+D:\Documenten\Git Repositories\Trinity-LEDPanels\Trinity Link\Trinity\bin\Debug\Trinity.exe.config
+D:\Documenten\Git Repositories\Trinity-LEDPanels\Trinity Link\Trinity\bin\Debug\Trinity.exe
+D:\Documenten\Git Repositories\Trinity-LEDPanels\Trinity Link\Trinity\bin\Debug\Trinity.pdb
+D:\Documenten\Git Repositories\Trinity-LEDPanels\Trinity Link\Trinity\bin\Debug\Newtonsoft.Json.dll
+D:\Documenten\Git Repositories\Trinity-LEDPanels\Trinity Link\Trinity\bin\Debug\Newtonsoft.Json.xml
+D:\Documenten\Git Repositories\Trinity-LEDPanels\Trinity Link\Trinity\obj\Debug\Trinity.csproj.AssemblyReference.cache
+D:\Documenten\Git Repositories\Trinity-LEDPanels\Trinity Link\Trinity\obj\Debug\Trinity.Form1.resources
+D:\Documenten\Git Repositories\Trinity-LEDPanels\Trinity Link\Trinity\obj\Debug\Trinity.Properties.Resources.resources
+D:\Documenten\Git Repositories\Trinity-LEDPanels\Trinity Link\Trinity\obj\Debug\Trinity.csproj.GenerateResource.cache
+D:\Documenten\Git Repositories\Trinity-LEDPanels\Trinity Link\Trinity\obj\Debug\Trinity.csproj.CoreCompileInputs.cache
+D:\Documenten\Git Repositories\Trinity-LEDPanels\Trinity Link\Trinity\obj\Debug\Trinity.csproj.CopyComplete
+D:\Documenten\Git Repositories\Trinity-LEDPanels\Trinity Link\Trinity\obj\Debug\Trinity.exe
+D:\Documenten\Git Repositories\Trinity-LEDPanels\Trinity Link\Trinity\obj\Debug\Trinity.pdb

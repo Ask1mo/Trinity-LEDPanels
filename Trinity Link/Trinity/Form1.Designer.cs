@@ -1413,7 +1413,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
-            this.ClientSize = new System.Drawing.Size(1391, 1061);
+            this.ClientSize = new System.Drawing.Size(1391, 574);
             this.Controls.Add(this.groupBox_Editor);
             this.Controls.Add(this.groupBox_Setup);
             this.Controls.Add(this.groupBox_Presets);
@@ -1421,7 +1421,9 @@
             this.Controls.Add(this.button_PresetsMode);
             this.Controls.Add(this.button_EditorMode);
             this.Controls.Add(this.button_SetupMode);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "Trinity";
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_millisDelay)).EndInit();
