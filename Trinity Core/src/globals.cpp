@@ -3,7 +3,7 @@
 /*-------------------------------------------------------------------------------------*/
 Globals globals =
 {
-    /*byte brightness = */20,
+    /*byte brightness = */50,
     /*byte leafDelay = */5,
 
     /*byte soundLevel = */0,
