@@ -67,3 +67,15 @@ D:\Documenten\Git Repositories\Trinity-LEDPanels\Trinity Link\Trinity\obj\Debug\
 D:\Documenten\Git Repositories\Trinity-LEDPanels\Trinity Link\Trinity\obj\Debug\Trinity.csproj.CopyComplete
 D:\Documenten\Git Repositories\Trinity-LEDPanels\Trinity Link\Trinity\obj\Debug\Trinity.exe
 D:\Documenten\Git Repositories\Trinity-LEDPanels\Trinity Link\Trinity\obj\Debug\Trinity.pdb
+C:\GitHub\Private\Trinity-LEDPanels\Trinity Link\Trinity\bin\Debug\Trinity.exe.config
+C:\GitHub\Private\Trinity-LEDPanels\Trinity Link\Trinity\bin\Debug\Trinity.exe
+C:\GitHub\Private\Trinity-LEDPanels\Trinity Link\Trinity\bin\Debug\Trinity.pdb
+C:\GitHub\Private\Trinity-LEDPanels\Trinity Link\Trinity\bin\Debug\Newtonsoft.Json.dll
+C:\GitHub\Private\Trinity-LEDPanels\Trinity Link\Trinity\bin\Debug\Newtonsoft.Json.xml
+C:\GitHub\Private\Trinity-LEDPanels\Trinity Link\Trinity\obj\Debug\Trinity.csproj.AssemblyReference.cache
+C:\GitHub\Private\Trinity-LEDPanels\Trinity Link\Trinity\obj\Debug\Trinity.Form1.resources
+C:\GitHub\Private\Trinity-LEDPanels\Trinity Link\Trinity\obj\Debug\Trinity.Properties.Resources.resources
+C:\GitHub\Private\Trinity-LEDPanels\Trinity Link\Trinity\obj\Debug\Trinity.csproj.GenerateResource.cache
+C:\GitHub\Private\Trinity-LEDPanels\Trinity Link\Trinity\obj\Debug\Trinity.csproj.CoreCompileInputs.cache
+C:\GitHub\Private\Trinity-LEDPanels\Trinity Link\Trinity\obj\Debug\Trinity.exe
+C:\GitHub\Private\Trinity-LEDPanels\Trinity Link\Trinity\obj\Debug\Trinity.pdb
