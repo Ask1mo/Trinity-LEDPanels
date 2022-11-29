@@ -5,20 +5,19 @@
 
 
 
+
 class Trinity
 {
 private:
-  Vector<Panel*> panels;
-  CRGB *leds;
-  bool brightness;
-  bool speed;
+  Vector<Panel*> Panels;
 
 public:
   Trinity(Vector<Panel*> &panels);
-  void tick();
-  Panel* getPanel(uint8_t x, uint8_t y);
+  void Tick();
+  Panel* GetPanel(uint8_t x, uint8_t y);
 
-  
+  bool Brightness;
+  bool Speed;
 };
 
 #endif

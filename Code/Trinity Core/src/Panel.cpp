@@ -1,73 +1,581 @@
 #include "Panel.h"
 
-Panel::Panel(uint8_t number, uint8_t x, uint8_t y, uint8_t compassDir, bool clockDir, uint8_t diodeAmount)
+Panel::Panel(uint8_t panelNumber, uint8_t x, uint8_t y, uint8_t compassDirection, bool clockDirection)
 {
-  this->number = number;
-  this->x = x;
-  this->y = y;
-  this->compassDir = compassDir;
-  this->clockDir = clockDir;
-  this->diodeAmount = diodeAmount;
+  PanelNumber = panelNumber;
+  X = x;
+  Y = y;
+  CompassDirection = compassDirection;
+  ClockDirection = clockDirection;
 
-  //TODO: GET THE XYZ COORDIATES RIGHT
-  for (uint8_t i = 0; i < diodeAmount; i++)
+  
+}
+
+
+
+void Panel::Tick()
+{
+  if (timer < Offset)timer++;
+  else
   {
-    diodes.push_back(new Diode(i, 0, 0));
+    switch (Effect)
+    {
+      case RAINBOW:
+      FX_rainbow();
+      break;
+
+      case SYNTHBOW:
+      FX_rainbow();
+      break;
+
+      case FIRE:
+      FX_fire();
+      break;
+    
+      case STATIC:
+      FX_static();
+    
+      case BLINK:
+      FX_blink();
+      break;
+    
+      case BREATHING:
+      FX_breathing();
+      break;
+
+      case PAUSEDBREATHING:
+      FX_breathing();
+      break;
+
+      case FLASH:
+      FX_flash();
+      break;
+
+      case HEARTBEAT:
+      FX_flash();
+      break;
+    }
+  }
+  
+  uint8_t redValue = (this->redValue*this->Brightness)/255;
+  uint8_t greenValue = (this->greenValue*this->Brightness)/255;
+  uint8_t blueValue = (this->blueValue*this->Brightness)/255;
+
+  for(byte i = 0; i < sizeof(Leds); i++)
+  {
+    Leds[i] = CRGB(redValue, greenValue, blueValue);
   }
 }
 
-void Panel::tick()
+
+
+bool Panel::getColourClearance(byte colourToClear)
 {
-  if (offsetTimer < offset)
+  switch (colourToClear)
   {
-    offsetTimer++;
-  }
-  else
-  {
-    for (uint8_t i = 0; i < diodeAmount; i++)
+    case RED:
     {
-      diodes[i]->tick();
+      if(Colour == BLACK || Colour == RED || Colour == YELLOW || Colour == VIOLET) return true;
+      return false;
+    }
+    break;
+
+    case GREEN:
+    {
+      if(Colour == BLACK || Colour == YELLOW || Colour == GREEN || Colour == TEAL) return true;
+      return false;
+    }
+    break;
+
+    case BLUE:
+    {
+      if(Colour == BLACK || Colour == TEAL || Colour == BLUE || Colour == VIOLET) return true;
+      return false;
+    }
+    break;
+  }
+  return false;
+}
+
+void Panel::FX_rainbow()
+{
+  switch (fxProgression)
+  {
+    case 0:
+    {
+      redValue = 0;
+      greenValue = 0;
+      blueValue = 255;
+
+      fxProgression++;
+    }
+    break;
+
+    case 1:
+    {
+      redValue++;
+      if (redValue == 255)fxProgression++;
+    }
+    break;
+
+    case 2:
+    {
+      blueValue = blueValue - 1;
+      if (blueValue == 0)
+      {
+        if(Effect == 1)fxProgression++;
+        else fxProgression = fxProgression + 3;
+      }
+    }
+    break;
+
+    case 3:
+    {
+      greenValue++;
+      if (greenValue == 255)fxProgression++;
+    }
+    break;
+
+    case 4:
+    {
+      redValue = redValue - 1;
+      if (redValue == 0)
+      {
+        if(Effect == 1)fxProgression++;
+        else fxProgression = fxProgression + 3;
+      }
+    }
+    break;
+
+    case 5:
+    {
+      blueValue++;
+      if (blueValue == 255)
+      {
+        if(Effect == 1)fxProgression++;
+        else fxProgression = fxProgression - 1;
+      }
+    }
+    break;
+
+    case 6:
+    {
+      if(Effect == 1)
+      {
+        greenValue = greenValue - 1;
+        if (greenValue == 0)fxProgression++;
+      }
+      else fxProgression++;
+    }
+    break;
+
+    default:
+    {
+      fxProgression = 0;
+    }
+    break;
+  }
+}
+
+void Panel::FX_fire()
+{
+  if(fxProgression == 0)
+  {
+      redValue = 255;
+      greenValue = random(0, 200);
+      blueValue = 0;
+  }
+  else if (greenValue < 90)greenValue++;
+  fxProgression++;
+
+  if(greenValue > 25 && random(0, Offset) ==  0)greenValue = greenValue - 5;
+
+  if(greenValue < 150 && Offset > 5)if(random(10, Offset) > 10)greenValue = greenValue + 6;
+}
+
+void Panel::FX_blink()
+{
+  for(byte i = 0; i < Speed; i++)
+  {
+    if(cycleProgression == 7) cycleProgression = 0;
+    colourNumber = Effect;
+    if(Effect == 7) colourNumber = cycleProgression;
+
+    allowRed = getColourClearance(RED);
+    allowGreen = getColourClearance(GREEN);
+    allowBlue = getColourClearance(BLUE);
+
+    switch (fxProgression)
+    {
+      case 0:
+      {
+        if(allowRed)redValue = 255;
+        else redValue = 0;
+
+        if(allowGreen)greenValue = 255;
+        else greenValue = 0;
+
+        if(allowBlue)blueValue = 255;
+        else blueValue = 0;
+
+        dummyValue = 0;
+
+        fxProgression++;
+      }
+      break;
+      
+      case 1:
+      {
+        dummyValue++;
+
+        if(dummyValue == 20) fxProgression++;
+      }
+      break;
+
+      case 2:
+      {
+        redValue = 0;
+        greenValue = 0;
+        blueValue = 0;
+
+  	    fxProgression++;
+      }
+      break;
+
+      case 3:
+      {
+        dummyValue++;
+
+        if(dummyValue == 40 && Effect == 3) fxProgression = fxProgression + 2;
+        if(dummyValue == 255) fxProgression++;
+      }
+      break;
+
+
+
+
+      case 5: //Double effect start
+      {
+        if(allowRed)redValue = 255;
+        if(allowGreen)greenValue = 255;
+        if(allowBlue)blueValue = 255;
+
+        fxProgression++;
+      }
+      break;
+
+      case 6:
+      {
+        dummyValue++;
+
+        if(dummyValue == 60) fxProgression++;
+      }
+      break;
+
+      case 7:
+      {
+        redValue = 0;
+        greenValue = 0;
+        blueValue = 0;
+
+  	    fxProgression++;
+      }
+      break;
+
+      case 8:
+      {
+        dummyValue++;
+
+        if(dummyValue == 253) fxProgression++;
+      }
+      break; //Double effect end
+
+
+
+
+      default:
+      {
+        fxProgression = 0;
+        cycleProgression++;
+      }
+      break;
     }
   }
 }
 
-
-
-CRGB Panel::getPanelRGB()
+void Panel::FX_static()
 {
-  uint8_t redValue    = (this->r * this->brightness)/255;
-  uint8_t greenValue  = (this->g * this->brightness)/255;
-  uint8_t blueValue   = (this->b * this->brightness)/255;
-  
-  return CRGB(redValue, greenValue, blueValue);
-}
-CRGB Panel::getDiodeRGB(byte number)
-{
-  if(number >= diodeAmount)
+  for(byte i = 0; i < Speed; i++)
   {
-    Serial.println(F("Too high diode number requested"));
-    return;
+    if(cycleProgression == 7) cycleProgression = 0;
+    colourNumber = Effect;
+    if(Effect == 7) colourNumber = cycleProgression;
+
+    allowRed = getColourClearance(RED);
+    allowGreen = getColourClearance(GREEN);
+    allowBlue = getColourClearance(BLUE);
+
+    switch (fxProgression)
+    {
+      case 0:
+      {
+        if(allowRed)redValue = 255;
+        else redValue = 0;
+
+        if(allowGreen)greenValue = 255;
+        else greenValue = 0;
+
+        if(allowBlue)blueValue = 255;
+        else blueValue = 0;
+
+        dummyValue = 0;
+
+        fxProgression++;
+      }
+      break;
+      
+      case 1:
+      {
+        dummyValue++;
+
+        if(dummyValue == 255) fxProgression++;
+      }
+      break;
+
+      default:
+      {
+        fxProgression = 0;
+        cycleProgression++;
+      }
+      break;
+    }
+  }
+}
+
+void Panel::FX_breathing()
+{
+  for(byte i = 0; i < Speed; i++)
+  {
+    if(cycleProgression == 7) cycleProgression = 0;
+    colourNumber = Effect;
+    if(Effect == 7) colourNumber = cycleProgression;
+
+    allowRed = getColourClearance(RED);
+    allowGreen = getColourClearance(GREEN);
+    allowBlue = getColourClearance(BLUE);
+
+    switch (fxProgression)
+    {
+      case 0:
+      {
+        if(Effect == 4 || Effect == 5)
+        {
+          redValue = 0;
+          greenValue = 0;
+          blueValue = 0;
+        }
+        else
+        {
+          redValue = 255;
+          greenValue = 255;
+          blueValue = 255;
+        }
+
+        dummyValue = 0;
+
+        fxProgression++;
+      }
+      break;
+
+      case 1:
+      {
+        if(Effect == 4 || Effect == 5)
+        {
+          if(allowRed)redValue++;
+          if(allowGreen)greenValue++;
+          if(allowBlue)blueValue++;
+        }
+        else
+        {
+          if(!allowRed)redValue--;
+          if(!allowGreen)greenValue--;
+          if(!allowBlue)blueValue--;
+        }
+
+        dummyValue++;
+
+        if(dummyValue == 255)fxProgression++;
+      }
+      break;
+
+      case 2:
+      {
+        if(Effect == 4 || Effect == 5)
+        {
+          if(allowRed)redValue--;
+          if(allowGreen)greenValue--;
+          if(allowBlue)blueValue--;
+        }
+        else
+        {
+          if(!allowRed)redValue++;
+          if(!allowGreen)greenValue++;
+          if(!allowBlue)blueValue++;
+        }
+
+        dummyValue--;
+
+        if(dummyValue == 0)
+        {
+          if(Effect == 5 || Effect == 11)fxProgression = fxProgression + 2;
+          else fxProgression++;
+        }
+      }
+      break;
+
+
+
+      case 4: //Begin of double code
+      {
+        dummyValue++;
+
+        if(dummyValue == 255)fxProgression++;
+      }
+      break;
+
+      case 5:
+      {
+        dummyValue--;
+
+        if(dummyValue == 1)fxProgression++;
+      }
+      break; //End of double code
+      
+
+
+
+
+      default:
+      {
+        fxProgression = 0;
+        cycleProgression++;
+      }
+      break;
+    }
+  }
+}
+
+void Panel::FX_flash()
+{
+  for(byte i = 0; i < Speed; i++)
+  {
+    if(cycleProgression == 7) cycleProgression = 0;
+    colourNumber = Effect;
+    if(Effect == 7) colourNumber = cycleProgression;
+
+    allowRed = getColourClearance(RED);
+    allowGreen = getColourClearance(GREEN);
+    allowBlue = getColourClearance(BLUE);
+
+    switch (fxProgression)
+    {
+      case 0:
+      {
+        if(allowRed)redValue = 255;
+        else redValue = 0;
+
+        if(allowGreen)greenValue = 255;
+        else greenValue = 0;
+
+        if(allowBlue)blueValue = 255;
+        else blueValue = 0;
+
+        dummyValue = 255;
+
+        fxProgression++;
+      }
+      break;
+
+      case 1:
+      {
+        if(allowRed)redValue = redValue - 5;
+        if(allowGreen)greenValue = greenValue - 5;
+        if(allowBlue)blueValue = blueValue - 5;
+
+        dummyValue = dummyValue - 5;
+
+        
+        if(Effect == 7 && dummyValue == 100)fxProgression = fxProgression + 3;
+        if(dummyValue == 0)fxProgression++;
+      }
+      break;
+
+      case 2:
+      {
+        dummyValue++;
+        if (dummyValue == 255)fxProgression++;
+      }
+      break;
+
+
+
+
+
+      case 4://Start of double code
+      {
+        if(Effect == 7)
+        {
+          if(allowRed)redValue = 255;
+          if(allowGreen)greenValue = 255;
+          if(allowBlue)blueValue = 255;
+
+          dummyValue = 255;
+
+          fxProgression++;
+        }
+        else
+        {
+          fxProgression = 0;
+          cycleProgression++;
+        }
+      }
+      break;
+
+      case 5:
+      {
+        if(allowRed)redValue = redValue - 5;
+        if(allowGreen)greenValue = greenValue - 5;
+        if(allowBlue)blueValue = blueValue - 5;
+
+        dummyValue = dummyValue - 5;
+
+        if(dummyValue == 0)fxProgression++;
+      }
+      break;
+
+      case 6:
+      {
+        dummyValue++;
+        if (dummyValue == 223)fxProgression++;
+      }
+      break; //End of double code
+
+      
+
+
+      
+
+
+
+
+      default:
+      {
+        fxProgression = 0;
+        cycleProgression++;
+      }
+      break;
+    }
   }
 
-  return diodes[number]->getRGB();
-}
-byte Panel::getDiodeStart()
-{
-  return diodeStart;
-}
-void Panel::setDiodeStart(byte ledStart)
-{
-  this->diodeStart = ledStart;
-}
-byte Panel::getDiodeAmount()
-{
-  return diodeAmount;
-}
-byte Panel::getX()
-{
-  return x;
-}
-byte Panel::getY()
-{
-  return y;
+  
 }
