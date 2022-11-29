@@ -1,46 +1,53 @@
 #include "Trinity.h"
 
 #define LED_PIN 12
-#define LEDSAMOUNT 200
+#define LEDAMOUNT 200
 
 
 
 
 Trinity::Trinity(Vector<Panel*> &panels)
 {
-  uint8_t totalLEDAmount = sizeof(panels)*sizeof(panels[0]->Leds);
-  CRGB leds[totalLEDAmount];
+  brightness = 100;
+  speed = 1;
 
+  uint8_t ledAmount = 0;
   for (uint8_t i = 0; i < sizeof(panels); i++)
-  { 
-    for (uint8_t j = 0; j < sizeof(panels[i]->Leds); j++)
-    {
-      
-    }
+  {
+    panels[i]->setDiodeStart(ledAmount);
+    ledAmount += panels[i]->getDiodeAmount();
   }
-  
-
-  FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, totalLEDAmount);
+  if (ledAmount != LEDAMOUNT)
+  {
+    Serial.println(F("LED amount in the system is incorrect"));
+  }
+  leds = new CRGB[ledAmount];
+  FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, ledAmount);
 }
 
 
-Panel* Trinity::GetPanel(uint8_t x, uint8_t y)
+Panel* Trinity::getPanel(uint8_t x, uint8_t y)
 {
-  for(uint8_t i = 0; i < sizeof(Panels); i++)
+  for(uint8_t i = 0; i < sizeof(panels); i++)
   {
-    if(Panels[i]->X == x && Panels[i]->Y == y)
+    if(panels[i]->getX() == x && panels[i]->getY() == y)
     {
-      return Panels[i];
+      return panels[i];
     }
   }
   return NULL;
 }
 
-void Trinity::Tick()
+void Trinity::tick()
 {
-  for (uint8_t i = 0; i < sizeof(Panels); i++)
+  for (uint8_t panelNumber = 0; panelNumber < sizeof(panels); panelNumber++)
   {
-    Panels[i]->Tick();
+    panels[panelNumber]->tick();
+    for(byte diodeNumber = 0; diodeNumber < panels[panelNumber]->getDiodeAmount(); diodeNumber++)
+    {
+      leds[panels[panelNumber]->getDiodeStart()+diodeNumber] = panels[panelNumber]->getPanelRGB();
+      //leds[panels[panelNumber]->getDiodeStart()+diodeNumber] = panels[panelNumber]->getDiodeRGB(diodeNumber);
+    }
   }
   FastLED.show();
 }
