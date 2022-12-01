@@ -10,7 +10,7 @@
 #define COLOUR_RED               1
 #define COLOUR_YELLOW            2
 #define COLOUR_GREEN             3
-#define COLOUR_TEAL              4
+#define COLOUR_CYAN              4
 #define COLOUR_BLUE              5
 #define COLOUR_VIOLET            6
 #define COLOUR_WHITE             7
@@ -44,14 +44,21 @@ private:
   uint8_t b;
   uint8_t d;
   uint8_t fxProgression;      //In effect cycling
-  uint8_t fXCycleProgression; //Cycles of the whole effect (But with different colourss)
+  uint8_t fxCycleProgression; //Cycles of the whole effect (But with different colourss)
   uint16_t offsetTimer;
   bool getColourClearance(byte colourToClear);
+  void FX_rainbow();
+  void FX_fire();
+  void FX_blink();
+  void FX_static();
+  void FX_breathing();
+  void FX_flash();
+  void FX_sound();
 
 public:
   Diode(uint8_t number);
-  CRGB getRGB();
   void tick();
+  CRGB getRGB();
 };
 
 #endif

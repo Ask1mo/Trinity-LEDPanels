@@ -2,10 +2,34 @@
 
 Panel::Panel(uint8_t number, uint8_t compassDir, bool clockDir, uint8_t diodeAmount)
 {
+
+  //Vector<Diode *> diodes;
+
   this->number        = number;
   this->compassDir    = compassDir;
   this->clockDir      = clockDir;
   this->diodeAmount   = diodeAmount;
+  this->diodeStart    = 0;  // The coordinate of the first LED
+
+  this->brightness   = 255;
+  this->effect       = 0;
+  this->colour       = 0;
+  this->offset       = 10;
+  this->speed        = 1;
+  this->rCustom      = 255;
+  this->gCustom      = 255;
+  this->bCustom      = 255;
+  
+  this->r                   = 0;
+  this->g                   = 0;
+  this->b                   = 0;
+  this->d                   = 0;
+  this->fxProgression       = 0;      // In effect cycling
+  this->fXCycleProgression  = 0; // Cycles of the whole effect (But with different colourss)
+  this->offsetTimer         = 0;
+
+
+  
 
   //TODO: GET THE XYZ COORDIATES RIGHT
   for (uint8_t i = 0; i < diodeAmount; i++)
@@ -31,9 +55,6 @@ void Panel::tick()
     }
   }
 }
-
-
-
 CRGB Panel::getPanelRGB()
 {
   uint8_t redValue    = (this->r * this->brightness)/255;
@@ -52,6 +73,10 @@ CRGB Panel::getDiodeRGB(byte number)
 
   //return diodes[number]->getRGB();
 }
+byte Panel::getDiodeAmount()
+{
+  return diodeAmount;
+}
 byte Panel::getDiodeStart()
 {
   return diodeStart;
@@ -60,54 +85,51 @@ void Panel::setDiodeStart(byte ledStart)
 {
   this->diodeStart = ledStart;
 }
-byte Panel::getDiodeAmount()
-{
-  return diodeAmount;
-}
-
 void Panel::printDebug()
 {
+  Serial.println();
   Serial.print(F("Panel "));
   Serial.println(number);
 
   Serial.print(F("compassDir "));
   Serial.print(compassDir);
-  Serial.print(F("| clockDir "));
+  Serial.print(F(" | clockDir "));
   Serial.print(clockDir);
-  Serial.print(F("| diodeAmount "));
+  Serial.print(F(" | diodeAmount "));
   Serial.print(diodeAmount);
-  Serial.print(F("| diodeStart "));
+  Serial.print(F(" | diodeStart "));
   Serial.println(diodeStart);
 
   Serial.print(F("brightness "));
   Serial.print(brightness);
-  Serial.print(F("| effect "));
+  Serial.print(F(" | effect "));
   Serial.print(effect);
-  Serial.print(F("| colour "));
+  Serial.print(F(" | colour "));
   Serial.print(colour);
-  Serial.print(F("| offset "));
+  Serial.print(F(" | offset "));
   Serial.print(offset);
-  Serial.print(F("| speed "));
+  Serial.print(F(" | speed "));
   Serial.print(speed);
-  Serial.print(F("| rCustom "));
+  Serial.print(F(" | rCustom "));
   Serial.print(rCustom);
-  Serial.print(F("| gCustom "));
+  Serial.print(F(" | gCustom "));
   Serial.print(gCustom);
-  Serial.print(F("| bCustom "));
+  Serial.print(F(" | bCustom "));
   Serial.println(bCustom);
 
   Serial.print(F("r "));
   Serial.print(r);
-  Serial.print(F("| g "));
+  Serial.print(F(" | g "));
   Serial.print(g);
-  Serial.print(F("| b "));
+  Serial.print(F(" | b "));
   Serial.print(b);
-  Serial.print(F("| d "));
+  Serial.print(F(" | d "));
   Serial.print(d);
-  Serial.print(F("| fxProgression "));
+  Serial.print(F(" | fxProgression "));
   Serial.print(fxProgression);
-  Serial.print(F("| fXCycleProgression "));
+  Serial.print(F(" | fXCycleProgression "));
   Serial.print(fXCycleProgression);
-  Serial.print(F("| offsetTimer "));
+  Serial.print(F(" | offsetTimer "));
   Serial.println(offsetTimer);
+  
 }
