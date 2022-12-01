@@ -1,4 +1,4 @@
-#include "Trinity.h"
+#include "Trinity/Trinity.h"
 
 #define LED_PIN 12
 #define LEDAMOUNT 200
@@ -6,10 +6,14 @@
 
 
 
-Trinity::Trinity(Vector<Panel*> &panels)
+Trinity::Trinity(Vector<Panel*> panels)
 {
+  Serial.println(F("Starting Trinity..."));
+
   brightness = 100;
   speed = 1;
+
+  Serial.println(F("Adding diodes"));
 
   uint8_t ledAmount = 0;
   for (uint8_t i = 0; i < sizeof(panels); i++)
@@ -21,8 +25,15 @@ Trinity::Trinity(Vector<Panel*> &panels)
   {
     Serial.println(F("LED amount in the system is incorrect"));
   }
+
+  Serial.println(F("Creating leds"));
+
   leds = new CRGB[ledAmount];
+
+  Serial.println(F("Binding leds"));
+
   FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, ledAmount);
+  Serial.println(F("Trinity complete"));
 }
 
 
@@ -40,6 +51,8 @@ Panel* Trinity::getPanel(uint8_t x, uint8_t y)
 
 void Trinity::tick()
 {
+  Serial.println(F("Tick"));
+  delay(1000);
   for (uint8_t panelNumber = 0; panelNumber < sizeof(panels); panelNumber++)
   {
     panels[panelNumber]->tick();

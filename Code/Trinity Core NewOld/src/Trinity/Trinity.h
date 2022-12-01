@@ -1,7 +1,7 @@
 #ifndef TRINITY_H
 #define TRINITY_H
 
-#include "Panel.h"
+#include "Trinity/Panel/Panel.h"
 
 
 
@@ -14,7 +14,7 @@ private:
   bool speed;
 
 public:
-  Trinity(Vector<Panel*> &panels);
+  Trinity(Vector<Panel*> panels);
   void tick();
   Panel* getPanel(uint8_t x, uint8_t y);
 

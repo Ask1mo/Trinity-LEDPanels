@@ -1,10 +1,8 @@
-#include "Diode.h"
+#include "Trinity/Diode/Diode.h"
 
-Diode::Diode(uint8_t number, uint8_t x, uint8_t y)
+Diode::Diode(uint8_t number)
 {
   this->number = number;
-  this->x = x;
-  this->y = y;
 }
 
 
@@ -64,13 +62,4 @@ CRGB Diode::getRGB()
   uint8_t greenValue  = (this->g * this->brightness)/255;
   uint8_t blueValue   = (this->b * this->brightness)/255;
   return CRGB(redValue, greenValue, blueValue);
-}
-
-byte Diode::getX()
-{
-  return x;
-}
-byte Diode::getY()
-{
-  return y;
 }

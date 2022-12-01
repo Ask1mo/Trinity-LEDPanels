@@ -4,14 +4,9 @@
 #include <Arduino.h>
 #include <FastLED.h>
 #include <Vector.h>
-
-#include "Diode.h"
+#include "Trinity/Panel/Diode/Diode.h"
 
 #define LEDSAMOUNT_TRIANGLE 17
-
-
-
-
 
 #define CLOCK_CLOCKWISE      0
 #define CLOCK_COUNTERWISE    1
