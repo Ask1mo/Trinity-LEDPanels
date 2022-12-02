@@ -2,7 +2,6 @@
 #define PANEL_H
 
 #include <Arduino.h>
-#include <FastLED.h>
 #include "Trinity/Diode/Diode.h"
 
 #define LEDSAMOUNT_TRIANGLE 17
@@ -22,7 +21,7 @@
 class Panel
 {
 private:
-  //Vector<Diode *> diodes;
+  Diode **diodes;
 
   uint8_t number;
   uint8_t compassDir;
@@ -44,7 +43,7 @@ private:
   uint8_t b;
   uint8_t d;
   uint8_t fxProgression;      // In effect cycling
-  uint8_t fXCycleProgression; // Cycles of the whole effect (But with different colourss)
+  uint8_t fxCycleProgression; // Cycles of the whole effect (But with different colourss)
   uint16_t offsetTimer;
 
 public:

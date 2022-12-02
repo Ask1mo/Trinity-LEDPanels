@@ -3,7 +3,11 @@
 Panel::Panel(uint8_t number, uint8_t compassDir, bool clockDir, uint8_t diodeAmount)
 {
 
-  //Vector<Diode *> diodes;
+  diodes = (Diode**)malloc(sizeof(Diode*) * diodeAmount);
+  for (uint8_t i = 0; i < diodeAmount; i++)
+  {
+    diodes[i] = new Diode(i);
+  }
 
   this->number        = number;
   this->compassDir    = compassDir;
@@ -25,7 +29,7 @@ Panel::Panel(uint8_t number, uint8_t compassDir, bool clockDir, uint8_t diodeAmo
   this->b                   = 0;
   this->d                   = 0;
   this->fxProgression       = 0;      // In effect cycling
-  this->fXCycleProgression  = 0; // Cycles of the whole effect (But with different colourss)
+  this->fxCycleProgression  = 0; // Cycles of the whole effect (But with different colourss)
   this->offsetTimer         = 0;
 
 
@@ -51,7 +55,7 @@ void Panel::tick()
   {
     for (uint8_t i = 0; i < diodeAmount; i++)
     {
-      //diodes[i]->tick();
+      diodes[i]->tick();
     }
   }
 }
@@ -71,7 +75,7 @@ CRGB Panel::getDiodeRGB(byte number)
     return CRGB(0);
   }
 
-  //return diodes[number]->getRGB();
+  return diodes[number]->getRGB();
 }
 byte Panel::getDiodeAmount()
 {
@@ -127,8 +131,8 @@ void Panel::printDebug()
   Serial.print(d);
   Serial.print(F(" | fxProgression "));
   Serial.print(fxProgression);
-  Serial.print(F(" | fXCycleProgression "));
-  Serial.print(fXCycleProgression);
+  Serial.print(F(" | fxCycleProgression "));
+  Serial.print(fxCycleProgression);
   Serial.print(F(" | offsetTimer "));
   Serial.println(offsetTimer);
   
