@@ -2,7 +2,7 @@
 #define PANEL_H
 
 #include <Arduino.h>
-#include "Trinity/Diode/Diode.h"
+#include "Diode/Diode.h"
 
 #define LEDSAMOUNT_TRIANGLE 17
 

@@ -1,24 +1,22 @@
 #ifndef TRINITY_H
 #define TRINITY_H
 
-#include "Trinity/Panel/Panel.h"
+#include "LedManager/ledManager.h"
 
-#define LEDAMOUNT 300
-#define LED_PIN 12
-
+#define PANELSETUP_TEST_AMOUNT  6
+#define PANELSETUP_PRIME_AMOUNT 16
+#define PANELSETUP_EVA_AMOUNT   4
+#define PANELSETUP_LIAM_AMOUNT  10
 
 class Trinity
 {
 private:
   Panel **panels;
-  
-  uint8_t   panelsAmount;
-  CRGB      leds[LEDAMOUNT];
-  bool      brightness;
-  bool      speed;
+  LedManager *ledManager;
+  uint8_t setupPanels_Test();
 
 public:
-  Trinity(Panel **panelsArg, uint8_t panelsAmount, uint8_t pin);
+  Trinity();
   void tick();
 };
 

@@ -1,4 +1,4 @@
-#include "Trinity/Panel/Panel.h"
+#include "Panel.h"
 
 Panel::Panel(uint8_t number, uint8_t compassDir, bool clockDir, uint8_t diodeAmount)
 {

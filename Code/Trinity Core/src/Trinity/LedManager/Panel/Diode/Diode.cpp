@@ -1,4 +1,4 @@
-#include "Trinity/Diode/Diode.h"
+#include "Diode.h"
 
 Diode::Diode(uint8_t number)
 {

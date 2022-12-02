@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 #include <FastLED.h>
-#include "Trinity/ColourRGB.h"
+#include "ColourRGB.h"
 
 #define AMOUNTOFCOLOURS 7 //The amount of preset colours in the system, also functions as the amount of slots for custom colours
 #define COLOUR_BLACK    0
