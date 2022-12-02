@@ -16,23 +16,26 @@
 #define COLOUR_WHITE    7
 #define COLOUR_CYCLE    8
 
-#define EFFECT_STATIC                 0
-#define EFFECT_BLINK                  1
-#define EFFECT_PLANE                  2
-#define EFFECT_BREATHING              3
-#define EFFECT_PAUSEDBREATHING        4
-#define EFFECT_FLASH                  5
-#define EFFECT_HEARTBEAT              6
-#define EFFECT_CUSTOM_STATIC          7
-#define EFFECT_CUSTOM_BLINK           8
-#define EFFECT_CUSTOM_PLANE           9
-#define EFFECT_CUSTOM_BREATHING       10
-#define EFFECT_CUSTOM_PAUSEDBREATHING 11
-#define EFFECT_CUSTOM_FLASH           12
-#define EFFECT_CUSTOM_HEARTBEAT       13
-#define EFFECT_RAINBOW                14
-#define EFFECT_FIRE                   15
-#define EFFECT_SOUND                  16
+#define EFFECT_RAINBOW                0
+#define EFFECT_STATIC                 1
+#define EFFECT_BLINK                  2
+#define EFFECT_PLANE                  3
+#define EFFECT_BREATHING              4
+#define EFFECT_PAUSEDBREATHING        5
+#define EFFECT_FLASH                  6
+#define EFFECT_HEARTBEAT              7
+
+#define EFFECT_CUSTOM_RAINBOW         8
+#define EFFECT_CUSTOM_STATIC          9
+#define EFFECT_CUSTOM_BLINK           10
+#define EFFECT_CUSTOM_PLANE           11
+#define EFFECT_CUSTOM_BREATHING       12
+#define EFFECT_CUSTOM_PAUSEDBREATHING 13
+#define EFFECT_CUSTOM_FLASH           14
+#define EFFECT_CUSTOM_HEARTBEAT       15
+
+#define EFFECT_FIRE                   16
+#define EFFECT_SOUND                  17
 
 
 

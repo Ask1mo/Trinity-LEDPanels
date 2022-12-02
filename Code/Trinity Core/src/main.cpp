@@ -24,8 +24,10 @@ uint8_t setupPanels_Test()
   panels[3] = new Panel( 3, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, LEDSAMOUNT_TRIANGLE);
   panels[4] = new Panel( 4, CLOCK_CLOCKWISE,   COMPASS_NORTH,      LEDSAMOUNT_TRIANGLE);
   panels[5] = new Panel( 5, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, LEDSAMOUNT_TRIANGLE);
+  
   Serial.println(F("Allocating complete"));
-  return 6;
+  
+  return PANELSETUP_TEST_AMOUNT;
 }
 
 void setup()
