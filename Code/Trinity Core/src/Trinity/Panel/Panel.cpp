@@ -31,20 +31,11 @@ Panel::Panel(uint8_t number, uint8_t compassDir, bool clockDir, uint8_t diodeAmo
   this->fxProgression       = 0;      // In effect cycling
   this->fxCycleProgression  = 0; // Cycles of the whole effect (But with different colourss)
   this->offsetTimer         = 0;
-
-
-  
-
-  //TODO: GET THE XYZ COORDIATES RIGHT
-  for (uint8_t i = 0; i < diodeAmount; i++)
-  {
-    //diodes.push_back(new Diode(i));
-  }
 }
 
 void Panel::tick()
 {
-  printDebug();
+  //printDebug();
 
 
   if (offsetTimer < offset)

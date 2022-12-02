@@ -13,7 +13,11 @@ Panel     **panels;
 uint8_t setupPanels_Test()
 {
   Serial.println(F("Allocatig..."));
+
   panels = (Panel**)malloc(sizeof(Panel*) * PANELSETUP_TEST_AMOUNT);
+
+  Serial.println(F("Array allocated..."));
+  
   panels[0] = new Panel( 0, CLOCK_COUNTERWISE, COMPASS_SOUTH_EAST, LEDSAMOUNT_TRIANGLE);
   panels[1] = new Panel( 1, CLOCK_COUNTERWISE, COMPASS_SOUTH,      LEDSAMOUNT_TRIANGLE);
   panels[2] = new Panel( 2, CLOCK_COUNTERWISE, COMPASS_SOUTH_WEST, LEDSAMOUNT_TRIANGLE);
@@ -40,7 +44,6 @@ void setup()
 
 void loop()
 {
-  Serial.println("Loop");
   trinity->tick();
 }
 

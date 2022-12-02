@@ -5,13 +5,19 @@ Diode::Diode(uint8_t number)
   this->number = number;
 
   this->brightness  = 255;
-  this->effect      = EFFECT_CUSTOMCOL;
-  this->colour      = COLOUR_RED;
+  this->effect      = EFFECT_CUSTOM_STATIC;
+  this->colour      = COLOUR_CYCLE;
   this->offset      = 0;
   this->speed       = 1;
-  this->rCustom     = 255;
-  this->gCustom     = 0;
-  this->bCustom     = 255;
+
+  for (uint8_t i = 0; i < AMOUNTOFCOLOURS; i++)
+  {
+    this->customRGB[i] = new struct ColourRGB;
+    this->customRGB[i]->r = 255;
+    this->customRGB[i]->g = 63;
+    this->customRGB[i]->b = 127;
+    //These are some preset empty colours for the custom RGB values.
+  }
 
   this->r               = 0;
   this->g               = 0;
@@ -53,11 +59,43 @@ bool Diode::getColourClearance(byte colourToClear, byte colourChannel)
   }
   return false;
 }
-void Diode::progressFX_customCol()
+void Diode::progressFX_custom_static()
 {
-  r = rCustom;
-  g = gCustom;
-  b = bCustom;
+  if (colour != COLOUR_CYCLE) c = colour;
+
+  switch (fxProgression)
+  {
+  case 0:
+  {
+    r = customRGB[c]->r;
+    g = customRGB[c]->g;
+    b = customRGB[c]->b;
+
+    d = 0;
+
+    fxProgression++;
+  }
+  break;
+
+  case 1:
+  {
+    d++;
+
+    if (d == 255) fxProgression++;
+  }
+  break;
+
+  default:
+  {
+    fxProgression = 0;
+    if(colour == COLOUR_CYCLE)
+    {
+      c++;
+      if(c == AMOUNTOFCOLOURS) c = 0;
+    }
+  }
+  break;
+  }
 }
 void Diode::progressFX_rainbow()
 {
@@ -345,18 +383,12 @@ void Diode::progressFX_static()
   {
   case 0: // Setup
   {
-    if (allowR)
-      r = 255;
-    else
-      r = 0;
-    if (allowG)
-      g = 255;
-    else
-      g = 0;
-    if (allowB)
-      b = 255;
-    else
-      b = 0;
+    if(allowR) r = 255;
+    else r = 0;
+    if(allowG) g = 255;
+    else g = 0;
+    if(allowB) b = 255;
+    else b = 0;
 
     d = 0;
 
@@ -665,10 +697,14 @@ void Diode::progressFX_heartbeat()
   break;
   }
 }
+void Diode::progressFX_custom_fade()
+{
+
+}
 
 void Diode::tick()
 {
-  printDebug();
+  //printDebug();
   if (offsetTimer < offset)
   {
     offsetTimer++;
@@ -707,8 +743,8 @@ void Diode::tick()
         progressFX_heartbeat();
         break;
 
-        case EFFECT_CUSTOMCOL:
-        progressFX_customCol();
+        case EFFECT_CUSTOM_STATIC:
+        progressFX_custom_static();
         break;
 
         case EFFECT_RAINBOW:
@@ -722,6 +758,8 @@ void Diode::tick()
         case EFFECT_SOUND:
         //progressFX_sound();
         break;
+
+        
       }
     }
   }
@@ -748,12 +786,6 @@ void Diode::printDebug()
   Serial.print(offset);
   Serial.print(F(" | speed "));
   Serial.print(speed);
-  Serial.print(F(" | rCustom "));
-  Serial.print(rCustom);
-  Serial.print(F(" | gCustom "));
-  Serial.print(gCustom);
-  Serial.print(F(" | bCustom "));
-  Serial.println(bCustom);
 
   Serial.print(F("r "));
   Serial.print(r);
