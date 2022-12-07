@@ -6,17 +6,18 @@
 
 #define LEDSAMOUNT_TRIANGLE 17
 
-#define CLOCK_CLOCKWISE 0
-#define CLOCK_COUNTERWISE 1
-
-#define COMPASS_NORTH 0
-#define COMPASS_NORTH_EAST 1
-#define COMPASS_EAST 2
-#define COMPASS_SOUTH_EAST 3
-#define COMPASS_SOUTH 4
-#define COMPASS_SOUTH_WEST 5
-#define COMPASS_WEST 6
-#define COMPASS_NORTH_WEST 7
+//These are mostly used for setup, but are also selectable when applying offset stuff.
+#define DIR_STRIP           0
+#define CLOCK_CLOCKWISE     1
+#define CLOCK_COUNTERWISE   2
+#define COMPASS_NORTH       3
+#define COMPASS_NORTH_EAST  4
+#define COMPASS_EAST        5
+#define COMPASS_SOUTH_EAST  6
+#define COMPASS_SOUTH       7
+#define COMPASS_SOUTH_WEST  8
+#define COMPASS_WEST        9
+#define COMPASS_NORTH_WEST  10
 
 class Panel
 {
@@ -34,6 +35,8 @@ private:
   uint8_t colour;
   uint8_t offset;
   uint8_t speed;
+  bool repeat;
+
   uint8_t rCustom;
   uint8_t gCustom;
   uint8_t bCustom;
@@ -49,6 +52,8 @@ private:
 public:
   Panel(uint8_t number, uint8_t compassDir, bool clockDir, uint8_t diodeAmount);
   void tick();
+  void setData(uint8_t direction, uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat);
+  void setCustomData(uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);
   CRGB getPanelRGB();
   CRGB getDiodeRGB(byte number);
   byte getDiodeAmount();

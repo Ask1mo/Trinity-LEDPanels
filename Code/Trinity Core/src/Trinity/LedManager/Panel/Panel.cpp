@@ -50,6 +50,27 @@ void Panel::tick()
     }
   }
 }
+void Panel::setData(uint8_t direction, uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat)
+{
+  this->brightness  = brightness;
+  this->effect      = effect;
+  this->colour      = colour;
+  this->offset      = offset;
+  this->speed       = speed;
+  this->repeat      = repeat;
+
+  for (uint8_t i = 0; i < diodeAmount; i++)
+  {
+    diodes[i]->setData(brightness, effect, colour, offset, speed, repeat);
+  }
+}
+void Panel::setCustomData(uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
+{
+  for (uint8_t i = 0; i < diodeAmount; i++)
+  {
+    diodes[i]->setCustomData(customRGBAmount, customRGB);
+  }
+}
 CRGB Panel::getPanelRGB()
 {
   uint8_t redValue    = (this->r * this->brightness)/255;

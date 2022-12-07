@@ -764,6 +764,23 @@ void Diode::tick()
     }
   }
 }
+void Diode::setData(uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat)
+{
+  this->brightness  = brightness;
+  this->effect      = effect;
+  this->colour      = colour;
+  this->offset      = offset;
+  this->speed       = speed;
+  this->repeat      = repeat;
+}
+void Diode::setCustomData(uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
+{
+  this->customRGBAmount = customRGBAmount;
+  for (uint8_t i = 0; i < AMOUNTOFCOLOURS; i++)
+  {
+    this->customRGB[i]->r = customRGB[i]->r;
+  }
+}
 CRGB Diode::getRGB()
 {
   uint8_t r = (this->r * this->brightness) / 255;
