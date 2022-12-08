@@ -3,6 +3,8 @@
 
 #include <Arduino.h>
 
+#define IDENTLENGTH 5
+
 #define TRANSMISSION_PANELFX                1
 #define TRANSMISSION_PANELCUSTOM            2
 #define TRANSMISSION_DIODEFX                3
@@ -17,17 +19,13 @@
 class Comms
 {
     private:
-    byte            pin;
-    bool            state;
-    bool            prevState;
-    bool            holdStateIsKnown;
-    unsigned long   myMillis;
-    unsigned long   pressStartTime;
-    unsigned long   lastActionTime;
-    uint32_t        longPressDuration;
+    uint8_t transmissionData[IDENTLENGTH];
+    uint8_t decodeTransmissionType();
+
 
     public:
     Comms();
+    void tick();
     uint8_t getReadyTransmission();
     void getTransmission_PanelFX();
     void getTransmission_PanelCustom();

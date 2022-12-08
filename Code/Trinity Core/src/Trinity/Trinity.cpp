@@ -49,6 +49,7 @@ uint8_t Trinity::setupPanels_Test()
 
 void Trinity::tick()
 {
+  /*
   //Button press handling: Tap (Brightness cycle)
   if(button->getCommand() == BUTTON_TAPPED)
   {
@@ -137,8 +138,10 @@ void Trinity::tick()
     }
     break;
   }
-
+*/
+  comms->tick();
 
   ledManager->tick();
   ledManager->print();
+  
 }
