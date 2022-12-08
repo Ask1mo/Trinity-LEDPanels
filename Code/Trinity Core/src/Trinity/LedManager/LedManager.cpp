@@ -49,11 +49,11 @@ void LedManager::setBrightness(uint8_t brightness)
 }
 void LedManager::setPanelData(uint8_t panelNumber, uint8_t direction, uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat)
 {
-  panels[panelNumber]->setData(direction, brightness, effect, colour, offset, speed, repeat);
+  panels[panelNumber]->setDataFx(direction, brightness, effect, colour, offset, speed, repeat);
 }
 void LedManager::setPanelCustomData(uint8_t panelNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
 {
-  panels[panelNumber]->setCustomData(customRGBAmount, customRGB);
+  panels[panelNumber]->setDataCustom(customRGBAmount, customRGB);
 }
 void LedManager::setEnabled(bool enabled)
 {

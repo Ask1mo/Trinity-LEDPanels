@@ -27,10 +27,7 @@ class Comms
     uint32_t        longPressDuration;
 
     public:
-    Comms(byte pin, uint32_t longPressDuration);
-    byte getCommand();
-    unsigned long getLastTimeDelta();
-
+    Comms();
     uint8_t getReadyTransmission();
     void getTransmission_PanelFX();
     void getTransmission_PanelCustom();
@@ -38,9 +35,9 @@ class Comms
     void getTransmission_DiodeCustom();
     uint8_t getTransmission_Brightness();
     uint8_t getTransmission_Speed();
-    void getTransmission_SleepTimerEnable();
+    void getTransmission_SleepTimerEnabled();
     void getTransmission_SleepTimerTime();
-    bool getTransmission_LightSensorEnable();
+    bool getTransmission_LightSensorEnabled();
     int getTransmission_LightSensorOverride();
 };
 

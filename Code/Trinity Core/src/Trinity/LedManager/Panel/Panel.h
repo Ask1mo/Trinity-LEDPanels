@@ -26,7 +26,7 @@ private:
 
   uint8_t number;
   uint8_t compassDir;
-  bool clockDir;
+  bool    clockDir;
   uint8_t diodeAmount; // Amount of leds in this panel
   uint8_t diodeStart;  // The coordinate of the first LED
 
@@ -36,6 +36,7 @@ private:
   uint8_t offset;
   uint8_t speed;
   bool repeat;
+  bool detailed;
 
   uint8_t rCustom;
   uint8_t gCustom;
@@ -52,8 +53,10 @@ private:
 public:
   Panel(uint8_t number, uint8_t compassDir, bool clockDir, uint8_t diodeAmount);
   void tick();
-  void setData(uint8_t direction, uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat);
-  void setCustomData(uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);
+  void setDataFx(uint8_t direction, uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat);
+  void setDataCustom(uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);
+  void setDiodeDataFx(uint8_t diodeNumber, uint8_t direction, uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat);
+  void setDiodeDataCustom(uint8_t diodeNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);
   CRGB getPanelRGB();
   CRGB getDiodeRGB(byte number);
   byte getDiodeAmount();

@@ -5,6 +5,7 @@
 #include "ControlPanel/AskButton/AskButton.h"
 #include "ControlPanel/LightSensor/LightSensor.h"
 #include "ControlPanel/SleepTimer/SleepTimer.h"
+#include "ControlPanel/Comms/Comms.h"
 #include "PinMapping.h"
 
 #define PANELSETUP_TEST_AMOUNT  6
@@ -29,11 +30,9 @@ private:
   Panel **panels;
   LedManager    *ledManager;
   AskButton     *button;
-  //bluetooth
   LightSensor   *lightSensor;
-  //Serial
   SleepTimer    *sleepTimer;
-  //Wireless
+  Comms         *comms;
 
   uint8_t brightnessLevel;
   uint8_t setupPanels_Test();

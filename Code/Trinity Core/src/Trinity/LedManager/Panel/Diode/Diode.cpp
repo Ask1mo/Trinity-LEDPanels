@@ -764,7 +764,7 @@ void Diode::tick()
     }
   }
 }
-void Diode::setData(uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat)
+void Diode::setDataFx(uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat)
 {
   this->brightness  = brightness;
   this->effect      = effect;
@@ -773,7 +773,7 @@ void Diode::setData(uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t 
   this->speed       = speed;
   this->repeat      = repeat;
 }
-void Diode::setCustomData(uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
+void Diode::setDataCustom(uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
 {
   this->customRGBAmount = customRGBAmount;
   for (uint8_t i = 0; i < AMOUNTOFCOLOURS; i++)

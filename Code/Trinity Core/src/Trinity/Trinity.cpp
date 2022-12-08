@@ -10,11 +10,9 @@ Trinity::Trinity()
 
   ledManager    = new LedManager(panels, panelsAmount);
   button        = new AskButton(PIN_BUTTON, BUTTON_LONGPRESSDURATION);
-  //Bluetooth
   lightSensor   = new LightSensor(PIN_LIGHTSENSOR);
-  //Serial
   sleepTimer    = new SleepTimer();
-  //Wireless
+  comms         = new Comms();
 
   Serial.println(F("Setup Finished"));
 
@@ -22,7 +20,7 @@ Trinity::Trinity()
   Serial.println(F("---===STARTUP COMPLETED===---"));
   Serial.println();
 
-  //Do some editing of the panel data 
+  //TEMP: Do some editing of the panel data 
   for (uint8_t i = 0; i < panelsAmount; i++)
   {
     ledManager->setPanelData(i, DIR_STRIP, 255, EFFECT_RAINBOW, COLOUR_BLACK, i*5, 3, true);
