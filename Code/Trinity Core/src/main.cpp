@@ -11,10 +11,6 @@ void setup()
 
 void loop()
 {
-  if(Serial.available())
-  {
-    delay(1000);
-  }
   trinity->tick();
   delay(1);
 }
