@@ -23,7 +23,7 @@ LedManager::LedManager(Panel **panelsArg)
   FastLED.addLeds<WS2812, PIN_LEDS, GRB>(leds, LEDAMOUNT);
   #endif
   #ifdef PLATFORM_ESP32FIREBEETLE2_DEBUG
-  FastLED.addLeds<NEOPIXEL, PIN_LEDS>(leds, LEDAMOUNT);
+  FastLED.addLeds<NEOPIXEL, 5>(leds, LEDAMOUNT);
   #endif
 
   Serial.println(F("...LedManager Started"));
@@ -44,6 +44,7 @@ void LedManager::tick()
 void LedManager::print() 
 {
   #ifdef PLATFORM_ESP32FIREBEETLE2_DEBUG
+  /*
   Serial.print(F("Red = "));
   Serial.println(leds[5].r);
 
@@ -78,6 +79,7 @@ void LedManager::print()
   leds[0].b = 255;
   FastLED.show();
   delay(500);
+  */
   #endif
 
   FastLED.show();

@@ -1,5 +1,5 @@
 //Pin mapping
-#define PIN_LEDS        12    //D13
+#define PIN_LEDS        4     //D12
 #define PIN_BUTTON      25    //D2
 #define PIN_LIGHTSENSOR 26    //D3
 
@@ -14,7 +14,7 @@
 //PANELSETUP_LIAM
 //PANELSETUP_PRIME
 //PANELSETUP_TEST
-#define PLATFORM_ESP32FIREBEETLE2
+#define PLATFORM_ESP32FIREBEETLE2_DEBUG
 //PLATFORM_ARDUINO
 //PLATFORM_ESP32FIREBEETLE2
 //PLATFORM_ESP32FIREBEETLE2_DEBUG
@@ -27,23 +27,19 @@
     #define PANELAMOUNT 1
     #define LEDAMOUNT 38
 #endif
-
 #ifdef PANELSETUP_EVA
     #define PANELAMOUNT 4
     #define LEDAMOUNT 68
 #endif
-
 #ifdef PANELSETUP_LIAM
     #define PANELAMOUNT 10
     #define LEDAMOUNT 170
 #endif
-
 #ifdef PANELSETUP_PRIME
     #define PANELAMOUNT 16
     #define LEDAMOUNT 272
 #endif
-
 #ifdef PANELSETUP_TEST
     #define PANELAMOUNT 6
-    #define LEDAMOUNT 85
+    #define LEDAMOUNT 18
 #endif

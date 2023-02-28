@@ -7,7 +7,7 @@ void setupPanels()
   Serial.println(F("Array allocated..."));
 
   #ifdef PANELSETUP_ATOS
-  panels[0] = new Panel(0, CLOCK_COUNTERWISE, COMPASS_WEST, 38);
+  panels[0] = new Panel(0, CLOCK_COUNTERWISE, COMPASS_WEST, LEDAMOUNT);
   #endif
   #ifdef PANELSETUP_EVA
   panels[0] = new Panel(0, CLOCK_COUNTERWISE, COMPASS_SOUTH_EAST, LEDSAMOUNT_TRIANGLE);
@@ -46,12 +46,12 @@ void setupPanels()
   panels[15] = new Panel(15, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, LEDSAMOUNT_TRIANGLE);
   #endif
   #ifdef PANELSETUP_TEST
-  panels[0] = new Panel(0, CLOCK_COUNTERWISE, COMPASS_SOUTH_EAST, LEDSAMOUNT_TRIANGLE);
-  panels[1] = new Panel(1, CLOCK_COUNTERWISE, COMPASS_SOUTH,      LEDSAMOUNT_TRIANGLE);
-  panels[2] = new Panel(2, CLOCK_COUNTERWISE, COMPASS_SOUTH_WEST, LEDSAMOUNT_TRIANGLE);
-  panels[3] = new Panel(3, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, LEDSAMOUNT_TRIANGLE);
-  panels[4] = new Panel(4, CLOCK_CLOCKWISE,   COMPASS_NORTH,      LEDSAMOUNT_TRIANGLE);
-  panels[5] = new Panel(5, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, LEDSAMOUNT_TRIANGLE);
+  panels[0] = new Panel(0, CLOCK_COUNTERWISE, COMPASS_SOUTH_EAST, 3);
+  panels[1] = new Panel(1, CLOCK_COUNTERWISE, COMPASS_SOUTH,      3);
+  panels[2] = new Panel(2, CLOCK_COUNTERWISE, COMPASS_SOUTH_WEST, 3);
+  panels[3] = new Panel(3, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, 3);
+  panels[4] = new Panel(4, CLOCK_CLOCKWISE,   COMPASS_NORTH,      3);
+  panels[5] = new Panel(5, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, 3);
   #endif
 
   Serial.println(F("Allocating complete"));
@@ -77,23 +77,23 @@ void setup()
   Serial.println(F("...Trinity Started"));
 
 
-  
+  /*
   //TEMP: Do some editing of the panel data 
   for (uint8_t i = 0; i < PANELAMOUNT; i++)
   {
     ledManager->setPanelData(i, DIR_STRIP, 255, EFFECT_RAINBOW, COLOUR_BLACK, i*5, 3, true);
   }
+  */
   
-/*
+
   //Temp
   for (uint8_t i = 0; i < PANELAMOUNT; i++)
   {
     for (uint8_t j = 0; j < panels[i]->getDiodeAmount(); j++)
     {
-      panels[i]->setDiodeDataFx(j, DIR_STRIP, 255, EFFECT_HEARTBEAT, COLOUR_RED, j*5, 1, true);
+      panels[i]->setDiodeDataFx(j, DIR_STRIP, 255, EFFECT_HEARTBEAT, COLOUR_RED, i*j*5, 1, true);
     }
   }
-*/
 
 
   Serial.println(F("---===SETUP COMPLETED===---"));

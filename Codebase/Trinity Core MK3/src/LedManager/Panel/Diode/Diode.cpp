@@ -704,7 +704,7 @@ void Diode::progressFX_custom_fade()
 
 void Diode::tick()
 {
-  printDebug();
+  //printDebug();
   
   if (offsetTimer < offset)
   {
