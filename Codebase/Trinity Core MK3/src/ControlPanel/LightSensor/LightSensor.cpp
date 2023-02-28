@@ -6,6 +6,9 @@ LightSensor::LightSensor(uint8_t pin)
 
   this->pin = pin;
   pinMode(pin, INPUT);
+  enabled = false;
+  recommendedBrightness = 99;
+  brightnessOffset = 0;
 
   Serial.println(F("...LightSensor Started"));
 }
@@ -23,7 +26,7 @@ void LightSensor::setEnabled(bool enabled)
 {
   this->enabled = enabled;
 }
-bool LightSensor::getBrightnessOffset()
+uint8_t LightSensor::getBrightnessOffset()
 {
   return brightnessOffset;
 }
@@ -31,7 +34,7 @@ void LightSensor::setBrightnessOffset(int brightnessOffset)
 {
   this->brightnessOffset = brightnessOffset;
 }
-uint8_t LightSensor::getInstruction_Brightness()
+uint8_t LightSensor::getRecommendedBrightness()
 {
-
+  return recommendedBrightness;
 }

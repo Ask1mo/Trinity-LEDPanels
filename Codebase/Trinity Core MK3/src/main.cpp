@@ -1,0 +1,190 @@
+#include "main.h"
+
+void setupPanels()
+{
+  Serial.println(F("Allocatig..."));
+  panels = (Panel**)malloc(sizeof(Panel*) * PANELAMOUNT);
+  Serial.println(F("Array allocated..."));
+
+  #ifdef PANELSETUP_ATOS
+  panels[0] = new Panel(0, CLOCK_COUNTERWISE, COMPASS_WEST, 38);
+  #endif
+  #ifdef PANELSETUP_EVA
+  panels[0] = new Panel(0, CLOCK_COUNTERWISE, COMPASS_SOUTH_EAST, LEDSAMOUNT_TRIANGLE);
+  panels[1] = new Panel(1, CLOCK_COUNTERWISE, COMPASS_SOUTH,      LEDSAMOUNT_TRIANGLE);
+  panels[2] = new Panel(2, CLOCK_COUNTERWISE, COMPASS_SOUTH_WEST, LEDSAMOUNT_TRIANGLE);
+  panels[3] = new Panel(3, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, LEDSAMOUNT_TRIANGLE);
+  #endif
+  #ifdef PANELSETUP_LIAM
+  panels[0] = new Panel(0, CLOCK_COUNTERWISE, COMPASS_SOUTH_EAST, LEDSAMOUNT_TRIANGLE);
+  panels[1] = new Panel(1, CLOCK_COUNTERWISE, COMPASS_SOUTH,      LEDSAMOUNT_TRIANGLE);
+  panels[2] = new Panel(2, CLOCK_COUNTERWISE, COMPASS_SOUTH_WEST, LEDSAMOUNT_TRIANGLE);
+  panels[3] = new Panel(3, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, LEDSAMOUNT_TRIANGLE);
+  panels[4] = new Panel(4, CLOCK_CLOCKWISE,   COMPASS_NORTH,      LEDSAMOUNT_TRIANGLE);
+  panels[5] = new Panel(5, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, LEDSAMOUNT_TRIANGLE);
+  panels[6] = new Panel(6, CLOCK_COUNTERWISE, COMPASS_SOUTH_WEST, LEDSAMOUNT_TRIANGLE);
+  panels[7] = new Panel(7, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, LEDSAMOUNT_TRIANGLE);
+  panels[8] = new Panel(8, CLOCK_CLOCKWISE,   COMPASS_NORTH,      LEDSAMOUNT_TRIANGLE);
+  panels[9] = new Panel(9, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, LEDSAMOUNT_TRIANGLE);
+  #endif
+  #ifdef PANELSETUP_PRIME
+  panels[ 0] = new Panel( 0, CLOCK_COUNTERWISE, COMPASS_SOUTH_EAST, LEDSAMOUNT_TRIANGLE);
+  panels[ 1] = new Panel( 1, CLOCK_COUNTERWISE, COMPASS_SOUTH,      LEDSAMOUNT_TRIANGLE);
+  panels[ 2] = new Panel( 2, CLOCK_COUNTERWISE, COMPASS_SOUTH_WEST, LEDSAMOUNT_TRIANGLE);
+  panels[ 3] = new Panel( 3, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, LEDSAMOUNT_TRIANGLE);
+  panels[ 4] = new Panel( 4, CLOCK_CLOCKWISE,   COMPASS_NORTH,      LEDSAMOUNT_TRIANGLE);
+  panels[ 5] = new Panel( 5, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, LEDSAMOUNT_TRIANGLE);
+  panels[ 6] = new Panel( 6, CLOCK_COUNTERWISE, COMPASS_SOUTH_WEST, LEDSAMOUNT_TRIANGLE);
+  panels[ 7] = new Panel( 7, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, LEDSAMOUNT_TRIANGLE);
+  panels[ 8] = new Panel( 8, CLOCK_CLOCKWISE,   COMPASS_NORTH,      LEDSAMOUNT_TRIANGLE);
+  panels[ 9] = new Panel( 9, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, LEDSAMOUNT_TRIANGLE);
+  panels[10] = new Panel(10, CLOCK_CLOCKWISE,   COMPASS_NORTH,      LEDSAMOUNT_TRIANGLE);
+  panels[11] = new Panel(11, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, LEDSAMOUNT_TRIANGLE);
+  panels[12] = new Panel(12, CLOCK_COUNTERWISE, COMPASS_SOUTH_WEST, LEDSAMOUNT_TRIANGLE);
+  panels[13] = new Panel(13, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, LEDSAMOUNT_TRIANGLE);
+  panels[14] = new Panel(14, CLOCK_CLOCKWISE,   COMPASS_NORTH,      LEDSAMOUNT_TRIANGLE);
+  panels[15] = new Panel(15, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, LEDSAMOUNT_TRIANGLE);
+  #endif
+  #ifdef PANELSETUP_TEST
+  panels[0] = new Panel(0, CLOCK_COUNTERWISE, COMPASS_SOUTH_EAST, LEDSAMOUNT_TRIANGLE);
+  panels[1] = new Panel(1, CLOCK_COUNTERWISE, COMPASS_SOUTH,      LEDSAMOUNT_TRIANGLE);
+  panels[2] = new Panel(2, CLOCK_COUNTERWISE, COMPASS_SOUTH_WEST, LEDSAMOUNT_TRIANGLE);
+  panels[3] = new Panel(3, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, LEDSAMOUNT_TRIANGLE);
+  panels[4] = new Panel(4, CLOCK_CLOCKWISE,   COMPASS_NORTH,      LEDSAMOUNT_TRIANGLE);
+  panels[5] = new Panel(5, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, LEDSAMOUNT_TRIANGLE);
+  #endif
+
+  Serial.println(F("Allocating complete"));
+  return;
+}
+
+void setup()
+{
+  Serial.begin(9600);
+  Serial.println(F("Trinity MK3 - Ask Blommaert"));
+
+  setupPanels();
+  ledManager      = new LedManager(panels);
+  button          = new AskButton(PIN_BUTTON, 1000);
+  //lightSensor     = new LightSensor(PIN_LIGHTSENSOR);
+  //sleepTimer      = new SleepTimer();
+  //comms           = new Comms();
+
+  Serial.println(F("...Trinity Initialised"));
+
+  ledManager->setBrightness(255);
+
+  Serial.println(F("...Trinity Started"));
+
+
+  
+  //TEMP: Do some editing of the panel data 
+  for (uint8_t i = 0; i < PANELAMOUNT; i++)
+  {
+    ledManager->setPanelData(i, DIR_STRIP, 255, EFFECT_RAINBOW, COLOUR_BLACK, i*5, 3, true);
+  }
+  
+/*
+  //Temp
+  for (uint8_t i = 0; i < PANELAMOUNT; i++)
+  {
+    for (uint8_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+    {
+      panels[i]->setDiodeDataFx(j, DIR_STRIP, 255, EFFECT_HEARTBEAT, COLOUR_RED, j*5, 1, true);
+    }
+  }
+*/
+
+
+  Serial.println(F("---===SETUP COMPLETED===---"));
+}
+void loop()
+{
+  delay(10);
+  /*
+  //Button press handling: Tap (Brightness cycle)
+  if(button->getCommand() == BUTTON_TAPPED)
+  {
+    switch (ledManager->getBrightness())
+    {
+      case BRIGHTNESS_0_OFF:
+      {
+        ledManager->setEnabled(true);
+        ledManager->setBrightness(BRIGHTNESS_1_DIM);
+        lightSensor->setEnabled(false);
+      }
+      break;
+      case BRIGHTNESS_1_DIM:
+      {
+        ledManager->setEnabled(true);
+        ledManager->setBrightness(BRIGHTNESS_2_NOR);
+        lightSensor->setEnabled(false);
+      }
+      break;
+      case BRIGHTNESS_2_NOR:
+      {
+        ledManager->setEnabled(true);
+        ledManager->setBrightness(BRIGHTNESS_3_MAX);
+        lightSensor->setEnabled(false);
+      }
+      break;
+      case BRIGHTNESS_3_MAX:
+      {
+        ledManager->setEnabled(true);
+        ledManager->setBrightness(BRIGHTNESS_4_AUT);
+        lightSensor->setEnabled(true);
+      }
+      break;
+      default:
+      {
+        ledManager->setEnabled(true);
+        ledManager->setBrightness(BRIGHTNESS_2_NOR);
+        lightSensor->setEnabled(false);
+      }
+      break;
+    }
+  }
+  */
+
+  /*
+  //Button press handling: Long (Preset cycle)
+  if(button->getCommand() == BUTTON_HELD)
+  {
+    Serial.println(F("Preset loading not implemented"));
+  }
+*/
+  //Auto brightness handling
+
+  /*
+  if (lightSensor->getEnabled())
+  {
+    lightSensor->tick();
+    ledManager->setBrightness(lightSensor->getRecommendedBrightness());
+  }
+  */
+
+  /*
+  //Waking up / Shutting down system from sleep timer
+  sleepTimer->tick();
+  switch (sleepTimer->getTurn())
+  {
+    case TURN_OFF:
+    ledManager->setEnabled(false);
+    break;
+
+    case TURN_ON:
+    ledManager->setEnabled(true);
+    if(ledManager->getBrightness() == BRIGHTNESS_0_OFF)
+    {
+      ledManager->setBrightness(BRIGHTNESS_3_NOR);
+    }
+    break;
+  }
+*/
+  //comms->tick();
+
+  ledManager->tick();
+  ledManager->print();
+}
+
+

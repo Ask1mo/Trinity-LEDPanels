@@ -2,9 +2,7 @@
 #define LEDMANAGER_H
 
 #include "Panel/Panel.h"
-#include "../PinMapping.h"
-
-#define LEDAMOUNT 38
+#include "../setup.h"
 
 class LedManager
 {
@@ -18,7 +16,7 @@ private:
   bool      enabled;
 
 public:
-  LedManager(Panel **panelsArg, uint8_t panelsAmount);
+  LedManager(Panel **panelsArg);
   void tick();
   void print();
   uint8_t getBrightness();
