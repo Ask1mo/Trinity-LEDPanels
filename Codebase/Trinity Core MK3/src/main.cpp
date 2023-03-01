@@ -66,8 +66,8 @@ void setup()
   setupPanels();
   ledManager      = new LedManager(panels);
   button          = new AskButton(PIN_BUTTON, 1000);
-  //lightSensor     = new LightSensor(PIN_LIGHTSENSOR);
-  //sleepTimer      = new SleepTimer();
+  lightSensor     = new LightSensor(PIN_LIGHTSENSOR);
+  sleepTimer      = new SleepTimer();
   //comms           = new Comms();
 
   Serial.println(F("...Trinity Initialised"));
@@ -91,7 +91,7 @@ void setup()
   {
     for (uint8_t j = 0; j < panels[i]->getDiodeAmount(); j++)
     {
-      panels[i]->setDiodeDataFx(j, DIR_STRIP, 255, EFFECT_HEARTBEAT, COLOUR_RED, i*j*5, 1, true);
+      panels[i]->setDiodeDataFx(j, DIR_STRIP, 255, EFFECT_RAINBOW, COLOUR_BLACK, i*j*5, 1, true);
     }
   }
 
@@ -101,67 +101,71 @@ void setup()
 void loop()
 {
   delay(10);
-  /*
-  //Button press handling: Tap (Brightness cycle)
-  if(button->getCommand() == BUTTON_TAPPED)
+  
+  //Button press handling
+  switch(button->getCommand())
   {
-    switch (ledManager->getBrightness())
+    case BUTTON_TAPPED: //Brightness cycle
     {
-      case BRIGHTNESS_0_OFF:
+      switch (ledManager->getBrightness())
       {
-        ledManager->setEnabled(true);
-        ledManager->setBrightness(BRIGHTNESS_1_DIM);
-        lightSensor->setEnabled(false);
+        case BRIGHTNESS_0_OFF:
+        {
+          ledManager->setEnabled(true);
+          ledManager->setBrightness(BRIGHTNESS_1_DIM);
+          lightSensor->setEnabled(false);
+          Serial.println(F("Changing sys brightness to DIM"));
+        }
+        break;
+        case BRIGHTNESS_1_DIM:
+        {
+          ledManager->setEnabled(true);
+          ledManager->setBrightness(BRIGHTNESS_2_NOR);
+          lightSensor->setEnabled(false);
+          Serial.println(F("Changing sys brightness to NORMAL"));
+        }
+        break;
+        case BRIGHTNESS_2_NOR:
+        {
+          ledManager->setEnabled(true);
+          ledManager->setBrightness(BRIGHTNESS_3_MAX);
+          lightSensor->setEnabled(false);
+          Serial.println(F("Changing sys brightness to MAX"));
+
+        }
+        break;
+        case BRIGHTNESS_3_MAX:
+        {
+          ledManager->setEnabled(true);
+          ledManager->setBrightness(BRIGHTNESS_4_AUT);
+          lightSensor->setEnabled(true);
+          Serial.println(F("Changing sys brightness to Automatic"));
+        }
+        break;
+        default:
+        {
+          ledManager->setEnabled(true);
+          ledManager->setBrightness(BRIGHTNESS_0_OFF);
+          lightSensor->setEnabled(false);
+          Serial.println(F("Changing sys brightness to OFF"));
+        }
+        break;
       }
-      break;
-      case BRIGHTNESS_1_DIM:
-      {
-        ledManager->setEnabled(true);
-        ledManager->setBrightness(BRIGHTNESS_2_NOR);
-        lightSensor->setEnabled(false);
-      }
-      break;
-      case BRIGHTNESS_2_NOR:
-      {
-        ledManager->setEnabled(true);
-        ledManager->setBrightness(BRIGHTNESS_3_MAX);
-        lightSensor->setEnabled(false);
-      }
-      break;
-      case BRIGHTNESS_3_MAX:
-      {
-        ledManager->setEnabled(true);
-        ledManager->setBrightness(BRIGHTNESS_4_AUT);
-        lightSensor->setEnabled(true);
-      }
-      break;
-      default:
-      {
-        ledManager->setEnabled(true);
-        ledManager->setBrightness(BRIGHTNESS_2_NOR);
-        lightSensor->setEnabled(false);
-      }
-      break;
+    }
+    break;
+    case BUTTON_HELD: //Preset cycle
+    {
+      Serial.println(F("Preset loading not implemented"));
     }
   }
-  */
-
-  /*
-  //Button press handling: Long (Preset cycle)
-  if(button->getCommand() == BUTTON_HELD)
-  {
-    Serial.println(F("Preset loading not implemented"));
-  }
-*/
+  
   //Auto brightness handling
-
-  /*
   if (lightSensor->getEnabled())
   {
     lightSensor->tick();
+    if(ledManager->getBrightness() != lightSensor->getRecommendedBrightness())
     ledManager->setBrightness(lightSensor->getRecommendedBrightness());
   }
-  */
 
   /*
   //Waking up / Shutting down system from sleep timer
@@ -180,7 +184,8 @@ void loop()
     }
     break;
   }
-*/
+  */
+
   //comms->tick();
 
   ledManager->tick();

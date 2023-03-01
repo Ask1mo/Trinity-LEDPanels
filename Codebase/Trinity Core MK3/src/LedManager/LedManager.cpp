@@ -23,7 +23,7 @@ LedManager::LedManager(Panel **panelsArg)
   FastLED.addLeds<WS2812, PIN_LEDS, GRB>(leds, LEDAMOUNT);
   #endif
   #ifdef PLATFORM_ESP32FIREBEETLE2_DEBUG
-  FastLED.addLeds<NEOPIXEL, 5>(leds, LEDAMOUNT);
+  FastLED.addLeds<NEOPIXEL, PIN_LEDS>(leds, LEDAMOUNT);
   #endif
 
   Serial.println(F("...LedManager Started"));
@@ -92,7 +92,6 @@ uint8_t LedManager::getBrightness()
 void LedManager::setBrightness(uint8_t brightness)
 {
   this->brightness = brightness;
-  this->brightness = 255;
 }
 void LedManager::setPanelData(uint8_t panelNumber, uint8_t direction, uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat)
 {

@@ -1,4 +1,4 @@
-/*
+
 #ifndef SLEEPTIMER_H
 #define SLEEPTIMER_H
 
@@ -7,7 +7,7 @@
 #define TURN_NEUTRAL    2
 
 #include <Arduino.h>
-//#include <RTClib.h>
+#include <RTClib.h>
 
 class SleepTimer
 {
@@ -32,4 +32,3 @@ public:
 };
 
 #endif
-*/

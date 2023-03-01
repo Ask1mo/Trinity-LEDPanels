@@ -1,4 +1,4 @@
-/*
+
 #include "SleepTimer.h"
 
 SleepTimer::SleepTimer()
@@ -75,4 +75,3 @@ void SleepTimer::setTurnOffEnabled(bool enabled)
 {
     turnOffEnabled = enabled;
 }
-*/

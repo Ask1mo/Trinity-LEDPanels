@@ -1,27 +1,37 @@
-//Pin mapping
-#define PIN_LEDS        4     //D12
-#define PIN_BUTTON      25    //D2
-#define PIN_LIGHTSENSOR 26    //D3
+/*---=== Setup stuff ===---*/
 
-#define PIN_EXAMPLE_R   37
-#define PIN_EXAMPLE_G   36
-#define PIN_EXAMPLE_B   33
-
-//Setup stuff
 #define PANELSETUP_TEST //Select your panel setup here:
 //PANELSETUP_ATOS
 //PANELSETUP_EVA
 //PANELSETUP_LIAM
 //PANELSETUP_PRIME
 //PANELSETUP_TEST
-#define PLATFORM_ARDUINO
+#define PLATFORM_ESP32FIREBEETLE2_DEBUG
 //PLATFORM_ARDUINO
 //PLATFORM_ESP32FIREBEETLE2
 //PLATFORM_ESP32FIREBEETLE2_DEBUG
 
 
+/*---=== Pin Mapping ===---*/
 
-//You probably don't have to touch this stuff below 
+#ifdef PLATFORM_ARDUINO
+    #define PIN_BUTTON      2    //D2
+    #define PIN_LEDS        12    //D12
+    #define PIN_LIGHTSENSOR A0    //A0
+#endif
+#ifdef PLATFORM_ESP32FIREBEETLE2
+    #define PIN_BUTTON      25    //D2
+    #define PIN_LEDS        4     //D?
+    #define PIN_LIGHTSENSOR 26    //D3
+#endif
+#ifdef PLATFORM_ESP32FIREBEETLE2_DEBUG
+    #define PIN_BUTTON      27    //On board button
+    #define PIN_LEDS        5     //D?
+    #define PIN_LIGHTSENSOR 15    //D3
+#endif
+
+
+/* ---=== LED Setup ===---*/
 
 #ifdef PANELSETUP_ATOS
     #define PANELAMOUNT 1
