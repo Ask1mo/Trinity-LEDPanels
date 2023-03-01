@@ -43,47 +43,7 @@ void LedManager::tick()
 }
 void LedManager::print() 
 {
-  #ifdef PLATFORM_ESP32FIREBEETLE2_DEBUG
-  /*
-  Serial.print(F("Red = "));
-  Serial.println(leds[5].r);
-
-  leds[5].r = leds[5].red;
-
-  Serial.print(F("Red = "));
-  Serial.println(leds[5].r);
-
-  leds[5].r = 255;
-  
-  Serial.print(F("Red = "));
-  Serial.println(leds[5].r);
-
-
-
-
-
-  leds[0].g = leds[0].green;
-  leds[0].b = leds[0].blue;
-  FastLED.show();
-  
-  delay(500);
-  
-  leds[0].r = 255;
-  FastLED.show();
-  delay(500);
-  
-  leds[0].g = 255;
-  FastLED.show();
-  delay(500);
-  
-  leds[0].b = 255;
-  FastLED.show();
-  delay(500);
-  */
-  #endif
-
-  FastLED.show();
-  
+  FastLED.show(); 
 }
 uint8_t LedManager::getBrightness()
 {

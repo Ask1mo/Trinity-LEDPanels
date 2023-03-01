@@ -95,6 +95,11 @@ void setup()
     }
   }
 
+  sleepTimer->setTurnOnEnabled(true);
+  sleepTimer->setTurnOffEnabled(true);
+
+  DateTime *dingus = new DateTime(2023, 2, 1, 17, 15, 0);
+  
 
   Serial.println(F("---===SETUP COMPLETED===---"));
 }
@@ -167,24 +172,24 @@ void loop()
     ledManager->setBrightness(lightSensor->getRecommendedBrightness());
   }
 
-  /*
   //Waking up / Shutting down system from sleep timer
   sleepTimer->tick();
   switch (sleepTimer->getTurn())
   {
     case TURN_OFF:
-    ledManager->setEnabled(false);
+    {
+      Serial.println(F("SleepTimer Turning system off"));
+      ledManager->setBrightness(BRIGHTNESS_0_OFF);
+    }
     break;
 
     case TURN_ON:
-    ledManager->setEnabled(true);
-    if(ledManager->getBrightness() == BRIGHTNESS_0_OFF)
     {
-      ledManager->setBrightness(BRIGHTNESS_3_NOR);
+      Serial.println(F("SleepTimer Turning system on"));
+      ledManager->setBrightness(BRIGHTNESS_2_NOR);
     }
     break;
   }
-  */
 
   //comms->tick();
 

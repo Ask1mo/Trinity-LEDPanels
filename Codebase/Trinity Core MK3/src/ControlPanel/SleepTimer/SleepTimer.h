@@ -2,17 +2,17 @@
 #ifndef SLEEPTIMER_H
 #define SLEEPTIMER_H
 
+#include <Arduino.h>
+#include <RTClib.h>
+
 #define TURN_OFF        0
 #define TURN_ON         1
 #define TURN_NEUTRAL    2
 
-#include <Arduino.h>
-#include <RTClib.h>
-
 class SleepTimer
 {
 private:
-    RTC_DS3231  *rtc;
+    //RTC_DS3231  *rtc;
     uint8_t     turn;
     DateTime    turnOnTime;
     bool        turnOnEnabled;
@@ -32,3 +32,7 @@ public:
 };
 
 #endif
+
+
+
+#include "time.h"
