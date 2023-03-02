@@ -10,30 +10,62 @@ SleepTimer::SleepTimer()
     turnOnFlag      = false;
     turnOffEnabled  = false;
     turnOffFlag     = false;
+    time            = new struct tm;
+    turnOnTime      = new struct tm;
+    turnOffTime     = new struct tm;
 
-    struct tm tm;
-    tm.tm_year  = 2023 - 1900; //Year
-    tm.tm_mon   = 2; //Month (Do -1 or it will be incorrect)
-    tm.tm_mday  = 1; //Day
-    tm.tm_hour  = 17;//Hour
-    tm.tm_min   = 15; //Minute
-    tm.tm_sec   = 10; //Second
-    time_t t = mktime(&tm);
-    struct timeval now = { .tv_sec = t };
-    settimeofday(&now, NULL);
+    setTime(2023,3,2, 9,58);
 
     Serial.println(F("...SleepTimer Started"));
 }
 
+void SleepTimer::setTime(uint16_t year, uint8_t month, uint8_t day,   uint8_t hour, uint8_t minute)
+{ 
+    //Set own time
+    time->tm_year  = year - 1900; //Year
+    time->tm_mon   = month - 1; //Month (Do -1 or it will be incorrect)
+    time->tm_mday  = day; //Day
+
+    time->tm_hour  = hour;//Hour
+    time->tm_min   = minute; //Minute
+
+    time->tm_sec   = 0; //Second
+
+    //Setting DayMonthYear for turnOnTime (Doesn't do anything but makes me feel safe against leap seconds)
+    turnOnTime->tm_year     = time->tm_year;
+    turnOnTime->tm_mon      = time->tm_mon;
+    turnOnTime->tm_mday     = time->tm_mday;
+
+    //Setting DayMonthYear for turnOffTime (Doesn't do anything but makes me feel safe against leap seconds)
+    turnOffTime->tm_year    = time->tm_year;
+    turnOffTime->tm_mon     = time->tm_mon;
+    turnOffTime->tm_mday    = time->tm_mday;
+
+    struct timeval now = { .tv_sec = mktime(time) };
+    settimeofday(&now, NULL);
+}
+
+void SleepTimer::printTime()
+{
+    Serial.print(F("Current Time: "));
+    Serial.println(time, "%A, %B %d %Y %H:%M:%S");
+
+    /*
+    Serial.print(F("Turn On Time: "));
+    Serial.println(turnOnTime, "%A, %B %d %Y %H:%M:%S");
+
+    Serial.print(F("Turn Off Time: "));
+    Serial.println(turnOffTime, "%A, %B %d %Y %H:%M:%S");
+    */
+}
+
 void SleepTimer::tick()
 {
-    struct tm timeinfo;
-    getLocalTime(&timeinfo);
-    //Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S"); 
+    getLocalTime(time);
 
     if (turnOnEnabled)
     {
-        if(timeinfo.tm_hour == 17 && timeinfo.tm_min == 17)
+        if(time->tm_hour == turnOnTime->tm_hour && time->tm_min == turnOnTime->tm_min)
         {
             if(!turnOnFlag)
             {
@@ -49,7 +81,7 @@ void SleepTimer::tick()
 
     if (turnOffEnabled)
     {
-        if(timeinfo.tm_hour == 17 && timeinfo.tm_min == 16)
+        if(time->tm_hour == turnOffTime->tm_hour && time->tm_min == turnOffTime->tm_min)
         {
             if(!turnOffFlag)
             {
@@ -73,17 +105,19 @@ uint8_t SleepTimer::getTurn()
     }
     return turn;
 }
-void SleepTimer::setTurnOnTime(DateTime dateTime)
+void SleepTimer::setTurnOnTime(uint8_t hour, uint8_t minute)
 {
-    turnOnTime = dateTime;
+    turnOnTime->tm_hour = hour;
+    turnOnTime->tm_min = minute;
 }
 void SleepTimer::setTurnOnEnabled(bool enabled)
 {
     turnOnEnabled = enabled;
 }
-void SleepTimer::setTurnOffTime(DateTime dateTime)
+void SleepTimer::setTurnOffTime(uint8_t hour, uint8_t minute)
 {
-    turnOffTime = dateTime;
+    turnOffTime->tm_hour = hour;
+    turnOffTime->tm_min = minute;
 }
 void SleepTimer::setTurnOffEnabled(bool enabled)
 {
