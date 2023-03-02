@@ -35,11 +35,13 @@ void SleepTimer::setTime(uint16_t year, uint8_t month, uint8_t day,   uint8_t ho
     turnOnTime->tm_year     = time->tm_year;
     turnOnTime->tm_mon      = time->tm_mon;
     turnOnTime->tm_mday     = time->tm_mday;
+    turnOnTime->tm_sec      = time->tm_sec;
 
     //Setting DayMonthYear for turnOffTime (Doesn't do anything but makes me feel safe against leap seconds)
     turnOffTime->tm_year    = time->tm_year;
     turnOffTime->tm_mon     = time->tm_mon;
     turnOffTime->tm_mday    = time->tm_mday;
+    turnOffTime->tm_sec     = time->tm_sec;
 
     struct timeval now = { .tv_sec = mktime(time) };
     settimeofday(&now, NULL);
@@ -50,13 +52,12 @@ void SleepTimer::printTime()
     Serial.print(F("Current Time: "));
     Serial.println(time, "%A, %B %d %Y %H:%M:%S");
 
-    /*
-    Serial.print(F("Turn On Time: "));
-    Serial.println(turnOnTime, "%A, %B %d %Y %H:%M:%S");
+    
+    Serial.print(F("Turn On  Time: "));
+    Serial.println(turnOnTime, "%B %d %Y %H:%M:%S");
 
     Serial.print(F("Turn Off Time: "));
-    Serial.println(turnOffTime, "%A, %B %d %Y %H:%M:%S");
-    */
+    Serial.println(turnOffTime, "%B %d %Y %H:%M:%S");
 }
 
 void SleepTimer::tick()

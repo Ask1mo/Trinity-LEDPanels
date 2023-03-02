@@ -72,7 +72,14 @@ void setup()
 
   Serial.println(F("...Trinity Initialised"));
 
+  /*
   ledManager->setBrightness(255);
+
+  sleepTimer->setTurnOnEnabled(true);
+  sleepTimer->setTurnOnTime(10,0);
+  sleepTimer->setTurnOffEnabled(true);
+  sleepTimer->setTurnOffTime(9,59);
+  */
 
   Serial.println(F("...Trinity Started"));
 
@@ -95,19 +102,11 @@ void setup()
     }
   }
 
-  sleepTimer->setTurnOnEnabled(true);
-  sleepTimer->setTurnOnTime(10,0);
-
-  sleepTimer->setTurnOffEnabled(true);
-  sleepTimer->setTurnOffTime(9,59);
-
   Serial.println(F("---===SETUP COMPLETED===---"));
 }
 void loop()
 {
   delay(10);
-
-  sleepTimer->printTime();
   
   //Button press handling
   switch(button->getCommand())
