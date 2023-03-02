@@ -5,11 +5,11 @@ SleepTimer::SleepTimer()
 {
     Serial.println(F("SleepTimer Starting..."));
 
-    uint8_t     turn            = TURN_NEUTRAL;
-    bool        turnOnEnabled   = false;
-    bool        turnOnFlag      = false;
-    bool        turnOffEnabled  = false;
-    bool        turnOffFlag     = false;
+    turn            = TURN_NEUTRAL;
+    turnOnEnabled   = false;
+    turnOnFlag      = false;
+    turnOffEnabled  = false;
+    turnOffFlag     = false;
 
     struct tm tm;
     tm.tm_year  = 2023 - 1900; //Year
@@ -33,14 +33,13 @@ void SleepTimer::tick()
 
     if (turnOnEnabled)
     {
-        if(timeinfo.tm_hour == 17 && timeinfo.tm_min == 16)
+        if(timeinfo.tm_hour == 17 && timeinfo.tm_min == 17)
         {
             if(!turnOnFlag)
             {
                 turn = TURN_ON;
                 turnOnFlag = true;
             }
-            Serial.println(F("ON FLAG HIT!!! --- ON FLAG HIT!!! --- ON FLAG HIT!!!"));
         }
         else
         {
@@ -50,14 +49,13 @@ void SleepTimer::tick()
 
     if (turnOffEnabled)
     {
-        if(timeinfo.tm_hour == 17 && timeinfo.tm_min == 15)
+        if(timeinfo.tm_hour == 17 && timeinfo.tm_min == 16)
         {
-            //if(!turnOffFlag)
-            //{
+            if(!turnOffFlag)
+            {
                 turn = TURN_OFF;
                 turnOffFlag = true;
-            //}
-            Serial.println(F("OFF FLAG HIT!!! --- OFF FLAG HIT!!! --- OFF FLAG HIT!!!"));
+            }
         }
         else
         {
@@ -71,12 +69,8 @@ uint8_t SleepTimer::getTurn()
     {
         uint8_t turnToSend = turn;
         turn = TURN_NEUTRAL;
-        Serial.print(F("Returning "));
-        Serial.println(turnToSend);
         return turnToSend;
     }
-    Serial.print(F("Returning "));
-    Serial.println(turn);
     return turn;
 }
 void SleepTimer::setTurnOnTime(DateTime dateTime)

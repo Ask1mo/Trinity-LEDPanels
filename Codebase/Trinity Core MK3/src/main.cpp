@@ -186,7 +186,7 @@ void loop()
     case TURN_ON:
     {
       Serial.println(F("SleepTimer Turning system on"));
-      ledManager->setBrightness(BRIGHTNESS_2_NOR);
+      if(ledManager->getBrightness() == BRIGHTNESS_0_OFF)ledManager->setBrightness(BRIGHTNESS_2_NOR);
     }
     break;
   }
