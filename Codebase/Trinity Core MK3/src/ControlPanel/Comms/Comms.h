@@ -37,7 +37,7 @@ class Comms
     Transmission_DiodeFX            receieveTransmission_DiodeFX();
     Transmission_DiodeCustom        receieveTransmission_DiodeCustom();
     uint8_t                         receieveTransmission_Brightness();
-    Transmission_SleepTimerData     receieveTransmission_SleepTimer();
+    void     receieveTransmission_SleepTimer();
     Transmission_LightSensorData    receieveTransmission_LightSensor();
 
     public:

@@ -3,6 +3,15 @@
 Comms::Comms()
 {
     Serial.println(F("Comms: Starting"));
+
+    buffer_PanelFX          = new struct Transmission_PanelFX;
+    buffer_PanelCustom      = new struct Transmission_PanelCustom;
+    buffer_DiodeFX          = new struct Transmission_DiodeFX;
+    buffer_DiodeCustom      = new struct Transmission_DiodeCustom;
+    buffer_Brightness       = 0;
+    buffer_SleepTimerData   = new struct Transmission_SleepTimerData;
+    buffer_LightSensorData  = new struct Transmission_LightSensorData;
+
     Serial.println(F("Comms: Started"));
 }
 
@@ -77,7 +86,7 @@ uint8_t Comms::decodeTransmissionType()
 uint8_t Comms::waitAndRead()
 {
     while (!Serial.available()) delay(1);
-    return Serial.read();
+    return (Serial.read());
 }
 bool    Comms::doTransmissionEndCheck()
 {
@@ -94,7 +103,9 @@ bool    Comms::doTransmissionEndCheck()
         transmissionData[2] == 'e' &&
         transmissionData[3] == 'a' &&
         transmissionData[4] == 'r'
-    ) return TRANSMISSION_PANELFX;
+    ) return true;
+
+    return false;
 }
 Transmission_PanelFX            Comms::receieveTransmission_PanelFX()
 {
@@ -148,9 +159,22 @@ uint8_t                         Comms::receieveTransmission_Brightness()
 {
 
 }
-Transmission_SleepTimerData     Comms::receieveTransmission_SleepTimer()
+void     Comms::receieveTransmission_SleepTimer()
 {
-
+    Serial.println(F("Gimme"));
+                delay(1000);
+    buffer_SleepTimerData->timerID   = waitAndRead();
+    Serial.println(F("One"));
+                delay(1000);
+    buffer_SleepTimerData->hour      = waitAndRead();
+    Serial.println(F("Two"));
+                delay(1000);
+    buffer_SleepTimerData->minute    = waitAndRead();
+    Serial.println(F("Three"));
+                delay(1000);
+    buffer_SleepTimerData->enabled   = waitAndRead();
+    Serial.println(F("Four - complete"));
+                delay(1000);
 }
 Transmission_LightSensorData    Comms::receieveTransmission_LightSensor()
 {
@@ -201,7 +225,9 @@ void    Comms::tick()
             break;
             case TRANSMISSION_SLEEPTIMER:
             {
-                *buffer_SleepTimerData = receieveTransmission_SleepTimer();
+                receieveTransmission_SleepTimer();
+                Serial.println(F("Transmisison finished"));
+                delay(1000);
             }
             break;
             case TRANSMISSION_LIGHTSENSOR:
@@ -211,13 +237,17 @@ void    Comms::tick()
             break;
         }
 
-        if (doTransmissionEndCheck())
+        if(receivedTransmissionType != TRANSMISSION_NONE)
         {
-            readyTransmissionType = receivedTransmissionType;
-        }
-        else
-        {
-            Serial.println("BROKEN TRANSMISISON CAPTURED");
+            if (doTransmissionEndCheck())
+            {
+                readyTransmissionType = receivedTransmissionType;
+                Serial.println(F("Transmission completed"));
+            }
+            else
+            {
+                Serial.println(F("BROKEN TRANSMISISON NOT CAPUTRED"));
+            }
         }
         
 
