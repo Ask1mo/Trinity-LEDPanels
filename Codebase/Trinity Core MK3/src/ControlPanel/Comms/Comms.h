@@ -1,4 +1,3 @@
-/*
 #ifndef COMMS_H
 #define COMMS_H
 
@@ -14,49 +13,46 @@
 #define TRANSMISSION_DIODEFX                3
 #define TRANSMISSION_DIODECUSTOM            4
 #define TRANSMISSION_BRIGHTNESS             5
-#define TRANSMISSION_SPEED                  6
-#define TRANSMISSION_SLEEPTIMERENABLED      7
-#define TRANSMISSION_SLEEPTIMERTIME         8
-#define TRANSMISSION_LIGHTSENSORENABLED     9
-#define TRANSMISSION_LIGHTSENSOROFFSET      10
+#define TRANSMISSION_SLEEPTIMER             6
+#define TRANSMISSION_LIGHTSENSOR            7
 
 class Comms
 {
     private:
+    uint8_t readyTransmissionType;
     int inByte;         // incoming serial byte
     uint8_t transmissionData[IDENTLENGTH];
+    struct Transmission_PanelFX         *buffer_PanelFX;
+    struct Transmission_PanelCustom     *buffer_PanelCustom;
+    struct Transmission_DiodeFX         *buffer_DiodeFX;
+    struct Transmission_DiodeCustom     *buffer_DiodeCustom;
+    uint8_t                             buffer_Brightness;
+    struct Transmission_SleepTimerData  *buffer_SleepTimerData;
+    struct Transmission_LightSensorData *buffer_LightSensorData;
     uint8_t decodeTransmissionType();
     uint8_t waitAndRead();
     bool    doTransmissionEndCheck();
-
-    Transmission_PanelFX        receieveTransmission_PanelFX();
-    Transmission_PanelCustom    receieveTransmission_PanelCustom();
-    void receieveTransmission_DiodeFX();
-    void receieveTransmission_DiodeCustom();
-    void receieveTransmission_Brightness();
-    void receieveTransmission_Speed();
-    void receieveTransmission_SleepTimerEnabled();
-    void receieveTransmission_SleepTimerTime();
-    void receieveTransmission_LightSensorEnabled();
-    void receieveTransmission_LighstSensorOffset();
+    Transmission_PanelFX            receieveTransmission_PanelFX();
+    Transmission_PanelCustom        receieveTransmission_PanelCustom();
+    Transmission_DiodeFX            receieveTransmission_DiodeFX();
+    Transmission_DiodeCustom        receieveTransmission_DiodeCustom();
+    uint8_t                         receieveTransmission_Brightness();
+    Transmission_SleepTimerData     receieveTransmission_SleepTimer();
+    Transmission_LightSensorData    receieveTransmission_LightSensor();
 
     public:
     Comms();
     void tick();
     uint8_t getReadyTransmissionType();
-    void    getTransmission_PanelFX();
-    void    getTransmission_PanelCustom();
-    void    getTransmission_DiodeFX();
-    void    getTransmission_DiodeCustom();
-    uint8_t getTransmission_Brightness();
-    uint8_t getTransmission_Speed();
-    void    getTransmission_SleepTimerEnabled();
-    void    getTransmission_SleepTimerTime();
-    bool    getTransmission_LightSensorEnabled();
-    int     getTransmission_LightSensorOffset();
+    Transmission_PanelFX            getTransmission_PanelFX();
+    Transmission_PanelCustom        getTransmission_PanelCustom();
+    Transmission_DiodeFX            getTransmission_DiodeFX();
+    Transmission_DiodeCustom        getTransmission_DiodeCustom();
+    uint8_t                         getTransmission_Brightness();
+    Transmission_SleepTimerData     getTransmission_SleepTimerData();
+    Transmission_LightSensorData    getTransmission_LightSensorData();
 };
 
 
 
 #endif
-*/

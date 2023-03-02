@@ -68,7 +68,7 @@ void setup()
   button          = new AskButton(PIN_BUTTON, 1000);
   lightSensor     = new LightSensor(PIN_LIGHTSENSOR);
   sleepTimer      = new SleepTimer();
-  //comms           = new Comms();
+  comms           = new Comms();
 
   Serial.println(F("...Trinity Initialised"));
 
@@ -192,7 +192,7 @@ void loop()
     break;
   }
 
-  //comms->tick();
+  comms->tick();
 
   ledManager->tick();
   ledManager->print();

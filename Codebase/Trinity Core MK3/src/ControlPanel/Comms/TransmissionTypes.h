@@ -4,8 +4,8 @@
 
 #include <Arduino.h>
 #include <RTClib.h>
-//#include "./Trinity/LedManager/Panel/Diode/ColourRGB.h"
-#include "./Trinity/LedManager/Panel/Diode/Diode.h"
+#include "./LedManager/Panel/Diode/ColourRGB.h"
+#include "./LedManager/Panel/Diode/Diode.h"
 
 struct Transmission_PanelFX
 {
@@ -38,15 +38,17 @@ struct Transmission_DiodeCustom
     uint8_t customRGBAmount;
     ColourRGB *customRGB[AMOUNTOFCOLOURS];
 };
-struct Transmission_SleepTimerEnabled
-{
-    bool timerID;
-    bool enabled;
-};
-struct Transmission_SleepTimerTime
+struct Transmission_SleepTimerData
 {
     bool timerID;
     DateTime time;
+    bool enabled;
+};
+struct Transmission_LightSensorData
+{
+    bool timerID;
+    DateTime time;
+    bool enabled;
 };
 
 #endif

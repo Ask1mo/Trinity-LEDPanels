@@ -4,6 +4,8 @@
         "deque": "cpp",
         "string": "cpp",
         "vector": "cpp",
-        "ctime": "cpp"
+        "ctime": "cpp",
+        "limits": "cpp",
+        "type_traits": "cpp"
     }
 }

@@ -6,7 +6,7 @@
 #include "ControlPanel/AskButton/AskButton.h"
 #include "ControlPanel/LightSensor/LightSensor.h"
 #include "ControlPanel/SleepTimer/SleepTimer.h"
-//#include "ControlPanel/Comms/Comms.h"
+#include "ControlPanel/Comms/Comms.h"
 
 #define BRIGHTNESS_0_OFF 1
 #define BRIGHTNESS_1_DIM 10
@@ -19,7 +19,7 @@ LedManager    *ledManager;
 AskButton     *button;
 LightSensor   *lightSensor;
 SleepTimer    *sleepTimer;
-//Comms         *comms;
+Comms         *comms;
 
 //uint8_t brightnessLevel;
 void setupPanels();

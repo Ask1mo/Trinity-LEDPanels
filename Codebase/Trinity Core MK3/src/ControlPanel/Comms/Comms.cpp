@@ -1,11 +1,12 @@
-/*
 #include "Comms.h"
 
 Comms::Comms()
 {
-    
+    Serial.println(F("Comms: Starting"));
+    Serial.println(F("Comms: Started"));
 }
 
+//Private
 uint8_t Comms::decodeTransmissionType()
 {
     if
@@ -56,47 +57,20 @@ uint8_t Comms::decodeTransmissionType()
     if
     (
         transmissionData[0] == 'S' &&
-        transmissionData[1] == 'p' &&
+        transmissionData[1] == 'l' &&
         transmissionData[2] == 'e' &&
         transmissionData[3] == 'e' &&
-        transmissionData[4] == 'd'
-    ) return TRANSMISSION_SPEED;
-
-    if
-    (
-        transmissionData[0] == 'S' &&
-        transmissionData[1] == 'l' &&
-        transmissionData[2] == 'p' &&
-        transmissionData[3] == 'E' &&
-        transmissionData[4] == 'n'
-    ) return TRANSMISSION_SLEEPTIMERENABLED;
-
-    if
-    (
-        transmissionData[0] == 'S' &&
-        transmissionData[1] == 'l' &&
-        transmissionData[2] == 'p' &&
-        transmissionData[3] == 'T' &&
-        transmissionData[4] == 'i'
-    ) return TRANSMISSION_SLEEPTIMERTIME;
+        transmissionData[4] == 'p'
+    ) return TRANSMISSION_SLEEPTIMER;
 
     if
     (
         transmissionData[0] == 'L' &&
         transmissionData[1] == 'i' &&
         transmissionData[2] == 'g' &&
-        transmissionData[3] == 'E' &&
-        transmissionData[4] == 'n'
-    ) return TRANSMISSION_LIGHTSENSORENABLED;
-
-    if
-    (
-        transmissionData[0] == 'L' &&
-        transmissionData[1] == 'i' &&
-        transmissionData[2] == 'g' &&
-        transmissionData[3] == 'O' &&
-        transmissionData[4] == 'f'
-    ) return TRANSMISSION_LIGHTSENSOROFFSET;
+        transmissionData[3] == 'h' &&
+        transmissionData[4] == 't'
+    ) return TRANSMISSION_LIGHTSENSOR;
 
     return TRANSMISSION_NONE;
 }
@@ -122,7 +96,7 @@ bool    Comms::doTransmissionEndCheck()
         transmissionData[4] == 'r'
     ) return TRANSMISSION_PANELFX;
 }
-Transmission_PanelFX        Comms::receieveTransmission_PanelFX()
+Transmission_PanelFX            Comms::receieveTransmission_PanelFX()
 {
     Transmission_PanelFX processedData;
     
@@ -136,7 +110,7 @@ Transmission_PanelFX        Comms::receieveTransmission_PanelFX()
 
     return processedData;
 }
-Transmission_PanelCustom    Comms::receieveTransmission_PanelCustom()
+Transmission_PanelCustom        Comms::receieveTransmission_PanelCustom()
 {
     Transmission_PanelCustom processedData;
     
@@ -152,7 +126,7 @@ Transmission_PanelCustom    Comms::receieveTransmission_PanelCustom()
 
     return processedData;
 }
-Transmission_DiodeFX        Comms::receieveTransmission_DiodeFX()
+Transmission_DiodeFX            Comms::receieveTransmission_DiodeFX()
 {
     Transmission_DiodeFX processedData;
 
@@ -166,36 +140,25 @@ Transmission_DiodeFX        Comms::receieveTransmission_DiodeFX()
 
     return processedData;
 }
-void                        Comms::receieveTransmission_DiodeCustom()
+Transmission_DiodeCustom        Comms::receieveTransmission_DiodeCustom()
 {
 
 }
-void Comms::receieveTransmission_Brightness()
+uint8_t                         Comms::receieveTransmission_Brightness()
 {
 
 }
-void Comms::receieveTransmission_Speed()
+Transmission_SleepTimerData     Comms::receieveTransmission_SleepTimer()
 {
 
 }
-void Comms::receieveTransmission_SleepTimerEnabled()
-{
-
-}
-void Comms::receieveTransmission_SleepTimerTime()
-{
-
-}
-void Comms::receieveTransmission_LightSensorEnabled()
-{
-
-}
-void Comms::receieveTransmission_LighstSensorOffset()
+Transmission_LightSensorData    Comms::receieveTransmission_LightSensor()
 {
 
 }
 
-void Comms::tick()
+//Public
+void    Comms::tick()
 {
     while(Serial.available() > 0)
     {
@@ -213,55 +176,50 @@ void Comms::tick()
         {
             case TRANSMISSION_PANELFX:
             {
-                receieveTransmission_PanelFX();
+                *buffer_PanelFX = receieveTransmission_PanelFX();
             }
             break;
             case TRANSMISSION_PANELCUSTOM:
             {
-                receieveTransmission_PanelCustom();
+                *buffer_PanelCustom = receieveTransmission_PanelCustom();
             }
             break;
             case TRANSMISSION_DIODEFX:
             {
-                receieveTransmission_DiodeFX();
+                *buffer_DiodeFX = receieveTransmission_DiodeFX();
             }
             break;
             case TRANSMISSION_DIODECUSTOM:
             {
-                receieveTransmission_DiodeCustom();
+                *buffer_DiodeCustom = receieveTransmission_DiodeCustom();
             }
             break;
             case TRANSMISSION_BRIGHTNESS:
             {
-                receieveTransmission_Brightness();
+                buffer_Brightness = receieveTransmission_Brightness();
             }
             break;
-            case TRANSMISSION_SPEED:
+            case TRANSMISSION_SLEEPTIMER:
             {
-                receieveTransmission_Speed();
+                *buffer_SleepTimerData = receieveTransmission_SleepTimer();
             }
             break;
-            case TRANSMISSION_SLEEPTIMERENABLED:
+            case TRANSMISSION_LIGHTSENSOR:
             {
-                receieveTransmission_SleepTimerEnabled();
-            }
-            break;
-            case TRANSMISSION_SLEEPTIMERTIME:
-            {
-                receieveTransmission_SleepTimerTime();
-            }
-            break;
-            case TRANSMISSION_LIGHTSENSORENABLED:
-            {
-                receieveTransmission_LightSensorEnabled();
-            }
-            break;
-            case TRANSMISSION_LIGHTSENSOROFFSET:
-            {
-                receieveTransmission_LighstSensorOffset();
+                *buffer_LightSensorData = receieveTransmission_LightSensor();
             }
             break;
         }
+
+        if (doTransmissionEndCheck())
+        {
+            readyTransmissionType = receivedTransmissionType;
+        }
+        else
+        {
+            Serial.println("BROKEN TRANSMISISON CAPTURED");
+        }
+        
 
         if(!Serial.available())
         {            
@@ -269,4 +227,37 @@ void Comms::tick()
         }
     }
 }
-*/
+uint8_t Comms::getReadyTransmissionType()
+{
+    uint8_t readyTransmissionTypeToSend = readyTransmissionType;
+    readyTransmissionType = TRANSMISSION_NONE;
+    return readyTransmissionTypeToSend;
+}
+Transmission_PanelFX            Comms::getTransmission_PanelFX()
+{
+    return *buffer_PanelFX;
+}
+Transmission_PanelCustom        Comms::getTransmission_PanelCustom()
+{
+    return *buffer_PanelCustom;
+}
+Transmission_DiodeFX            Comms::getTransmission_DiodeFX()
+{
+    return *buffer_DiodeFX;
+}
+Transmission_DiodeCustom        Comms::getTransmission_DiodeCustom()
+{
+    return *buffer_DiodeCustom;
+}
+uint8_t                         Comms::getTransmission_Brightness()
+{
+    return buffer_Brightness;
+}
+Transmission_SleepTimerData     Comms::getTransmission_SleepTimerData()
+{
+    return *buffer_SleepTimerData;
+}
+Transmission_LightSensorData    Comms::getTransmission_LightSensorData()
+{
+    return *buffer_LightSensorData;
+}
