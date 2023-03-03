@@ -55,6 +55,14 @@ void    LedManager::setBrightness(uint8_t brightness)
 {
   this->brightness = brightness;
 }
+uint8_t LedManager::getPanelAmount()
+{
+  return panelsAmount;
+}
+uint8_t LedManager::getPanelDiodeAmount(uint8_t panelNumber)
+{
+  return panels[panelNumber]->getDiodeAmount();
+}
 void    LedManager::setPanelData(uint8_t panelNumber, uint8_t direction, uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat)
 {
   panels[panelNumber]->setDataFx(direction, brightness, effect, colour, offset, speed, repeat);
@@ -76,4 +84,12 @@ String  LedManager::convertToTansmission()
   data += enabled;
 
   return data;
+}
+String  LedManager::convertPanelToTransmission(uint8_t panelNumber)
+{
+  return panels[panelNumber]->convertToTransmission();
+}
+String  LedManager::convertPanelDiodeToTransmission(uint8_t panelNumber,uint8_t diodeNumber)
+{
+  return panels[panelNumber]->convertDiodeToTransmission(diodeNumber);
 }

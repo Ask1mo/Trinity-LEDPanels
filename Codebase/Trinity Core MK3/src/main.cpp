@@ -60,7 +60,7 @@ void setupPanels()
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial.println(F("Trinity MK3 - Ask Blommaert"));
 
   setupPanels();
@@ -234,17 +234,16 @@ void loop()
     {
       comms->transmit(TRANSMISSION_OUT_LEDMANAGER, ledManager->convertToTansmission());
 
-      /*
       for (uint8_t i = 0; i < ledManager->getPanelAmount(); i++)
       {
-        comms->transmit(ledManager->convertPanelToTransmission(i));
-
+        
+        comms->transmit(TRANSMISSION_OUT_PANEL, ledManager->convertPanelToTransmission(i));
+        
         for (uint8_t j = 0; j < ledManager->getPanelDiodeAmount(i); j++)
         {
-          panels[i]->convertPanelDiodeToTransmission(i,j);
+          comms->transmit(TRANSMISSION_OUT_DIODE, ledManager->convertPanelDiodeToTransmission(i,j));
         }
       }
-      */
     }
     break;
   }

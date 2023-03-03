@@ -110,11 +110,11 @@ CRGB Panel::getDiodeRGB(byte number, uint8_t brightness)
 
   return diodes[number]->getRGB(brightness);
 }
-byte Panel::getDiodeAmount()
+uint8_t Panel::getDiodeAmount()
 {
   return diodeAmount;
 }
-byte Panel::getDiodeStart()
+uint8_t Panel::getDiodeStart()
 {
   return diodeStart;
 }
@@ -169,4 +169,32 @@ void Panel::printDebug()
   Serial.print(F(" | offsetTimer "));
   Serial.println(offsetTimer);
   
+}
+
+String Panel::convertToTransmission()
+{
+  String data = "";
+  
+  data += number;
+  data += compassDir;
+  data += clockDir;
+  data += diodeAmount; // Amount of leds in this panel
+
+  data += brightness;
+  data += effect;
+  data += colour;
+  data += offset;
+  data += speed;
+  data += repeat;
+  data += detailed;
+
+  data += r;
+  data += g;
+  data += b;
+
+  return data;
+}
+String Panel::convertDiodeToTransmission(uint8_t diodeNumber)
+{
+  return diodes[diodeNumber]->convertToTransmission();
 }

@@ -279,7 +279,7 @@ void                            Comms::transmit(uint8_t transmissionType, String
     }
 
     Serial.print(data);
-    Serial.print("Clear");
+    Serial.println("Clear");
 }
 uint8_t                         Comms::getReadyTransmissionType()
 {

@@ -820,3 +820,23 @@ void Diode::printDebug()
   Serial.print(F(" | offsetTimer "));
   Serial.println(offsetTimer);
 }
+
+String Diode::convertToTransmission()
+{
+  String data = "";
+  
+  data += number;
+
+  data += brightness;
+  data += effect;
+  data += colour;
+  data += offset;
+  data += speed;
+  data += repeat;
+
+  data += r;
+  data += g;
+  data += b;
+
+  return data;
+}

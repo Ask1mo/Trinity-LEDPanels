@@ -89,6 +89,7 @@ public:
   void setDataCustom(uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);
   CRGB getRGB(uint8_t sysBrightness);
   void printDebug();
+  String convertToTransmission();
 };
 
 #endif

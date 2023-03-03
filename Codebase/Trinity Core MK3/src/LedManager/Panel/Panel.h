@@ -59,10 +59,12 @@ public:
   void setDiodeDataCustom(uint8_t diodeNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);
   CRGB getPanelRGB();
   CRGB getDiodeRGB(byte number, uint8_t brightness);
-  byte getDiodeAmount();
-  byte getDiodeStart();
+  uint8_t getDiodeAmount();
+  uint8_t getDiodeStart();
   void setDiodeStart(uint8_t ledStart);
   void printDebug();
+  String convertToTransmission();
+  String convertDiodeToTransmission(uint8_t diodeNumber);
 };
 
 
