@@ -193,6 +193,61 @@ void loop()
   }
 
   comms->tick();
+  switch (comms->getReadyTransmissionType())
+  {
+    case TRANSMISSION_IN_PANELFX:
+    {
+
+    }
+    break;
+    case TRANSMISSION_IN_PANELCUSTOM:
+    {
+
+    }
+    break;
+    case TRANSMISSION_IN_DIODEFX:
+    {
+
+    }
+    break;
+    case TRANSMISSION_IN_DIODECUSTOM:
+    {
+
+    }
+    break;
+    case TRANSMISSION_IN_BRIGHTNESS:
+    {
+
+    }
+    break;
+    case TRANSMISSION_IN_SLEEPTIMER:
+    {
+
+    }
+    break;
+    case TRANSMISSION_IN_LIGHTSENSOR:
+    {
+
+    }
+    break;
+    case TRANSMISSION_IN_REQUEST:
+    {
+      comms->transmit(TRANSMISSION_OUT_LEDMANAGER, ledManager->convertToTansmission());
+
+      /*
+      for (uint8_t i = 0; i < ledManager->getPanelAmount(); i++)
+      {
+        comms->transmit(ledManager->convertPanelToTransmission(i));
+
+        for (uint8_t j = 0; j < ledManager->getPanelDiodeAmount(i); j++)
+        {
+          panels[i]->convertPanelDiodeToTransmission(i,j);
+        }
+      }
+      */
+    }
+    break;
+  }
 
   ledManager->tick();
   ledManager->print();

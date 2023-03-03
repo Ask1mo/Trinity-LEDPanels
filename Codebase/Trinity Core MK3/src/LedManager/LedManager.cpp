@@ -1,13 +1,15 @@
 #include "ledManager.h"
 
+//Constructor
 LedManager::LedManager(Panel **panelsArg)
 {
   Serial.println(F("LedManager Starting..."));
 
-  brightness  = 100;
-  speed       = 1;
+  panelsAmount  = PANELAMOUNT;
+  brightness    = 100;
+  speed         = 1;
+  enabled       = 1;
   panels        = panelsArg;
-  this->panelsAmount  = PANELAMOUNT;
 
   int ledAmount = 0;
   for (uint8_t i = 0; i < PANELAMOUNT; i++)
@@ -29,8 +31,8 @@ LedManager::LedManager(Panel **panelsArg)
   Serial.println(F("...LedManager Started"));
 }
 
-
-void LedManager::tick() 
+//Public
+void    LedManager::tick() 
 {
   for (uint8_t panelNumber = 0; panelNumber < panelsAmount; panelNumber++)
   {
@@ -41,7 +43,7 @@ void LedManager::tick()
     }
   }
 }
-void LedManager::print() 
+void    LedManager::print() 
 {
   FastLED.show(); 
 }
@@ -49,19 +51,29 @@ uint8_t LedManager::getBrightness()
 {
   return brightness;
 }
-void LedManager::setBrightness(uint8_t brightness)
+void    LedManager::setBrightness(uint8_t brightness)
 {
   this->brightness = brightness;
 }
-void LedManager::setPanelData(uint8_t panelNumber, uint8_t direction, uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat)
+void    LedManager::setPanelData(uint8_t panelNumber, uint8_t direction, uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat)
 {
   panels[panelNumber]->setDataFx(direction, brightness, effect, colour, offset, speed, repeat);
 }
-void LedManager::setPanelCustomData(uint8_t panelNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
+void    LedManager::setPanelCustomData(uint8_t panelNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
 {
   panels[panelNumber]->setDataCustom(customRGBAmount, customRGB);
 }
-void LedManager::setEnabled(bool enabled)
+void    LedManager::setEnabled(bool enabled)
 {
   this->enabled = enabled;
+}
+String  LedManager::convertToTansmission()
+{
+  String data = "";
+  
+  data += brightness;
+  data += speed;
+  data += enabled;
+
+  return data;
 }

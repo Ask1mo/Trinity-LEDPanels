@@ -7,13 +7,13 @@
 class LedManager
 {
 private:
-  Panel     **panels;
-  
   uint8_t   panelsAmount;
-  CRGB      leds[LEDAMOUNT];
   uint8_t   brightness;
   bool      speed;
   bool      enabled;
+  Panel     **panels;
+  CRGB      leds[LEDAMOUNT];
+  
 
 public:
   LedManager(Panel **panelsArg);
@@ -24,6 +24,7 @@ public:
   void setPanelData(uint8_t panelNumber, uint8_t direction, uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat);
   void setPanelCustomData(uint8_t panelNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);
   void setEnabled(bool enabled);
+  String convertToTansmission();
 };
 
 

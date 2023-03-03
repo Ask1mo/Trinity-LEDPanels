@@ -6,6 +6,20 @@
 #include "./LedManager/Panel/Diode/ColourRGB.h"
 #include "./LedManager/Panel/Diode/Diode.h"
 
+#define TRANSMISSION_IN_NONE                   0
+#define TRANSMISSION_IN_PANELFX                1
+#define TRANSMISSION_IN_PANELCUSTOM            2
+#define TRANSMISSION_IN_DIODEFX                3
+#define TRANSMISSION_IN_DIODECUSTOM            4
+#define TRANSMISSION_IN_BRIGHTNESS             5
+#define TRANSMISSION_IN_SLEEPTIMER             6
+#define TRANSMISSION_IN_LIGHTSENSOR            7
+#define TRANSMISSION_IN_REQUEST                8
+
+#define TRANSMISSION_OUT_LEDMANAGER 0
+#define TRANSMISSION_OUT_PANEL      1
+#define TRANSMISSION_OUT_DIODE      2
+
 struct Transmission_PanelFX
 {
     uint8_t brightness;

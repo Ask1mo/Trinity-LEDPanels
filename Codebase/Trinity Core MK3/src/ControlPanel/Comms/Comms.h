@@ -7,15 +7,6 @@
 #define IDENTLENGTH 5
 #define COMPLETEDBUFFERSIZE
 
-#define TRANSMISSION_NONE                   0
-#define TRANSMISSION_PANELFX                1
-#define TRANSMISSION_PANELCUSTOM            2
-#define TRANSMISSION_DIODEFX                3
-#define TRANSMISSION_DIODECUSTOM            4
-#define TRANSMISSION_BRIGHTNESS             5
-#define TRANSMISSION_SLEEPTIMER             6
-#define TRANSMISSION_LIGHTSENSOR            7
-
 class Comms
 {
     private:
@@ -36,6 +27,7 @@ class Comms
     public:
     Comms();
     void                            tick();
+    void                            transmit(uint8_t transmissionType, String data);
     uint8_t                         getReadyTransmissionType();
     Transmission_PanelFX            getTransmission_PanelFX();
     Transmission_CustomRGB          getTransmission_PanelCustomRGB();
