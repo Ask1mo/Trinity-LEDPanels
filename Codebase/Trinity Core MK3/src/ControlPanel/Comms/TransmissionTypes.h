@@ -16,7 +16,7 @@ struct Transmission_PanelFX
     bool repeat;
     bool detailed;
 };
-struct Transmission_PanelCustom
+struct Transmission_CustomRGB
 {
     uint8_t customRGBAmount;
     ColourRGB *customRGB[AMOUNTOFCOLOURS];
@@ -31,11 +31,6 @@ struct Transmission_DiodeFX
     uint8_t offset;
     uint8_t speed;
     bool repeat;
-};
-struct Transmission_DiodeCustom
-{
-    uint8_t customRGBAmount;
-    ColourRGB *customRGB[AMOUNTOFCOLOURS];
 };
 struct Transmission_SleepTimerData
 {

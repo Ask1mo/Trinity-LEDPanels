@@ -4,10 +4,14 @@ Comms::Comms()
 {
     Serial.println(F("Comms: Starting"));
 
+    readyTransmissionType = TRANSMISSION_NONE;
+
     buffer_PanelFX          = new struct Transmission_PanelFX;
-    buffer_PanelCustom      = new struct Transmission_PanelCustom;
+    buffer_PanelCustomRGB   = new struct Transmission_CustomRGB;
+    for (uint8_t i = 0; i < AMOUNTOFCOLOURS; i++) buffer_PanelCustomRGB->customRGB[i]= new struct ColourRGB;
     buffer_DiodeFX          = new struct Transmission_DiodeFX;
-    buffer_DiodeCustom      = new struct Transmission_DiodeCustom;
+    buffer_DiodeCustomRGB   = new struct Transmission_CustomRGB;
+    for (uint8_t i = 0; i < AMOUNTOFCOLOURS; i++) buffer_DiodeCustomRGB->customRGB[i]= new struct ColourRGB;
     buffer_Brightness       = 0;
     buffer_SleepTimerData   = new struct Transmission_SleepTimerData;
     buffer_LightSensorData  = new struct Transmission_LightSensorData;
@@ -90,12 +94,13 @@ uint8_t Comms::waitAndRead()
 }
 bool    Comms::doTransmissionEndCheck()
 {
-    for(uint8_t i = 0; i < IDENTLENGTH-1; i++)
+    for(uint8_t i = 0; i < IDENTLENGTH; i++)
     {
-        transmissionData[i] = transmissionData[i+1];
+        transmissionData[i] = waitAndRead();
     }
-    transmissionData[IDENTLENGTH-1] = waitAndRead();
-
+    
+    printBuffer();
+    
     if
     (
         transmissionData[0] == 'C' &&
@@ -107,84 +112,20 @@ bool    Comms::doTransmissionEndCheck()
 
     return false;
 }
-Transmission_PanelFX            Comms::receieveTransmission_PanelFX()
+void    Comms::printBuffer()
 {
-    Transmission_PanelFX processedData;
-    
-    processedData.brightness  = waitAndRead();
-    processedData.effect      = waitAndRead();
-    processedData.colour      = waitAndRead();
-    processedData.offset      = waitAndRead();
-    processedData.speed       = waitAndRead();
-    processedData.repeat      = waitAndRead();
-    processedData.detailed    = waitAndRead();
-
-    return processedData;
-}
-Transmission_PanelCustom        Comms::receieveTransmission_PanelCustom()
-{
-    Transmission_PanelCustom processedData;
-    
-    processedData.customRGBAmount  = waitAndRead();
-
-    ColourRGB *processedData_ColourRGB[processedData.customRGBAmount];
-    for (uint8_t i = 0; i < processedData.customRGBAmount; i++)
+    Serial.print(F("Printing buffer: "));
+    for(uint8_t i = 0; i < IDENTLENGTH; i++)
     {
-        processedData_ColourRGB[i]->r = waitAndRead();
-        processedData_ColourRGB[i]->g = waitAndRead();
-        processedData_ColourRGB[i]->b = waitAndRead();
+        Serial.write(transmissionData[i]);
     }
-
-    return processedData;
-}
-Transmission_DiodeFX            Comms::receieveTransmission_DiodeFX()
-{
-    Transmission_DiodeFX processedData;
-
-    processedData.number        = waitAndRead();
-    processedData.brightness    = waitAndRead();
-    processedData.effect        = waitAndRead();
-    processedData.colour        = waitAndRead();
-    processedData.offset        = waitAndRead();
-    processedData.speed         = waitAndRead();
-    processedData.repeat        = waitAndRead();
-
-    return processedData;
-}
-Transmission_DiodeCustom        Comms::receieveTransmission_DiodeCustom()
-{
-
-}
-uint8_t                         Comms::receieveTransmission_Brightness()
-{
-
-}
-void     Comms::receieveTransmission_SleepTimer()
-{
-    Serial.println(F("Gimme"));
-                delay(1000);
-    buffer_SleepTimerData->timerID   = waitAndRead();
-    Serial.println(F("One"));
-                delay(1000);
-    buffer_SleepTimerData->hour      = waitAndRead();
-    Serial.println(F("Two"));
-                delay(1000);
-    buffer_SleepTimerData->minute    = waitAndRead();
-    Serial.println(F("Three"));
-                delay(1000);
-    buffer_SleepTimerData->enabled   = waitAndRead();
-    Serial.println(F("Four - complete"));
-                delay(1000);
-}
-Transmission_LightSensorData    Comms::receieveTransmission_LightSensor()
-{
-
+    Serial.println( );
 }
 
 //Public
 void    Comms::tick()
 {
-    while(Serial.available() > 0)
+    while(Serial.available() > 0 && readyTransmissionType == TRANSMISSION_NONE)
     {
         for(byte i = 0; i < IDENTLENGTH-1; i++)
         {
@@ -200,39 +141,89 @@ void    Comms::tick()
         {
             case TRANSMISSION_PANELFX:
             {
-                *buffer_PanelFX = receieveTransmission_PanelFX();
+                buffer_PanelFX->brightness  = waitAndRead();
+                buffer_PanelFX->effect      = waitAndRead();
+                buffer_PanelFX->colour      = waitAndRead();
+                buffer_PanelFX->offset      = waitAndRead();
+                buffer_PanelFX->speed       = waitAndRead();
+                buffer_PanelFX->repeat      = waitAndRead();
+                buffer_PanelFX->detailed    = waitAndRead();
             }
             break;
             case TRANSMISSION_PANELCUSTOM:
             {
-                *buffer_PanelCustom = receieveTransmission_PanelCustom();
+                buffer_PanelCustomRGB->customRGBAmount = waitAndRead();
+
+                for (uint8_t i = 0; i < AMOUNTOFCOLOURS; i++)
+                {
+                    if (i < buffer_PanelCustomRGB->customRGBAmount)
+                    {
+
+                        buffer_PanelCustomRGB->customRGB[i]->r = waitAndRead();
+                        buffer_PanelCustomRGB->customRGB[i]->g = waitAndRead();
+                        buffer_PanelCustomRGB->customRGB[i]->b = waitAndRead();
+                    }
+                    else
+                    {
+                        buffer_PanelCustomRGB->customRGB[i]->r = 0;
+                        buffer_PanelCustomRGB->customRGB[i]->g = 0;
+                        buffer_PanelCustomRGB->customRGB[i]->b = 0;
+                    }
+                }
             }
             break;
             case TRANSMISSION_DIODEFX:
             {
-                *buffer_DiodeFX = receieveTransmission_DiodeFX();
+                buffer_DiodeFX->number        = waitAndRead();
+                buffer_DiodeFX->brightness    = waitAndRead();
+                buffer_DiodeFX->effect        = waitAndRead();
+                buffer_DiodeFX->colour        = waitAndRead();
+                buffer_DiodeFX->offset        = waitAndRead();
+                buffer_DiodeFX->speed         = waitAndRead();
+                buffer_DiodeFX->repeat        = waitAndRead();
             }
             break;
             case TRANSMISSION_DIODECUSTOM:
             {
-                *buffer_DiodeCustom = receieveTransmission_DiodeCustom();
+                buffer_DiodeCustomRGB->customRGBAmount = waitAndRead();
+
+                for (uint8_t i = 0; i < AMOUNTOFCOLOURS; i++)
+                {
+                    if (i < buffer_DiodeCustomRGB->customRGBAmount)
+                    {
+
+                        buffer_DiodeCustomRGB->customRGB[i]->r = waitAndRead();
+                        buffer_DiodeCustomRGB->customRGB[i]->g = waitAndRead();
+                        buffer_DiodeCustomRGB->customRGB[i]->b = waitAndRead();
+                    }
+                    else
+                    {
+                        buffer_DiodeCustomRGB->customRGB[i]->r = 0;
+                        buffer_DiodeCustomRGB->customRGB[i]->g = 0;
+                        buffer_DiodeCustomRGB->customRGB[i]->b = 0;
+                    }
+                }
             }
             break;
             case TRANSMISSION_BRIGHTNESS:
             {
-                buffer_Brightness = receieveTransmission_Brightness();
+                buffer_Brightness = waitAndRead();
             }
             break;
             case TRANSMISSION_SLEEPTIMER:
             {
-                receieveTransmission_SleepTimer();
-                Serial.println(F("Transmisison finished"));
-                delay(1000);
+                buffer_SleepTimerData->timerID   = waitAndRead();
+                buffer_SleepTimerData->hour      = waitAndRead();
+                buffer_SleepTimerData->minute    = waitAndRead();
+                buffer_SleepTimerData->enabled   = waitAndRead();
             }
             break;
             case TRANSMISSION_LIGHTSENSOR:
             {
-                *buffer_LightSensorData = receieveTransmission_LightSensor();
+                buffer_LightSensorData->offset = waitAndRead();
+                buffer_LightSensorData->offset = buffer_LightSensorData->offset << 8;
+                buffer_LightSensorData->offset = buffer_LightSensorData->offset | waitAndRead();
+                buffer_LightSensorData->enabled = waitAndRead();
             }
             break;
         }
@@ -246,7 +237,7 @@ void    Comms::tick()
             }
             else
             {
-                Serial.println(F("BROKEN TRANSMISISON NOT CAPUTRED"));
+                Serial.println(F("TRANS ERR"));
             }
         }
         
@@ -259,35 +250,40 @@ void    Comms::tick()
 }
 uint8_t Comms::getReadyTransmissionType()
 {
-    uint8_t readyTransmissionTypeToSend = readyTransmissionType;
-    readyTransmissionType = TRANSMISSION_NONE;
-    return readyTransmissionTypeToSend;
+    return readyTransmissionType;
 }
 Transmission_PanelFX            Comms::getTransmission_PanelFX()
 {
+    readyTransmissionType = TRANSMISSION_NONE;
     return *buffer_PanelFX;
 }
-Transmission_PanelCustom        Comms::getTransmission_PanelCustom()
+Transmission_CustomRGB          Comms::getTransmission_PanelCustomRGB()
 {
-    return *buffer_PanelCustom;
+    readyTransmissionType = TRANSMISSION_NONE;
+    return *buffer_PanelCustomRGB;
 }
 Transmission_DiodeFX            Comms::getTransmission_DiodeFX()
 {
+    readyTransmissionType = TRANSMISSION_NONE;
     return *buffer_DiodeFX;
 }
-Transmission_DiodeCustom        Comms::getTransmission_DiodeCustom()
+Transmission_CustomRGB          Comms::getTransmission_DiodeCustomRGB()
 {
-    return *buffer_DiodeCustom;
+    readyTransmissionType = TRANSMISSION_NONE;
+    return *buffer_DiodeCustomRGB;
 }
 uint8_t                         Comms::getTransmission_Brightness()
 {
+    readyTransmissionType = TRANSMISSION_NONE;
     return buffer_Brightness;
 }
 Transmission_SleepTimerData     Comms::getTransmission_SleepTimerData()
 {
+    readyTransmissionType = TRANSMISSION_NONE;
     return *buffer_SleepTimerData;
 }
 Transmission_LightSensorData    Comms::getTransmission_LightSensorData()
 {
+    readyTransmissionType = TRANSMISSION_NONE;
     return *buffer_LightSensorData;
 }
