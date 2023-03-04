@@ -1262,7 +1262,7 @@
             this.textBox_BaudRate.Name = "textBox_BaudRate";
             this.textBox_BaudRate.Size = new System.Drawing.Size(100, 25);
             this.textBox_BaudRate.TabIndex = 5;
-            this.textBox_BaudRate.Text = "9600";
+            this.textBox_BaudRate.Text = "115200";
             this.textBox_BaudRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label2

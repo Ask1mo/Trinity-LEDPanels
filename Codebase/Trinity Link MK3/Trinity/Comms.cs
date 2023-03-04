@@ -16,7 +16,7 @@ namespace Trinity
     {
         SerialPort serialPort = new SerialPort();
         byte[] transmissionData = new byte[maxTransmissionLength];
-        const byte maxTransmissionLength = 11;
+        const byte maxTransmissionLength = 5;
 
         byte amountOfBrokenBits = 0;
         byte brokenBitX = 0;
@@ -58,10 +58,22 @@ namespace Trinity
             while (serialPort.BytesToRead != 0 && byteNumber < maxTransmissionLength)
             {
                 transmissionData[byteNumber] = (byte)serialPort.ReadByte();
-                Console.Write("Received: ");
-                Console.WriteLine(transmissionData[byteNumber]);
+                Console.Write((char)transmissionData[byteNumber]);
                 byteNumber++;
             }
+        }
+        public byte serialRead2()
+        {
+            byte inByte = (byte)serialPort.ReadByte();
+            Console.Write((char)inByte);
+
+            for (int i = 0; i < (maxTransmissionLength-1); i++)
+            {
+                transmissionData[i] = transmissionData[i + 1];
+            }
+            transmissionData[maxTransmissionLength - 1] = inByte;
+
+            return inByte;
         }
 
         /*public void messageCorruptor() //Corrupts a random bit in a random byte from a transmission
@@ -69,18 +81,40 @@ namespace Trinity
             byte pos = Panel.GetSomeRandomNumber(0, 8);
             transmissionData[pos] = (byte)(transmissionData[pos] & Panel.GetSomeRandomNumber(0, 255));
         }*/
-        public bool messageCompleteChecker()
+        public byte messageCompleteChecker()
         {
             if(
-                transmissionData[0] == '/' &&
-                transmissionData[2] == '/' &&
-                transmissionData[6] == '/' &&
-                transmissionData[10] == '/'
-              )
-                {
-                return true;
-                }
-            return false;
+                transmissionData[0] == 'T' &&
+                transmissionData[1] == 'X' &&
+                transmissionData[2] == 'L' &&
+                transmissionData[3] == 'E' &&
+                transmissionData[4] == 'D'
+            )
+            {
+                return 1;
+            }
+            if (
+                transmissionData[0] == 'T' &&
+                transmissionData[1] == 'X' &&
+                transmissionData[2] == 'P' &&
+                transmissionData[3] == 'A' &&
+                transmissionData[4] == 'N'
+            )
+            {
+                return 2;
+            }
+            if(
+                transmissionData[0] == 'T' &&
+                transmissionData[1] == 'X' &&
+                transmissionData[2] == 'D' &&
+                transmissionData[3] == 'I' &&
+                transmissionData[4] == 'O'
+            )
+            {
+                return 3;
+            }
+
+            return 0;
         }
         
         /*public bool messageParityChecker()

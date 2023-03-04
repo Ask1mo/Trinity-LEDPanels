@@ -767,6 +767,7 @@ void Diode::tick()
 }
 void Diode::setDataFx(uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat)
 {
+  //Serial.println("Setting diode data (In Diode)");
   this->brightness  = brightness;
   this->effect      = effect;
   this->colour      = colour;

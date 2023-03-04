@@ -12,6 +12,7 @@ using System.Windows;
 using System.Threading;
 using System.IO;
 using Newtonsoft.Json;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace Trinity
 {
@@ -224,15 +225,66 @@ namespace Trinity
             catch (Exception) { MessageBox.Show("Unable to disconnect. Check if anything is connected"); } //Lol you were already disconnected
         }
 
+
+        private byte waitAndRead()
+        {
+            while (comms.getBufferSize() == 0) Thread.Sleep(1);
+            return (comms.serialRead2());
+        }
         private void transmissionReader(object sender, EventArgs e)
         {
             try
             {
-                if (comms.getBufferSize() != 0) //Check if there's data in the buffer
+                while (comms.getBufferSize() != 0) //Check if there's data in the buffer
                 {
-                    comms.serialRead(); //Read data (and put it in a buffer in the comms class)
+                    //comms.serialRead(); //Read data (and put it in a buffer in the comms class)
+                    comms.serialRead2();
                     //comms.messageCorruptor(); //Corrupt data in the message for testing purposes
 
+                    switch(comms.messageCompleteChecker())
+                    {
+                        case 1:
+                            Console.Write(" -MESSAGE DETECTED - LedManager: ");
+                            numericUpDown_brightness.Value = waitAndRead();
+                            numericUpDown_millisDelay.Value = waitAndRead();
+                            bool enabled = Convert.ToBoolean(waitAndRead());
+                        break;
+                        case 2:
+
+                            Console.Write(" -MESSAGE DETECTED - PanelFx: ");
+                            byte panelNumber = waitAndRead();
+                            byte compassDir = waitAndRead();
+                            byte clockDir = waitAndRead();
+                            byte diodeAmount = waitAndRead();
+
+                            byte brightness = waitAndRead();
+                            byte effect = waitAndRead();
+                            byte colour = waitAndRead();
+                            byte offset = waitAndRead();
+                            byte speed = waitAndRead();
+                            byte repeat = waitAndRead();
+                            byte detailed = waitAndRead();
+
+                            byte r = waitAndRead();
+                            byte g = waitAndRead();
+                            byte b = waitAndRead();
+
+                            Panel dingusPanel = new Panel(panelNumber, offset, speed, effect, colour, r, g, b);
+
+
+                            administration.interpretPanelTransmission(dingusPanel); //Interpret the transmission and add it to the administration
+                            if (comms.getBufferSize() == 0) updateLists();// update the preview list after all of the transmissions are done.
+
+                            break;
+                        case 3:
+                            Console.Write(" -MESSAGE DETECTED - DioFx: ");
+
+
+                            break;
+                    }
+
+                    if (comms.getBufferSize() == 0) updateLists();// update the preview list after all of the transmissions are done. 
+                    /*
                     if (comms.messageCompleteChecker()) //Are all the bytes of the message filled with data?
                     {
                         Console.WriteLine("Message completeChecker passed");
@@ -240,6 +292,7 @@ namespace Trinity
                         administration.interpretPanelTransmission(comms.transmissionDecoder()); //Interpret the transmission and add it to the administration
                         if (comms.getBufferSize() == 0) updateLists();// update the preview list after all of the transmissions are done.
                     }
+                    */
                 }
             }
             catch (System.InvalidOperationException)
@@ -267,14 +320,14 @@ namespace Trinity
                     if (dialogResult == DialogResult.Yes || !changesMade)
                     {
                         textBox_Receiver.Text = "";
-                        comms.serialWrite("Transmitting...Request");
+                        comms.serialWrite("Transmitting...RequeClear");
                         changesMade = false;
                     }
                 }
                 else
                 {
                     textBox_Receiver.Text = "";
-                    comms.serialWrite("Transmitting...Request");
+                    comms.serialWrite("Transmitting...RequeClear");
                 }
             }
             else MessageBox.Show("Check connection", "Transmission Failure");

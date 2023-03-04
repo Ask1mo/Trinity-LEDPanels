@@ -63,13 +63,19 @@ uint8_t LedManager::getPanelDiodeAmount(uint8_t panelNumber)
 {
   return panels[panelNumber]->getDiodeAmount();
 }
-void    LedManager::setPanelData(uint8_t panelNumber, uint8_t direction, uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat)
+void    LedManager::setPanelData(uint8_t panelNumber, uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat, bool detailed)
 {
-  panels[panelNumber]->setDataFx(direction, brightness, effect, colour, offset, speed, repeat);
+  //Serial.println("Setting panel data (In ledmanager)");
+  panels[panelNumber]->setDataFx(brightness, effect, colour, offset, speed, repeat, detailed);
 }
 void    LedManager::setPanelCustomData(uint8_t panelNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
 {
   panels[panelNumber]->setDataCustom(customRGBAmount, customRGB);
+}
+void    LedManager::setPanelDiodeData(uint8_t panelNumber, uint8_t diodeNumber, uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat)
+{
+  //Serial.println("Setting diode data (In ledmanager)");
+  panels[panelNumber]->setDiodeDataFx(diodeNumber, brightness, effect, colour, offset, speed, repeat);
 }
 void    LedManager::setEnabled(bool enabled)
 {
@@ -79,9 +85,9 @@ String  LedManager::convertToTansmission()
 {
   String data = "";
   
-  data += brightness;
-  data += speed;
-  data += enabled;
+  data += (char)brightness;
+  data += (char)speed;
+  data += (char)enabled;
 
   return data;
 }

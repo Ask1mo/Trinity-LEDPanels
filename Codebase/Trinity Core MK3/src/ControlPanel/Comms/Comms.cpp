@@ -62,9 +62,9 @@ uint8_t Comms::decodeTransmissionType()
     (
         transmissionData[0] == 'B' &&
         transmissionData[1] == 'r' &&
-        transmissionData[2] == 'g' &&
-        transmissionData[3] == 'h' &&
-        transmissionData[4] == 't'
+        transmissionData[2] == 'i' &&
+        transmissionData[3] == 'g' &&
+        transmissionData[4] == 'h'
     ) return TRANSMISSION_IN_BRIGHTNESS;
 
     if
@@ -155,8 +155,9 @@ void                            Comms::tick()
                 buffer_PanelFX->colour      = waitAndRead();
                 buffer_PanelFX->offset      = waitAndRead();
                 buffer_PanelFX->speed       = waitAndRead();
-                buffer_PanelFX->repeat      = waitAndRead();
-                buffer_PanelFX->detailed    = waitAndRead();
+                buffer_PanelFX->repeat      = 1;
+                buffer_PanelFX->detailed    = 1;
+                Serial.println("DD");
             }
             break;
             case TRANSMISSION_IN_PANELCUSTOM:
@@ -183,13 +184,15 @@ void                            Comms::tick()
             break;
             case TRANSMISSION_IN_DIODEFX:
             {
-                buffer_DiodeFX->number        = waitAndRead();
+                buffer_DiodeFX->panelNumber   = waitAndRead();
+                buffer_DiodeFX->diodeNumber   = waitAndRead();
                 buffer_DiodeFX->brightness    = waitAndRead();
                 buffer_DiodeFX->effect        = waitAndRead();
                 buffer_DiodeFX->colour        = waitAndRead();
                 buffer_DiodeFX->offset        = waitAndRead();
                 buffer_DiodeFX->speed         = waitAndRead();
-                buffer_DiodeFX->repeat        = waitAndRead();
+                buffer_DiodeFX->repeat        = 1;
+                Serial.println("DD");
             }
             break;
             case TRANSMISSION_IN_DIODECUSTOM:
@@ -277,6 +280,15 @@ void                            Comms::transmit(uint8_t transmissionType, String
         }
         break;
     }
+
+    /*
+    for (size_t i = 0; i < data.length(); i++)
+    {
+        Serial.write(data[i]);
+        Serial.write(" ");
+        delay(250);
+    }
+    */
 
     Serial.print(data);
     Serial.println("Clear");

@@ -8,6 +8,9 @@
 #define TURN_ON         1
 #define TURN_NEUTRAL    2
 
+#define TIMERID_OFFTIMER    0  
+#define TIMERID_ONTIMER     1
+
 class SleepTimer
 {
 private:

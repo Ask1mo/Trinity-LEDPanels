@@ -16,12 +16,14 @@
 #define TRANSMISSION_IN_LIGHTSENSOR            7
 #define TRANSMISSION_IN_REQUEST                8
 
-#define TRANSMISSION_OUT_LEDMANAGER 0
-#define TRANSMISSION_OUT_PANEL      1
-#define TRANSMISSION_OUT_DIODE      2
+#define TRANSMISSION_OUT_NONE       0
+#define TRANSMISSION_OUT_LEDMANAGER 1
+#define TRANSMISSION_OUT_PANEL      2
+#define TRANSMISSION_OUT_DIODE      3
 
 struct Transmission_PanelFX
 {
+    uint8_t panelNumber;
     uint8_t brightness;
     uint8_t effect;
     uint8_t colour;
@@ -37,7 +39,8 @@ struct Transmission_CustomRGB
 };
 struct Transmission_DiodeFX
 {
-    uint8_t number;
+    uint8_t panelNumber;
+    uint8_t diodeNumber;
 
     uint8_t brightness;
     uint8_t effect;

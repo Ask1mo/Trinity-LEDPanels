@@ -52,17 +52,24 @@ void Panel::tick()
 }
 void Panel::setDataFx(uint8_t direction, uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat)
 {
+  //Serial.println("Setting Panel Data Fx (In panel)");
   this->brightness  = brightness;
   this->effect      = effect;
   this->colour      = colour;
   this->offset      = offset;
   this->speed       = speed;
+
+  //Serial.println("PreSpeed");
+
   this->repeat      = repeat;
+
+  //Serial.println("Doing some diode shit?");
 
   for (uint8_t i = 0; i < diodeAmount; i++)
   {
     diodes[i]->setDataFx(brightness, effect, colour, offset, speed, repeat);
   }
+  //Serial.println("Done in panel");
 }
 void Panel::setDataCustom(uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
 {
@@ -71,14 +78,23 @@ void Panel::setDataCustom(uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOF
     diodes[i]->setDataCustom(customRGBAmount, customRGB);
   }
 }
-void Panel::setDiodeDataFx(uint8_t diodeNumber, uint8_t direction, uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat)
+void Panel::setDiodeDataFx(uint8_t diodeNumber, uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat)
 {
+  //Serial.println("Setting panel data (In Panel)");
   this->brightness  = brightness;
   this->effect      = effect;
   this->colour      = colour;
   this->offset      = offset;
   this->speed       = speed;
+
+  //Serial.println("Setting bool");
+
   this->repeat      = repeat;
+
+  //Serial.println("Setting diode data (About to... In Panel)");
+
+  //Serial.print("DiodeNumber = ");
+  //Serial.println(diodeNumber);
 
 
   diodes[diodeNumber]->setDataFx(brightness, effect, colour, offset, speed, repeat);
@@ -175,22 +191,22 @@ String Panel::convertToTransmission()
 {
   String data = "";
   
-  data += number;
-  data += compassDir;
-  data += clockDir;
-  data += diodeAmount; // Amount of leds in this panel
+  data += (char)number;
+  data += (char)compassDir;
+  data += (char)clockDir;
+  data += (char)diodeAmount; // Amount of leds in this panel
 
-  data += brightness;
-  data += effect;
-  data += colour;
-  data += offset;
-  data += speed;
-  data += repeat;
-  data += detailed;
+  data += (char)brightness;
+  data += (char)effect;
+  data += (char)colour;
+  data += (char)offset;
+  data += (char)speed;
+  data += (char)repeat;
+  data += (char)detailed;
 
-  data += r;
-  data += g;
-  data += b;
+  data += (char)r;
+  data += (char)g;
+  data += (char)b;
 
   return data;
 }

@@ -1,6 +1,6 @@
 /*---=== Setup stuff ===---*/
 
-#define PANELSETUP_PRIME //Select your panel setup here:
+#define PANELSETUP_TEST //Select your panel setup here:
 //PANELSETUP_ATOS
 //PANELSETUP_EVA
 //PANELSETUP_LIAM

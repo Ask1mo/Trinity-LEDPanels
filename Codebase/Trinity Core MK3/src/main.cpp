@@ -98,7 +98,7 @@ void setup()
   {
     for (uint8_t j = 0; j < panels[i]->getDiodeAmount(); j++)
     {
-      panels[i]->setDiodeDataFx(j, DIR_STRIP, 255, EFFECT_RAINBOW, COLOUR_BLACK, i*j*5, 1, true);
+      panels[i]->setDiodeDataFx(j, 255, EFFECT_RAINBOW, COLOUR_BLACK, i*j*5, 1, true);
     }
   }
 
@@ -197,7 +197,11 @@ void loop()
   {
     case TRANSMISSION_IN_PANELFX:
     {
-
+      //Serial.println("Panel transmission retrieved from comms");
+      Transmission_PanelFX data = comms->getTransmission_PanelFX();
+      //Serial.println("Yom");
+      ledManager->setPanelData(data.panelNumber, data.brightness, data.effect, data.colour, data.offset, data.speed, data.repeat, data.detailed);
+      //Serial.println("Done");
     }
     break;
     case TRANSMISSION_IN_PANELCUSTOM:
@@ -207,7 +211,11 @@ void loop()
     break;
     case TRANSMISSION_IN_DIODEFX:
     {
-
+      //Serial.println("Panel transmission retrieved from comms");
+      Transmission_DiodeFX data = comms->getTransmission_DiodeFX();
+      //Serial.println("Yom");
+      ledManager->setPanelDiodeData(data.panelNumber, data.diodeNumber, data.brightness, data.effect, data.colour, data.offset, data.speed, data.repeat);
+      //Serial.println("Done");
     }
     break;
     case TRANSMISSION_IN_DIODECUSTOM:
@@ -217,17 +225,34 @@ void loop()
     break;
     case TRANSMISSION_IN_BRIGHTNESS:
     {
-
+      ledManager->setBrightness(comms->getTransmission_Brightness());
     }
     break;
     case TRANSMISSION_IN_SLEEPTIMER:
     {
-
+      Transmission_SleepTimerData data = comms->getTransmission_SleepTimerData();
+      switch (data.timerID)
+      {
+        case TIMERID_OFFTIMER:
+        {
+          sleepTimer->setTurnOffTime(data.hour, data.minute);
+          sleepTimer->setTurnOffEnabled(data.enabled);
+        }
+        break;
+        case TIMERID_ONTIMER:
+        {
+          sleepTimer->setTurnOnTime(data.hour, data.minute);
+          sleepTimer->setTurnOnEnabled(data.enabled);
+        }
+        break;
+      }
     }
     break;
     case TRANSMISSION_IN_LIGHTSENSOR:
     {
-
+      Transmission_LightSensorData data = comms->getTransmission_LightSensorData();
+      lightSensor->setBrightnessOffset(data.offset);
+      lightSensor->setEnabled(data.enabled);
     }
     break;
     case TRANSMISSION_IN_REQUEST:
