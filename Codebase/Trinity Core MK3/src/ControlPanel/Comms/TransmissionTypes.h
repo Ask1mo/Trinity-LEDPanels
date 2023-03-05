@@ -3,8 +3,8 @@
 #define TRANSMISSIONTYPES_H
 
 #include <Arduino.h>
-#include "./LedManager/Panel/Diode/ColourRGB.h"
-#include "./LedManager/Panel/Diode/Diode.h"
+#include "./LedManager/effectApplications.h"
+//#include "./LedManager/Panel/Diode/Diode.h"
 
 #define TRANSMISSION_IN_NONE                   0
 #define TRANSMISSION_IN_PANELFX                1

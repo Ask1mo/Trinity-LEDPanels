@@ -7,6 +7,7 @@
         "ctime": "cpp",
         "limits": "cpp",
         "type_traits": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "random": "cpp"
     }
 }

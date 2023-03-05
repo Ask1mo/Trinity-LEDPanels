@@ -98,7 +98,7 @@ void setup()
   {
     for (uint8_t j = 0; j < panels[i]->getDiodeAmount(); j++)
     {
-      panels[i]->setDiodeDataFx(j, 255, EFFECT_RAINBOW, COLOUR_BLACK, i*j*5, 1, true);
+      panels[i]->setDiodeDataFx(j, 255, EFFECT_STOCK_PLANE, COLOUR_CYCLE, i*j*5, 1, true);
     }
   }
 
