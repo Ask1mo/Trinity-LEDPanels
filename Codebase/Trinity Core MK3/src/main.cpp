@@ -94,11 +94,15 @@ void setup()
   
 
   //Temp
+  uint16_t offset = 0;
+
   for (uint8_t i = 0; i < PANELAMOUNT; i++)
   {
+    panels[i]->setDataFx(i, 255, EFFECT_STOCK_APPEAR, COLOUR_RED, 0, 1, true);
     for (uint8_t j = 0; j < panels[i]->getDiodeAmount(); j++)
     {
-      panels[i]->setDiodeDataFx(j, 255, EFFECT_STOCK_PLANE, COLOUR_CYCLE, i*j*5, 1, true);
+      panels[i]->setDiodeDataFx(j, 255, EFFECT_STOCK_APPEAR, COLOUR_RED, offset, 1, true);
+      offset++;
     }
   }
 
@@ -192,6 +196,7 @@ void loop()
     break;
   }
 
+  //Communications handling
   comms->tick();
   switch (comms->getReadyTransmissionType())
   {

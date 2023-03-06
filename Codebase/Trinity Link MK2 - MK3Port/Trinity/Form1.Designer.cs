@@ -1411,8 +1411,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(1478, 1777);
+            this.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+            this.ClientSize = new System.Drawing.Size(1391, 574);
             this.Controls.Add(this.groupBox_Editor);
             this.Controls.Add(this.groupBox_Setup);
             this.Controls.Add(this.groupBox_Presets);

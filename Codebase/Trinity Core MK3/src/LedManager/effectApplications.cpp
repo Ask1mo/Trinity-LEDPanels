@@ -3,7 +3,7 @@
 //Constructor
 EffectApplications::EffectApplications()
 {
-  Serial.println(F("EffectApplications Imported"));
+  //Serial.println(F("EffectApplications Imported"));
 }
 
 //Private
@@ -47,63 +47,27 @@ bool EffectApplications::stock_static(ColourRGB *rgb, uint8_t *d, uint8_t *progF
 
   switch (*progFx)
   {
-  case 0: // Setup
-  {
-    if(allowR) 
-    {
-      Serial.println("R = 255");
-      rgb->r = 255;
-    }
-    else
-    {
-      Serial.println("R = 0");
-      rgb->r = 0;
-    }
-    if(allowG)
-    {
-      Serial.println("G = 255");
-      rgb->g = 255;
-    }
-    else
-    {
-      Serial.println("G = 0");
-      rgb->g = 0;
-    }
-    if(allowB)
-    {
-      Serial.println("B = 255");
-      rgb->b = 255;
-    }  
-    else
-    {
-      Serial.println("B = 0");
-      rgb->b = 0;
-    }
+    case 0:
+      if(allowR)rgb->r = 255;
+      else rgb->r = 0;
+      if(allowG)rgb->g = 255;
+      else rgb->g = 0;
+      if(allowB)rgb->b = 255;
+      else rgb->b = 0;
+      *d = 0;
 
-    *d = 0;
+      (*progFx)++;
+    break;
 
-    (*progFx)++;
-  }
-  break;
+    case 1:
+      (*d)++;
 
-  case 1:
-  {
-    (*d)++;
-
-    if (*d == 255)
-    {
-      (*progFx) = 0;
-      return true;
-    }
-    
-  }
-  break;
-
-  default:
-  {
-    (*progFx) = 0;
-  }
-  break;
+      if (*d == 255)
+      {
+        (*progFx) = 0;
+        return true;
+      }
+    break;
   }
 
   return false;
@@ -116,77 +80,40 @@ bool EffectApplications::stock_blink(ColourRGB *rgb, uint8_t *d, uint8_t *progFx
 
   switch (*progFx)
   {
-    case 0: // Setup
-  {
-    if(allowR) 
-    {
-      Serial.println("R = 255");
-      rgb->r = 255;
-    }
-    else
-    {
-      Serial.println("R = 0");
-      rgb->r = 0;
-    }
-    if(allowG)
-    {
-      Serial.println("G = 255");
-      rgb->g = 255;
-    }
-    else
-    {
-      Serial.println("G = 0");
-      rgb->g = 0;
-    }
-    if(allowB)
-    {
-      Serial.println("B = 255");
-      rgb->b = 255;
-    }  
-    else
-    {
-      Serial.println("B = 0");
-      rgb->b = 0;
-    }
+    case 0:
+      if(allowR)rgb->r = 255;
+      else rgb->r = 0;
+      if(allowG)rgb->g = 255;
+      else rgb->g = 0;
+      if(allowB)rgb->b = 255;
+      else rgb->b = 0;
+      *d = 0;
 
-    *d = 0;
-
-    (*progFx)++;
-  }
-  break;
+      (*progFx)++;
+    break;
 
     case 1:
-    {
       (*d)++;
+
       if (*d == 20) (*progFx)++;
-    }
     break;
 
     case 2:
-    {
       rgb->r = 0;
       rgb->g = 0;
       rgb->b = 0;
 
       (*progFx)++;
-    }
     break;
 
     case 3:
-    {
       (*d)++;
+
       if (*d == 255)
       {
         *progFx = 0;
         return true;
       }
-    }
-    break;
-
-    default:
-    {
-      *progFx = 0;
-    }
     break;
   }
   return false;
@@ -197,387 +124,358 @@ bool EffectApplications::stock_plane(ColourRGB *rgb, uint8_t *d, uint8_t *progFx
   bool allowG = getColourClearance(colour, COLOUR_GREEN);
   bool allowB = getColourClearance(colour, COLOUR_BLUE);
 
-  switch ((*progFx))
+  switch (*progFx)
   {
-  case 0:
-  {
-    if (allowR) rgb->r = 255;
-    else rgb->r = 0;
-    if (allowG) rgb->g = 255;
-    else rgb->g = 0;
-    if (allowB) rgb->b = 255;
-    else rgb->b = 0;
-    d = 0;
+    case 0:
+      if (allowR)rgb->r = 255;
+      else rgb->r = 0;
+      if (allowG)rgb->g = 255;
+      else rgb->g = 0;
+      if (allowB)rgb->b = 255;
+      else rgb->b = 0;
+      d = 0;
 
-    (*progFx)++;
-  }
-  break;
+      (*progFx)++;
+    break;
 
-  case 1:
-  {
-    d++;
+    case 1:
+      (*d)++;
 
-    if(*d == 20) (*progFx)++;
-  }
-  break;
+      if(*d == 20) (*progFx)++;
+    break;
 
-  case 2:
-  {
-    rgb->r = 0;
-    rgb->g = 0;
-    rgb->b = 0;
+    case 2:
+      rgb->r = 0;
+      rgb->g = 0;
+      rgb->b = 0;
 
-    (*progFx)++;
-  }
-  break;
+      (*progFx)++;
+    break;
 
-  case 3:
-  {
-    (*d)++;
+    case 3:
+      (*d)++;
 
-    if(*d == 40) (*progFx)++;
-  }
-  break;
+      if(*d == 40) (*progFx)++;
+    break;
 
-  case 4: // Double effect start
-  {
-    if(allowR) rgb->r = 255;
-    if(allowG) rgb->g = 255;
-    if(allowB) rgb->b = 255;
+    case 4:
+      if(allowR) rgb->r = 255;
+      if(allowG) rgb->g = 255;
+      if(allowB) rgb->b = 255;
 
-    (*progFx)++;
-  }
-  break;
+      (*progFx)++;
+    break;
 
-  case 5:
-  {
-    (*d)++;
+    case 5:
+      (*d)++;
 
-    if(*d == 60) (*progFx)++;
-  }
-  break;
+      if(*d == 60) (*progFx)++;
+    break;
 
-  case 6:
-  {
-    rgb->r = 0;
-    rgb->g = 0;
-    rgb->b = 0;
+    case 6:
+      rgb->r = 0;
+      rgb->g = 0;
+      rgb->b = 0;
 
-    (*progFx)++;
-  }
-  break;
+      (*progFx)++;
+    break;
 
-  case 7:
-  {
-    (*d)++;
+    case 7:
+      (*d)++;
 
-    if(*d == 255) 
-    {
-      *progFx = 0;
-      return true;
-    }
-  }
-  break;
-
-  default:
-  {
-    *progFx = 0;
-  }
-  break;
+      if(*d == 255) 
+      {
+        *progFx = 0;
+        return true;
+      }
+    break;
   }
   return false;
 }
 bool EffectApplications::stock_breathing(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
 {
-  /*
-  if (colour != COLOUR_CYCLE) c = colour;
-  bool allowR = getColourClearance(COLOUR_RED,    c);
-  bool allowG = getColourClearance(COLOUR_GREEN,  c);
-  bool allowB = getColourClearance(COLOUR_BLUE,   c);
+  bool allowR = getColourClearance(colour, COLOUR_RED);
+  bool allowG = getColourClearance(colour, COLOUR_GREEN);
+  bool allowB = getColourClearance(colour, COLOUR_BLUE);
 
-  switch ((*progFx))
+  switch (*progFx)
   {
-  case 0:
-  {
-    if (effect == 4 || effect == 5)
-    {
+    case 0:
       rgb->r = 0;
       rgb->g = 0;
       rgb->b = 0;
-    }
-    else
-    {
-      rgb->r = 255;
-      rgb->g = 255;
-      rgb->b = 255;
-    }
+      *d = 0;
 
-    d = 0;
-
-    (*progFx)++;
-  }
-  break;
-
-  case 1:
-  {
-    if (effect == 4 || effect == 5)
-    {
-      if (allowR)
-        rgb->r++;
-      if (allowG)
-        rgb->g++;
-      if (allowB)
-        rgb->b++;
-    }
-    else
-    {
-      if (!allowR)
-        rgb->r--;
-      if (!allowG)
-        rgb->g--;
-      if (!allowB)
-        rgb->b--;
-    }
-
-    d++;
-
-    if (d == 255)
       (*progFx)++;
+    break;
+
+    case 1:
+      if (allowR)rgb->r++;
+      if (allowG)rgb->g++;
+      if (allowB)rgb->b++;
+      (*d)++;
+
+      if (*d == 255)(*progFx)++;
+    break;
+
+    case 2:
+      if (allowR)rgb->r--;
+      if (allowG)rgb->g--;
+      if (allowB)rgb->b--;
+      (*d)--;
+
+      if (*d == 0)
+      {
+        *progFx = 0;
+        return true;
+      }
+    break;
   }
-  break;
-
-  case 2:
-  {
-    if (effect == 4 || effect == 5)
-    {
-      if (allowR)
-        rgb->r--;
-      if (allowG)
-        rgb->g--;
-      if (allowB)
-        rgb->b--;
-    }
-    else
-    {
-      if (!allowR)
-        rgb->r++;
-      if (!allowG)
-        rgb->g++;
-      if (!allowB)
-        rgb->b++;
-    }
-
-    d--;
-
-    if (d == 0)
-    {
-      if (effect == 5 || effect == 11)
-        (*progFx) = (*progFx) + 2;
-      else
-        (*progFx)++;
-    }
-  }
-  break;
-
-  case 4: // Begin of double code
-  {
-    d++;
-
-    if (d == 255)
-      (*progFx)++;
-  }
-  break;
-
-  case 5:
-  {
-    d--;
-
-    if (d == 1)
-      (*progFx)++;
-  }
-  break; // End of double code
-
-  default:
-  {
-    (*progFx) = 0;
-    if(colour == COLOUR_CYCLE)
-    {
-      if(c == AMOUNTOFCOLOURS) c = 0;
-      c++;
-    }
-  }
-  break;
-  }
-  */
+  return false;
 }
 bool EffectApplications::stock_pausedbreathing(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
 {
+  bool allowR = getColourClearance(colour, COLOUR_RED);
+  bool allowG = getColourClearance(colour, COLOUR_GREEN);
+  bool allowB = getColourClearance(colour, COLOUR_BLUE);
 
+  switch (*progFx)
+  {
+    case 0:
+      rgb->r = 0;
+      rgb->g = 0;
+      rgb->b = 0;
+      *d = 0;
+
+      (*progFx)++;
+    break;
+
+    case 1:
+      if (allowR)rgb->r++;
+      if (allowG)rgb->g++;
+      if (allowB)rgb->b++;
+      (*d)++;
+
+      if (*d == 255)(*progFx)++;
+    break;
+
+    case 2:
+      if (allowR)rgb->r--;
+      if (allowG)rgb->g--;
+      if (allowB)rgb->b--;
+      (*d)--;
+
+      if (*d == 0)(*progFx)++;
+    break;
+
+    case 3:
+      (*d)++;
+
+      if (*d == 255)(*progFx)++;
+    break;
+
+    case 4:
+      (*d)--;
+
+      if (*d == 0)
+      {
+        *progFx = 0;
+        return true;
+      }
+    break;
+  }
+  return false;
 }
 bool EffectApplications::stock_flash(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
 {
-  /*
-  if (colour != COLOUR_CYCLE) c = colour;
-  bool allowR = getColourClearance(COLOUR_RED,    c);
-  bool allowG = getColourClearance(COLOUR_GREEN,  c);
-  bool allowB = getColourClearance(COLOUR_BLUE,   c);
+  bool allowR = getColourClearance(colour, COLOUR_RED);
+  bool allowG = getColourClearance(colour, COLOUR_GREEN);
+  bool allowB = getColourClearance(colour, COLOUR_BLUE);
 
-  switch ((*progFx))
+  switch (*progFx)
   {
-  case 0:
-  {
-    if (allowR)
-      rgb->r = 255;
-    else
-      rgb->r = 0;
+    case 0:
+      if(allowR)rgb->r = 255;
+      else rgb->r = 0;
+      if(allowG) rgb->g = 255;
+      else rgb->g = 0;
+      if(allowB) rgb->b = 255;
+      else rgb->b = 0;
+      *d = 255;
 
-    if (allowG)
-      rgb->g = 255;
-    else
-      rgb->g = 0;
-
-    if (allowB)
-      rgb->b = 255;
-    else
-      rgb->b = 0;
-
-    d = 255;
-
-    (*progFx)++;
-  }
-  break;
-
-  case 1:
-  {
-    if (allowR)
-      rgb->r = rgb->r - 5;
-    if (allowG)
-      rgb->g = rgb->g - 5;
-    if (allowB)
-      rgb->b = rgb->b - 5;
-
-    d = d - 5;
-
-    if (effect == 7 && d == 100)
-      (*progFx) = (*progFx) + 3;
-    if (d == 0)
       (*progFx)++;
-  }
-  break;
+    break;
 
-  case 2:
+    case 1:
+      if(allowR)rgb->r--;
+      if(allowG)rgb->g--;
+      if(allowB)rgb->b--;
+      (*d)--;
+
+      if (*d == 0)
+      {
+        *progFx = 0;
+        return true;
+      }
+    break;
+  }
+  return false;
+}
+bool EffectApplications::stock_pausedFlash(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
+{
+  bool allowR = getColourClearance(colour, COLOUR_RED);
+  bool allowG = getColourClearance(colour, COLOUR_GREEN);
+  bool allowB = getColourClearance(colour, COLOUR_BLUE);
+
+  switch (*progFx)
   {
-    d++;
-    if (d == 255)
+    case 0:
+      if(allowR)rgb->r = 255;
+      else rgb->r = 0;
+      if(allowG) rgb->g = 255;
+      else rgb->g = 0;
+      if(allowB) rgb->b = 255;
+      else rgb->b = 0;
+      *d = 255;
+
       (*progFx)++;
-  }
-  break;
+    break;
 
-  default:
-  {
-    (*progFx) = 0;
-    if(colour == COLOUR_CYCLE)
-    {
-      if(c == AMOUNTOFCOLOURS) c = 0;
-      c++;
-    }
+    case 1:
+      if(allowR)rgb->r--;
+      if(allowG)rgb->g--;
+      if(allowB)rgb->b--;
+      (*d)--;
+
+      if (*d == 0)(*progFx)++;
+    break;
+
+    case 2:
+      (*d)++;
+      if (*d == 255)
+      {
+        *progFx = 0;
+        return true;
+      }
+    break;
   }
-  break;
-  }
-  */
+  return false;
 }
 bool EffectApplications::stock_heartbeat(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
 {
-  /*
-  if (colour != COLOUR_CYCLE) c = colour;
-  bool allowR = getColourClearance(COLOUR_RED,    c);
-  bool allowG = getColourClearance(COLOUR_GREEN,  c);
-  bool allowB = getColourClearance(COLOUR_BLUE,   c);
+  bool allowR = getColourClearance(colour, COLOUR_RED);
+  bool allowG = getColourClearance(colour, COLOUR_GREEN);
+  bool allowB = getColourClearance(colour, COLOUR_BLUE);
 
-  switch ((*progFx))
+  switch (*progFx)
   {
-  case 0:
-  {
-    if(allowR) rgb->r = 255;
-    else rgb->r = 0;
-    if(allowG) rgb->g = 255;
-    else rgb->g = 0;
-    if(allowB) rgb->b = 255;
-    else rgb->b = 0;
+    case 0:
+      if(allowR)rgb->r = 255;
+      else rgb->r = 0;
+      if(allowG)rgb->g = 255;
+      else rgb->g = 0;
+      if(allowB)rgb->b = 255;
+      else rgb->b = 0;
+      *d = 255;
 
-    d = 255;
-
-    (*progFx)++;
-  }
-  break;
-
-  case 1:
-  {
-    if(allowR) rgb->r -= 5;
-    if(allowG) rgb->g -= 5;
-    if(allowB) rgb->b -= 5;
-
-    d -= 5;
-
-    if(d == 100) (*progFx)++;
-  }
-  break;
-
-  case 2:
-  {
-    d++;
-    if(d == 255) (*progFx)++;
-  }
-  break;
-
-  case 3: // Start of double code
-  {
-    if(allowR) rgb->r = 255;
-    if(allowG) rgb->g = 255;
-    if(allowB) rgb->b = 255;
-
-    d = 255;
-
-    (*progFx)++;
-  }
-  break;
-
-  case 4:
-  {
-    if(allowR) rgb->r -= 5;
-    if(allowG) rgb->g -= 5;
-    if(allowB) rgb->b -= 5;
-
-    d -= 5;
-
-    if (d == 0)
       (*progFx)++;
-  }
-  break;
+    break;
 
-  case 5:
-  {
-    d++;
-    if (d == 223) (*progFx)++;
-  }
-  break; // End of double code
+    case 1:
+      if(allowR)rgb->r--;
+      if(allowG)rgb->g--;
+      if(allowB)rgb->b--;
+      (*d)--;
 
-  default:
-  {
-    (*progFx) = 0;
-    if(colour == COLOUR_CYCLE)
-    {
-      if(c == AMOUNTOFCOLOURS) c = 0;
-      c++;
-    }
+      if(*d == 100) (*progFx)++;
+    break;
+
+    case 2:
+      if(allowR) rgb->r = 255;
+      if(allowG) rgb->g = 255;
+      if(allowB) rgb->b = 255;
+      *d = 255;
+
+      (*progFx)++;
+    break;
+
+    case 3:
+      if(allowR)rgb->r--;
+      if(allowG)rgb->g--;
+      if(allowB)rgb->b--;
+      (*d)--;
+
+      if (*d == 0)
+      {
+        *progFx = 0;
+        return true;
+      }
+    break;
   }
-  break;
-  }
-  */
+  return false;
 }
 bool EffectApplications::stock_appear(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
 {
+  bool allowR = getColourClearance(colour, COLOUR_RED);
+  bool allowG = getColourClearance(colour, COLOUR_GREEN);
+  bool allowB = getColourClearance(colour, COLOUR_BLUE);
 
+  switch (*progFx)
+  {
+    case 0:
+      if(allowR)rgb->r = 255;
+      else rgb->r = 0;
+      if(allowG)rgb->g = 255;
+      else rgb->g = 0;
+      if(allowB)rgb->b = 255;
+      else rgb->b = 0;
+      *d = 255;
+
+      (*progFx)++;
+    break;
+
+    case 1:
+      if(allowR)rgb->r--;
+      if(allowG)rgb->g--;
+      if(allowB)rgb->b--;
+      (*d)--;
+
+      if(*d == 100) (*progFx)++;
+    break;
+
+    case 2:
+      (*d)++;
+      if(*d == 255) (*progFx)++;
+    break;
+
+    case 3:
+      if(allowR)rgb->r = 255;
+      if(allowG)rgb->g = 255;
+      if(allowB)rgb->b = 255;
+      *d = 255;
+
+      (*progFx)++;
+    break;
+
+    case 4:
+      if(allowR)rgb->r--;
+      if(allowG)rgb->g--;
+      if(allowB)rgb->b--;
+      (*d)--;
+
+      if (*d == 0) (*progFx)++;
+    break;
+
+    case 5:
+      (*d)++;
+      if (*d == 223) 
+      {
+        *progFx = 0;
+        return true;
+      }
+    break;
+  }
+  return false;
 }
 
 bool EffectApplications::custom_static(ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour)

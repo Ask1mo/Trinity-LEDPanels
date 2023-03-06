@@ -66,23 +66,27 @@ void Diode::tick()
         break;
 
         case EFFECT_STOCK_BREATHING:
-        //effectFinished = stock_breathing();
+        effectFinished = effectApplications.stock_breathing(&rgb, &d, &fxProgression, c);
         break;
 
         case EFFECT_STOCK_PAUSEDBREATHING:
-        //effectFinished = progressFX_pausedbreathing();
+        effectFinished = effectApplications.stock_pausedbreathing(&rgb, &d, &fxProgression, c);
         break;
 
         case EFFECT_STOCK_FLASH:
-        //effectFinished = stock_flash();
+        effectFinished = effectApplications.stock_flash(&rgb, &d, &fxProgression, c);
+        break;
+
+        case EFFECT_STOCK_PAUSEDFLASH:
+        effectFinished = effectApplications.stock_pausedFlash(&rgb, &d, &fxProgression, c);
         break;
 
         case EFFECT_STOCK_HEARTBEAT:
-        //effectFinished = stock_heartbeat();
+        effectFinished = effectApplications.stock_heartbeat(&rgb, &d, &fxProgression, c);
         break;
 
-        case EFFECT_CUSTOM_STATIC:
-        //effectFinished = custom_static();
+        case EFFECT_STOCK_APPEAR:
+        effectFinished = effectApplications.stock_appear(&rgb, &d, &fxProgression, c);
         break;
 
         case EFFECT_SPECIAL_RAINBOW:
@@ -106,7 +110,7 @@ void Diode::tick()
     }
   }
 }
-void Diode::setDataFx(uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat)
+void Diode::setDataFx(uint8_t brightness, uint8_t effect, uint8_t colour, uint16_t offset, uint8_t speed, bool repeat)
 {
   //Serial.println("Setting diode data (In Diode)");
   this->brightness  = brightness;

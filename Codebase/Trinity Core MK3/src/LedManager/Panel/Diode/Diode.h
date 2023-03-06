@@ -24,7 +24,7 @@ private:
   uint8_t brightness;
   uint8_t *effect;
   uint8_t *colour;
-  uint8_t offset;
+  uint16_t offset;
   uint8_t speed;
   bool repeat;
   
@@ -42,7 +42,7 @@ private:
 public:
   Diode(uint8_t number);
   void tick();
-  void setDataFx(uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat);
+  void setDataFx(uint8_t brightness, uint8_t effect, uint8_t colour, uint16_t offset, uint8_t speed, bool repeat);
   void setDataCustom(uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);
   CRGB getRGB(uint8_t sysBrightness);
   void printDebug();

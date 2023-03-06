@@ -63,7 +63,7 @@ uint8_t LedManager::getPanelDiodeAmount(uint8_t panelNumber)
 {
   return panels[panelNumber]->getDiodeAmount();
 }
-void    LedManager::setPanelData(uint8_t panelNumber, uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat, bool detailed)
+void    LedManager::setPanelData(uint8_t panelNumber, uint8_t brightness, uint8_t effect, uint8_t colour, uint16_t offset, uint8_t speed, bool repeat, bool detailed)
 {
   //Serial.println("Setting panel data (In ledmanager)");
   panels[panelNumber]->setDataFx(brightness, effect, colour, offset, speed, repeat, detailed);
@@ -72,7 +72,7 @@ void    LedManager::setPanelCustomData(uint8_t panelNumber, uint8_t customRGBAmo
 {
   panels[panelNumber]->setDataCustom(customRGBAmount, customRGB);
 }
-void    LedManager::setPanelDiodeData(uint8_t panelNumber, uint8_t diodeNumber, uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat)
+void    LedManager::setPanelDiodeData(uint8_t panelNumber, uint8_t diodeNumber, uint8_t brightness, uint8_t effect, uint8_t colour, uint16_t offset, uint8_t speed, bool repeat)
 {
   //Serial.println("Setting diode data (In ledmanager)");
   panels[panelNumber]->setDiodeDataFx(diodeNumber, brightness, effect, colour, offset, speed, repeat);

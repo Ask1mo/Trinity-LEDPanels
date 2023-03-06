@@ -18,7 +18,7 @@ Panel::Panel(uint8_t number, uint8_t compassDir, bool clockDir, uint8_t diodeAmo
   this->brightness   = 255;
   this->effect       = 0;
   this->colour       = 0;
-  this->offset       = 10;
+  this->offset       = 0;
   this->speed        = 1;
   this->rCustom      = 255;
   this->gCustom      = 255;
@@ -50,7 +50,7 @@ void Panel::tick()
     }
   }
 }
-void Panel::setDataFx(uint8_t direction, uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat)
+void Panel::setDataFx(uint8_t direction, uint8_t brightness, uint8_t effect, uint8_t colour, uint16_t offset, uint8_t speed, bool repeat)
 {
   //Serial.println("Setting Panel Data Fx (In panel)");
   this->brightness  = brightness;
@@ -78,27 +78,9 @@ void Panel::setDataCustom(uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOF
     diodes[i]->setDataCustom(customRGBAmount, customRGB);
   }
 }
-void Panel::setDiodeDataFx(uint8_t diodeNumber, uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat)
+void Panel::setDiodeDataFx(uint8_t diodeNumber, uint8_t brightness, uint8_t effect, uint8_t colour, uint16_t offset, uint8_t speed, bool repeat)
 {
-  //Serial.println("Setting panel data (In Panel)");
-  this->brightness  = brightness;
-  this->effect      = effect;
-  this->colour      = colour;
-  this->offset      = offset;
-  this->speed       = speed;
-
-  //Serial.println("Setting bool");
-
-  this->repeat      = repeat;
-
-  //Serial.println("Setting diode data (About to... In Panel)");
-
-  //Serial.print("DiodeNumber = ");
-  //Serial.println(diodeNumber);
-
-
   diodes[diodeNumber]->setDataFx(brightness, effect, colour, offset, speed, repeat);
-
 }
 void Panel::setDiodeDataCustom(uint8_t diodeNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
 {

@@ -33,7 +33,7 @@ private:
   uint8_t brightness;
   uint8_t effect;
   uint8_t colour;
-  uint8_t offset;
+  uint16_t offset;
   uint8_t speed;
   bool repeat;
   bool detailed;
@@ -53,9 +53,9 @@ private:
 public:
   Panel(uint8_t number, uint8_t compassDir, bool clockDir, uint8_t diodeAmount);
   void tick();
-  void setDataFx(uint8_t direction, uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat);
+  void setDataFx(uint8_t direction, uint8_t brightness, uint8_t effect, uint8_t colour, uint16_t offset, uint8_t speed, bool repeat);
   void setDataCustom(uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);
-  void setDiodeDataFx(uint8_t diodeNumber, uint8_t brightness, uint8_t effect, uint8_t colour, uint8_t offset, uint8_t speed, bool repeat);
+  void setDiodeDataFx(uint8_t diodeNumber, uint8_t brightness, uint8_t effect, uint8_t colour, uint16_t offset, uint8_t speed, bool repeat);
   void setDiodeDataCustom(uint8_t diodeNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);
   CRGB getPanelRGB();
   CRGB getDiodeRGB(byte number, uint8_t brightness);

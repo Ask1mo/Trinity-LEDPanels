@@ -21,18 +21,20 @@
 #define EFFECT_STOCK_BREATHING        3
 #define EFFECT_STOCK_PAUSEDBREATHING  4
 #define EFFECT_STOCK_FLASH            5
-#define EFFECT_STOCK_HEARTBEAT        6
-#define EFFECT_STOCK_APPEAR           7
-#define EFFECT_CUSTOM_STATIC          8
-#define EFFECT_CUSTOM_BLINK           9
-#define EFFECT_CUSTOM_PLANE           10
-#define EFFECT_CUSTOM_BREATHING       11
-#define EFFECT_CUSTOM_PAUSEDBREATHING 12
-#define EFFECT_CUSTOM_FLASH           13
-#define EFFECT_CUSTOM_HEARTBEAT       14
-#define EFFECT_SPECIAL_RAINBOW        15
-#define EFFECT_SPECIAL_FIRE           16
-#define EFFECT_SPECIAL_SOUND          17
+#define EFFECT_STOCK_PAUSEDFLASH      6
+#define EFFECT_STOCK_HEARTBEAT        7
+#define EFFECT_STOCK_APPEAR           8
+#define EFFECT_CUSTOM_STATIC          9
+#define EFFECT_CUSTOM_BLINK           10
+#define EFFECT_CUSTOM_PLANE           11
+#define EFFECT_CUSTOM_BREATHING       12
+#define EFFECT_CUSTOM_PAUSEDBREATHING 13
+#define EFFECT_CUSTOM_FLASH           14
+#define EFFECT_CUSTOM_PAUSEDFLASH     15
+#define EFFECT_CUSTOM_HEARTBEAT       16
+#define EFFECT_SPECIAL_RAINBOW        17
+#define EFFECT_SPECIAL_FIRE           18
+#define EFFECT_SPECIAL_SOUND          19
 
 struct ColourRGB
 {
@@ -54,6 +56,7 @@ public:
   bool stock_breathing(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour);
   bool stock_pausedbreathing(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour);
   bool stock_flash(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour);
+  bool stock_pausedFlash(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour);
   bool stock_heartbeat(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour);
   bool stock_appear(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour);
 
@@ -63,6 +66,7 @@ public:
   bool custom_breathing(ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour);
   bool custom_pausedbreathing(ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour);
   bool custom_flash(ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour);
+  bool custom_pausedFlash(ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour);
   bool custom_heartbeat(ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour);
   bool custom_appear(ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour);
   
