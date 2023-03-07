@@ -14,12 +14,23 @@ namespace Trinity
 
     public class Comms
     {
+        const byte TRANSMISSION_IN_NONE = 0;
+        const byte TRANSMISSION_IN_LEDMANAGER = 1;
+        const byte TRANSMISSION_IN_PANEL = 2;
+        const byte TRANSMISSION_IN_DIODE = 3;
+        const byte TRANSMISSION_IN_IDENT = 4;
 
-        const byte TRANSMISSION_IN_NONE         = 0;
-        const byte TRANSMISSION_IN_LEDMANAGER   = 1;
-        const byte TRANSMISSION_IN_PANEL        = 2;
-        const byte TRANSMISSION_IN_DIODE        = 3;
-        const byte TRANSMISSION_IN_IDENT        = 4;
+        const byte TRANSMISSION_OUT_NONE         = 0;
+        const byte TRANSMISSION_OUT_PANELFX      = 1;
+        const byte TRANSMISSION_OUT_PANELCUSTOM  = 2;
+        const byte TRANSMISSION_OUT_DIODEFX      = 3;
+        const byte TRANSMISSION_OUT_DIODECUSTOM  = 4;
+        const byte TRANSMISSION_OUT_BRIGHTNESS   = 5;
+        const byte TRANSMISSION_OUT_SLEEPTIMER   = 6;
+        const byte TRANSMISSION_OUT_LIGHTSENSOR  = 7;
+        const byte TRANSMISSION_OUT_REQUEST      = 8;
+        const byte TRANSMISSION_OUT_IDENT        = 9;
+
         const byte AUTOCONNECT_FAILED   = 0;
         const byte AUTOCONNECT_SUCCESS  = 1;
         const byte AUTOCONNECT_BUSY     = 2;
@@ -38,15 +49,9 @@ namespace Trinity
         int currentConnectingPort = -1; //-1 Because a ++ will set it to 0
         bool currentlyConnecting;
 
-
-
-
-
-
         //Constructor
         public Comms()
         {
-            connected = false;
         }
         //Private
         public byte decodeTransmissionType()
@@ -161,7 +166,6 @@ namespace Trinity
             serial.Close();
         }
         //Public
-
         public void manuallyConnect(int baudrate, string port)
         {
             if (serial.IsOpen)
@@ -179,17 +183,6 @@ namespace Trinity
             ports = SerialPort.GetPortNames();
             serial.BaudRate = baudrate;
             currentConnectingPort = -1; //-1 Because a ++ will set it to 0
-
-            /*
-            foreach (string port in ports)
-            {
-                serial.PortName = port;
-                serial.BaudRate = baudrate;
-                serial.Open();
-                serial.Write("IdentClear");
-                connected = true;
-            }
-            */
         }
         public byte autoConnect_tick() //0:Failed, 1:Success, 2:Busy.
         {
@@ -223,7 +216,7 @@ namespace Trinity
                     Console.WriteLine("AUTOCONNECT ATTEMPTING " + ports[currentConnectingPort]);
                     serial.PortName = ports[currentConnectingPort];
                     serial.Open();
-                    serial.Write("IdentClear");
+                    transmit(TRANSMISSION_OUT_IDENT, "");
                     currentlyConnecting = true;
                     waitAndRead();
                 }
@@ -232,7 +225,7 @@ namespace Trinity
         }
         public bool tick() //0:Nothing, 1:All data was probably read.
         {
-            if (serial.IsOpen)
+            if (serial.IsOpen || connected)
             {
                 try
                 {
@@ -311,11 +304,11 @@ namespace Trinity
                             if (doTransmissionEndCheck())
                             {
                                 readyTransmissionType = receivedTransmissionType;
-                                serial.WriteLine("[LINK-TRANS-ACK]");
+                                Console.WriteLine("[LINK-TRANS-ACK]");
                             }
                             else
                             {
-                                serial.WriteLine("[LINK-TRANS-ACK]");
+                                Console.WriteLine("[LINK-TRANS-ACK]");
                             }
                         }
 
@@ -335,10 +328,44 @@ namespace Trinity
                 catch (System.InvalidOperationException)
                 {
                     disconnect();
-                    MessageBox.Show("Trinity Disconnected");
                 }
             }
             return false;
+        }
+        public void transmit(byte transmissionType, string data)
+        {
+            switch (transmissionType)
+            {
+                case TRANSMISSION_OUT_PANELFX:
+                    serial.Write("PanFx");
+                    break;
+                case TRANSMISSION_OUT_PANELCUSTOM:
+                    serial.Write("PanCu");
+                    break;
+                case TRANSMISSION_OUT_DIODEFX:
+                    serial.Write("DioFx");
+                    break;
+                case TRANSMISSION_OUT_DIODECUSTOM:
+                    serial.Write("DioCu");
+                    break;
+                case TRANSMISSION_OUT_BRIGHTNESS:
+                    serial.Write("Brigh");
+                    break;
+                case TRANSMISSION_OUT_SLEEPTIMER:
+                    serial.Write("Sleep");
+                    break;
+                case TRANSMISSION_OUT_LIGHTSENSOR:
+                    serial.Write("Light");
+                    break;
+                case TRANSMISSION_OUT_REQUEST:
+                    serial.Write("Reque");
+                    break;
+                case TRANSMISSION_OUT_IDENT:
+                    serial.Write("Ident");
+                    break;
+            }
+            serial.Write(data);
+            serial.Write("Clear");
         }
         byte getReadyTransmissionType()
         {
@@ -348,6 +375,10 @@ namespace Trinity
                 return TRANSMISSION_IN_IDENT;
             }
             return readyTransmissionType;
+        }
+        public string getConnectedPort()
+        {
+            return serial.PortName;
         }
         public bool getConnected()
         {
@@ -359,13 +390,8 @@ namespace Trinity
             return ports;
         }
 
-
         //Old Code
         public bool getConnectionClearance() //Checks if the system is connected properly in order to safely transmit.
-        {
-            throw new NotImplementedException();
-        }
-        public bool getSerialPortState() //Checks if the serial port is connected
         {
             throw new NotImplementedException();
         }
@@ -373,15 +399,7 @@ namespace Trinity
         {
             throw new NotImplementedException();
         }
-        public void connectSerialPort(string name, int baudRate) //Opens a serial port
-        {
-            throw new NotImplementedException();
-        }
         public void serialWrite(string text) //Prints to the serial monitor
-        {
-            throw new NotImplementedException();
-        }
-        public void serialRead() //Reads from the serial monitor
         {
             throw new NotImplementedException();
         }
@@ -393,15 +411,7 @@ namespace Trinity
         {
             throw new NotImplementedException();
         }   
-        public Panel transmissionDecoder()
-        {
-            throw new NotImplementedException();
-        }
         public int getBufferSize()
-        {
-            throw new NotImplementedException();
-        }
-        public void clearBuffer()
         {
             throw new NotImplementedException();
         }

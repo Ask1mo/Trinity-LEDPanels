@@ -19,6 +19,17 @@ namespace Trinity
 
     public partial class Form1 : Form
     {
+        const byte TRANSMISSION_OUT_NONE         = 0;
+        const byte TRANSMISSION_OUT_PANELFX      = 1;
+        const byte TRANSMISSION_OUT_PANELCUSTOM  = 2;
+        const byte TRANSMISSION_OUT_DIODEFX      = 3;
+        const byte TRANSMISSION_OUT_DIODECUSTOM  = 4;
+        const byte TRANSMISSION_OUT_BRIGHTNESS   = 5;
+        const byte TRANSMISSION_OUT_SLEEPTIMER   = 6;
+        const byte TRANSMISSION_OUT_LIGHTSENSOR  = 7;
+        const byte TRANSMISSION_OUT_REQUEST      = 8;
+        const byte TRANSMISSION_OUT_IDENT        = 9;
+
         static string fileDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Trinity\");
         static string[] effectNumbers = new String[16]
         {
@@ -91,9 +102,7 @@ namespace Trinity
         public const byte XPOSITIONS = 7;
         public const byte YPOSITIONS = 4;
         byte trianglesize = 75;
-        byte requestAttempts = 0;
 
-        bool blockMoreRequests = false;
         bool autoloadSuccessful = false;
         bool changesMade = false;
         bool presetChangesMade = false;
@@ -133,7 +142,6 @@ namespace Trinity
         {
             InitializeComponent();
             F_baudrate.SelectedIndex = 1;
-            comboBox_FxBackground.SelectedIndex = 0;
             comboBox_SystemViewSelector.SelectedIndex = 0;
 
 
@@ -167,7 +175,7 @@ namespace Trinity
 
             
 
-            if (!autoloadSuccessful) listView_SetupMaps.Visible = true;
+            //if (!autoloadSuccessful) listView_SetupMaps.Visible = true;
             
 
             if (autoloadSuccessful)
@@ -176,11 +184,13 @@ namespace Trinity
             }
             updateLists();
         }
+        private void setup(object sender, EventArgs e)
+        {
+            serialAutoConnect(sender, e);
+        }
 
-
-
-        //Serial Communication
-        private void scanComPorts(object sender, EventArgs e)
+        //Serial Connecting
+        private void serialScanPorts(object sender, EventArgs e)
         {
             string[] ports = comms.getPorts();
 
@@ -192,11 +202,20 @@ namespace Trinity
                     listBox1.Items.Add(port);
                 }
             }
-        }
-        private void autoConnect(object sender, EventArgs e)
-        {
-            comms.autoConnect(Convert.ToInt32(F_baudrate.Text));
 
+            if (comms.getConnected())
+            {
+                BTN_setup.Text = comms.getConnectedPort();
+            }
+            else
+            {
+                BTN_setup.Text = "";
+            }
+        }
+        private void serialAutoConnect(object sender, EventArgs e)
+        {
+            //Auto connect Serial
+            comms.autoConnect(Convert.ToInt32(F_baudrate.Text));
             while (true)
             {
                 if (comms.autoConnect_tick() != 2) //2 = AUTOCONNECT_BUSY
@@ -206,7 +225,7 @@ namespace Trinity
                 }
             }
         }
-        private void manualConnect(object sender, EventArgs e)
+        private void serialManualConnect(object sender, EventArgs e)
         {
             comms.manuallyConnect(F_baudrate.SelectedIndex, listBox1.SelectedItem.ToString());
         }
@@ -214,166 +233,26 @@ namespace Trinity
         {
             comms.tick();
         }
-        
-
-
-
-
-        private void comPortConnect(object sender, EventArgs e) //Connects to the com port currently selected in the com port combobox
+        //Serial Transmitting
+        private void btn_download(object sender, EventArgs e)
         {
-            if (!comms.getSerialPortState()) //Checks if the port is already connected
+            comms.transmit(TRANSMISSION_OUT_REQUEST, "");
+        }
+        private void btn_upload(object sender, EventArgs e)
+        {
+            //comms.transmit(TRANSMISSION_OUT_BRIGHTNESS, ledManager.convertToTansmission());
+            //for (byte i = 0; i < ledManager.getPanelAmount(); i++)
             {
-                try
+                //comms.transmit(TRANSMISSION_OUT_PANELFX, ledManager->convertPanelFxToTransmission(i));
+                //comms.transmit(TRANSMISSION_OUT_PANELCUSTOM, ledManager->convertPanelCusToTransmission(i));
+                //for (byte j = 0; j < ledManager->getPanelDiodeAmount(i); j++)
                 {
-                    comms.connectSerialPort(comboBox_PortSelector.Text, Convert.ToInt32(textBox_BaudRate.Text)); //Connects to the serial port using the name and baud data from some  text boxes
-                    button_Connect.Text = "Connected";
-                    timer_SerialPoller.Enabled = true; //The serial monitor will now be continuously polled, and read if data exists.
-                    //if (comms.getConnectionClearance()) button_EditorMode_Click(sender, e); //Used to auto-go to the editor menu
+                    //comms.transmit(TRANSMISSION_OUT_PANELFX, ledManager->convertPanelFxToTransmission(i, j));
+                    //comms.transmit(TRANSMISSION_OUT_PANELCUSTOM, ledManager->convertPanelCusToTransmission(i, j));
                 }
-                catch (Exception) //If we couldn't connect
-                {
-                    MessageBox.Show("Possible problems include:\n\nIncorrect COM port selected\nNo Trinity is connected\nBeing called Eva\n", "Connecting Error");
-                }
-            }
-            else //The port is already connected, so disconnect
-            {
-                disconnectSerialPort(sender, e);
             }
         }
-        public void disconnectSerialPort(object sender, EventArgs e)
-        {
-            try
-            {
-                //Disconnect and return to the setup screen
-                comms.disconnectSerialPort();
-                button_Connect.Text = "Connect";
-                timer_SerialPoller.Enabled = false;
-                button_SetupMode_Click(sender, e);
-            }
-            catch (Exception) { MessageBox.Show("Unable to disconnect. Check if anything is connected"); } //Lol you were already disconnected
-        }
-        private void select(object sender, EventArgs e)//Favourites a zone map
-        {
-            if (listView2.SelectedItems.Count != 0 && !(listBox1.SelectedItems.Count > 1))
-            {
-                MultiplierMap multiplierMap = administration.getMultiplierMap(listView2.SelectedItems[0].Text);
-                if (multiplierMap.LatestFavourite)
-                {
-                    multiplierMap.LatestFavourite = false;
-                    if (comboBox_MultiplierMapSelector.Text == multiplierMap.Name) comboBox_MultiplierMapSelector.Text = "Get more from presets tab";
-                }
-                else
-                {
-                    multiplierMap.LatestFavourite = true;
-                }
-                updateLists();
-                //administration.exportToJason(multiplierMap, @"Multiplier Maps\");
-                multiplierMap.exportToJason();
-            }
-        }
-        private byte waitAndRead()
-        {
-            throw new NotImplementedException();
-            while (comms.getBufferSize() == 0) Thread.Sleep(1);
-            return (comms.serialRead2());
-        }
-        private void transmissionReader(object sender, EventArgs e)
-        {
-            try
-            {
-                while (comms.getBufferSize() != 0) //Check if there's data in the buffer
-                {
-                    //comms.serialRead(); //Read data (and put it in a buffer in the comms class)
-                    comms.serialRead2();
-                    //comms.messageCorruptor(); //Corrupt data in the message for testing purposes
 
-                    switch(comms.messageCompleteChecker())
-                    {
-                        case 1:
-                            Console.Write(" -MESSAGE DETECTED - LedManager: ");
-                            numericUpDown_brightness.Value = waitAndRead();
-                            numericUpDown_millisDelay.Value = waitAndRead();
-                            bool enabled = Convert.ToBoolean(waitAndRead());
-                        break;
-                        case 2:
-
-                            Console.Write(" -MESSAGE DETECTED - PanelFx: ");
-                            byte panelNumber = waitAndRead();
-                            byte compassDir = waitAndRead();
-                            byte clockDir = waitAndRead();
-                            byte diodeAmount = waitAndRead();
-
-                            byte brightness = waitAndRead();
-                            byte effect = waitAndRead();
-                            byte colour = waitAndRead();
-                            byte offset = waitAndRead();
-                            byte speed = waitAndRead();
-                            byte repeat = waitAndRead();
-                            byte detailed = waitAndRead();
-
-                            byte r = waitAndRead();
-                            byte g = waitAndRead();
-                            byte b = waitAndRead();
-
-                            Panel dingusPanel = new Panel(panelNumber, offset, speed, effect, colour, r, g, b);
-
-
-                            administration.interpretPanelTransmission(dingusPanel); //Interpret the transmission and add it to the administration
-                            if (comms.getBufferSize() == 0) updateLists();// update the preview list after all of the transmissions are done.
-
-                            break;
-                        case 3:
-                            Console.Write(" -MESSAGE DETECTED - DioFx: ");
-
-
-                            break;
-                    }
-
-                    if (comms.getBufferSize() == 0) updateLists();// update the preview list after all of the transmissions are done. 
-                    /*
-                    if (comms.messageCompleteChecker()) //Are all the bytes of the message filled with data?
-                    {
-                        Console.WriteLine("Message completeChecker passed");
-                      
-                        administration.interpretPanelTransmission(comms.transmissionDecoder()); //Interpret the transmission and add it to the administration
-                        if (comms.getBufferSize() == 0) updateLists();// update the preview list after all of the transmissions are done.
-                    }
-                    */
-                }
-            }
-            catch (System.InvalidOperationException)
-            {
-                disconnectSerialPort(sender, e);
-                MessageBox.Show("Invalid Operation Exception", "Jacking out");
-            }
-            catch (System.UnauthorizedAccessException)
-            {
-                disconnectSerialPort(sender, e);
-                MessageBox.Show("Unauthorized Access Exception ", "Jacking out");
-            }
-        }
-        private void sendRequest(object sender, EventArgs e)//Let the trinity device know that you want to download panel data
-        {
-            if (comms.getConnectionClearance()) //Check if the system is properly connected
-            {
-                if (changesMade) //Check if you want to delete the changes you've made
-                {
-                    DialogResult dialogResult = MessageBox.Show("Changes have been made and are ready to be uploaded, are you sure you want to override these changes?", "Overwrite Warning", MessageBoxButtons.YesNo);
-                    if (dialogResult == DialogResult.Yes || !changesMade)
-                    {
-                        textBox_Receiver.Text = "";
-                        comms.serialWrite("Transmitting...RequeClear");
-                        changesMade = false;
-                    }
-                }
-                else
-                {
-                    textBox_Receiver.Text = "";
-                    comms.serialWrite("Transmitting...RequeClear");
-                }
-            }
-            else MessageBox.Show("Check connection", "Transmission Failure");
-        }
         private void sendGlobals(object sender, EventArgs e) //Sends brightness and slowness data to the serial port
         {
             //Warns you if the brightness value exceeds the 100% safety limit
@@ -414,7 +293,6 @@ namespace Trinity
                     foreach (Panel panel in administration.Panels)
                     {
                         comms.serialWrite(panel.ToCommand());
-                        textBox_Transmittor_Translated.Text += panel.ToString();
                         panel.Changed = false;
                     }
                     changesMade = false;
@@ -424,8 +302,6 @@ namespace Trinity
             else MessageBox.Show("Check connection", "Transmission Failure");
         }
 
-
-
         //Updating lists, graphics and boxes
         private void updateListsButWithObject(object sender, EventArgs e)
         {
@@ -434,23 +310,23 @@ namespace Trinity
         private void updateLists() //Update all relevant listboxes and comboboxes
         {
             drawSomeTrianglesV2();
-            listView_SetupMaps.Items.Clear();
+            //listView_SetupMaps.Items.Clear();
             listView2.Items.Clear();
             listView_Presets.Items.Clear();
-            comboBox_MultiplierMapSelector.Items.Clear();
-            comboBox_PresetSelector.Items.Clear();
+            //comboBox_MultiplierMapSelector.Items.Clear();
+            //comboBox_PresetSelector.Items.Clear();
 
             foreach (SetupMap setupMap in administration.SetupMaps)
             {
                 ListViewItem lvi = new ListViewItem(setupMap.Name.ToString());
                 lvi.SubItems.Add(setupMap.Designer.ToString());
                 lvi.SubItems.Add(setupMap.AmountOfPanels.ToString());
-                listView_SetupMaps.Items.Add(lvi);
+                //listView_SetupMaps.Items.Add(lvi);
             }
 
             foreach (MultiplierMap multiplierMap in administration.MultiplierMaps)
             {
-                if (multiplierMap.DesignedFor == activeSetupMap.Name || multiplierMap.DesignedFor == "All" || checkBox_AllowDifferentPresets.Checked)
+                if (multiplierMap.DesignedFor == activeSetupMap.Name || multiplierMap.DesignedFor == "All")
                 {
                     ListViewItem lvi = new ListViewItem(multiplierMap.Name.ToString());
                     lvi.SubItems.Add(multiplierMap.Designer.ToString());
@@ -458,12 +334,12 @@ namespace Trinity
                     lvi.SubItems.Add(multiplierMap.DesignedFor.ToString());
                     listView2.Items.Add(lvi);
                 }
-                if (multiplierMap.LatestFavourite) comboBox_MultiplierMapSelector.Items.Add(multiplierMap.Name.ToString());
+                //if (multiplierMap.LatestFavourite) comboBox_MultiplierMapSelector.Items.Add(multiplierMap.Name.ToString());
             }
 
             foreach (Preset preset in administration.Presets)
             {
-                if (preset.DesignedFor == activeSetupMap.Name || preset.DesignedFor == "All" || checkBox_AllowDifferentPresets.Checked)
+                if (preset.DesignedFor == activeSetupMap.Name || preset.DesignedFor == "All")
                 {
                     ListViewItem lvi = new ListViewItem(preset.Name.ToString());
                     lvi.SubItems.Add(preset.Designer.ToString());
@@ -471,7 +347,7 @@ namespace Trinity
                     lvi.SubItems.Add(preset.DesignedFor.ToString());
                     listView_Presets.Items.Add(lvi);
                 }
-                if (preset.LatestFavourite) comboBox_PresetSelector.Items.Add(preset.Name.ToString());
+                //if (preset.LatestFavourite) comboBox_PresetSelector.Items.Add(preset.Name.ToString());
             }
 
             listView2.Items.Clear();
@@ -716,46 +592,41 @@ namespace Trinity
                 offsetChecked = false;
                 speedChecked = false;
                 zoneChecked = false;
-                panel_PanelCustomColour.Visible = true;
-                numericUpDown_RedValue.Visible = true;
-                numericUpDown_GreenValue.Visible = true;
-                numericUpDown_BlueValue.Visible = true;
-                label_RGB.Visible = true;
+                //panel_PanelCustomColour.Visible = true;
+                //numericUpDown_RedValue.Visible = true;
+                //numericUpDown_GreenValue.Visible = true;
+                //numericUpDown_BlueValue.Visible = true;
+                //label_RGB.Visible = true;
 
-                button_Type.Visible = false;
-                button_Colour.Visible = false;
-                button_Background.Visible = false;
-                button_Offset.Visible = false;
-                button_Speed.Visible = false;
-                button_Multiplier.Visible = false;
+                //button_Type.Visible = false;
+                //button_Colour.Visible = false;
+                //button_Background.Visible = false;
+                //button_Offset.Visible = false;
+                //button_Speed.Visible = false;
+                //button_Multiplier.Visible = false;
             }
             else
             {
-                panel_PanelCustomColour.Visible = false;
-                numericUpDown_RedValue.Visible = false;
-                numericUpDown_GreenValue.Visible = false;
-                numericUpDown_BlueValue.Visible = false;
-                label_RGB.Visible = false;
+                //panel_PanelCustomColour.Visible = false;
+                //numericUpDown_RedValue.Visible = false;
+                //numericUpDown_GreenValue.Visible = false;
+                //numericUpDown_BlueValue.Visible = false;
+                //label_RGB.Visible = false;
 
-                button_Type.Visible = true;
-                button_Colour.Visible = true;
-                button_Background.Visible = true;
-                button_Offset.Visible = true;
-                button_Speed.Visible = true;
-                button_Multiplier.Visible = true;
+                //button_Type.Visible = true;
+                //button_Colour.Visible = true;
+                //button_Offset.Visible = true;
+                //button_Speed.Visible = true;
+                //button_Multiplier.Visible = true;
             }
 
             if ((comboBox_FxType.SelectedIndex == 4 || comboBox_FxType.SelectedIndex == 5))
             {
-                comboBox_FxBackground.Visible = true;
-                button_Background.Visible = true;
             }
             else
             {
                 //comboBox_FxBackground.Visible = false;
-                button_Background.Visible = false;
                 backgroundChecked = false;
-                comboBox_FxBackground.SelectedIndex = 0;
             }
 
             if (typeChecked) comboBox_FxType.Visible = true;
@@ -764,24 +635,21 @@ namespace Trinity
             if (colourChecked) comboBox_FxColour.Visible = true;
             else comboBox_FxColour.Visible = false;
 
-            if (backgroundChecked ) comboBox_FxBackground.Visible = true;
-            else comboBox_FxBackground.Visible = false;
-
             if (offsetChecked) numericUpDown_FxOffset.Visible = true;
             else numericUpDown_FxOffset.Visible = false;
 
             if (speedChecked) numericUpDown_FxSpeed.Visible = true;
             else numericUpDown_FxSpeed.Visible = false;
 
-            if (offsetChecked && speedChecked) checkbox_Randomiser.Visible = true;
-            else checkbox_Randomiser.Visible = false;
+            //if (offsetChecked && speedChecked) checkbox_Randomiser.Visible = true;
+            //else checkbox_Randomiser.Visible = false;
 
-            if (zoneChecked) numericUpDown_MultiplierNumber.Visible = true;
-            else numericUpDown_MultiplierNumber.Visible = false;
+            //if (zoneChecked) numericUpDown_MultiplierNumber.Visible = true;
+            //else numericUpDown_MultiplierNumber.Visible = false;
         }
         private void comboBoxManager(object sender, EventArgs e) //Changes the text in the fx colour comboboxes
         {
-            if (comboBox_FxType.SelectedIndex == 0 && button_Colour.Text != "Effect")
+            //if (comboBox_FxType.SelectedIndex == 0 && button_Colour.Text != "Effect")
             {
                 comboBox_FxColour.Text = "";
                 comboBox_FxColour.Items.Clear();
@@ -793,9 +661,9 @@ namespace Trinity
                 comboBox_FxColour.Items.Add("Sound");
                 comboBox_FxColour.Items.Add("Christmas");
 
-                button_Colour.Text = "Number";
+                //button_Colour.Text = "Number";
             }
-            else if (button_Colour.Text != "Colour")
+            //else if (button_Colour.Text != "Colour")
             {
                 comboBox_FxColour.Text = "";
                 comboBox_FxColour.Items.Clear();
@@ -808,7 +676,7 @@ namespace Trinity
                 comboBox_FxColour.Items.Add("Violet");
                 comboBox_FxColour.Items.Add("Colour Cycle");
 
-                button_Colour.Text = "Colour";
+                //button_Colour.Text = "Colour";
             }
             visibilityManager(sender, e);
         }
@@ -817,16 +685,14 @@ namespace Trinity
             drawSomeTrianglesV2();
         }
 
-
-
         //Editing data of panels
         private void editAllPanels(object sender, EventArgs e) //Change all panels based on the settings in the paintbrush
         {
             foreach (Panel panel in administration.Panels)
             {
-                bool changesMadeTemp = panel.changePanel(customColoursChecked, (byte)numericUpDown_RedValue.Value, (byte)numericUpDown_GreenValue.Value, (byte)numericUpDown_BlueValue.Value, (byte)comboBox_FxBackground.SelectedIndex, comboBox_FxType.SelectedIndex, comboBox_FxColour.SelectedIndex, (byte)numericUpDown_FxSpeed.Value, (byte)numericUpDown_FxOffset.Value, activeSetupMap, activeMultiplierMap, checkbox_Randomiser.Checked, button_Background.Visible, typeChecked, colourChecked, speedChecked, offsetChecked);
-                if (changesMadeTemp && !changesMade) changesMade = true;
-                if (presetLoaded && !presetChangesMade && changesMadeTemp) presetChangesMade = true;
+                //bool changesMadeTemp = panel.changePanel(customColoursChecked, (byte)numericUpDown_RedValue.Value, (byte)numericUpDown_GreenValue.Value, (byte)numericUpDown_BlueValue.Value, (byte)comboBox_FxBackground.SelectedIndex, comboBox_FxType.SelectedIndex, comboBox_FxColour.SelectedIndex, (byte)numericUpDown_FxSpeed.Value, (byte)numericUpDown_FxOffset.Value, activeSetupMap, activeMultiplierMap, checkbox_Randomiser.Checked, button_Background.Visible, typeChecked, colourChecked, speedChecked, offsetChecked);
+                //if (changesMadeTemp && !changesMade) changesMade = true;
+                //if (presetLoaded && !presetChangesMade && changesMadeTemp) presetChangesMade = true;
             }
             if (administration.brokenDataTester())MessageBox.Show("Hey one of the panels has been set up with an incorrect Effect Type or Effect Colour/Number.\nCheck the previews to fix a specific panel or re-apply changes to all panels.", "Panel Error Detected");
             drawSomeTrianglesV2();
@@ -842,11 +708,11 @@ namespace Trinity
 
 
             byte panelAdress = activeSetupMap.Map[yTimes, xTimes];
-            if (zoneChecked) activeMultiplierMap[yTimes, xTimes] = (byte)numericUpDown_MultiplierNumber.Value;
+            //if (zoneChecked) activeMultiplierMap[yTimes, xTimes] = (byte)numericUpDown_MultiplierNumber.Value;
 
-            bool changesMadeTemp = administration.getPanel(panelAdress).changePanel(customColoursChecked, (byte)numericUpDown_RedValue.Value, (byte)numericUpDown_GreenValue.Value, (byte)numericUpDown_BlueValue.Value, (byte)comboBox_FxBackground.SelectedIndex, comboBox_FxType.SelectedIndex, comboBox_FxColour.SelectedIndex, (byte)numericUpDown_FxSpeed.Value, (byte)numericUpDown_FxOffset.Value, activeSetupMap, activeMultiplierMap, checkbox_Randomiser.Checked, button_Background.Visible, typeChecked, colourChecked, speedChecked, offsetChecked);
-            if (changesMadeTemp && !changesMade) changesMade = true;
-            if (presetLoaded && !presetChangesMade && changesMadeTemp) presetChangesMade = true;
+            //bool changesMadeTemp = administration.getPanel(panelAdress).changePanel(customColoursChecked, (byte)numericUpDown_RedValue.Value, (byte)numericUpDown_GreenValue.Value, (byte)numericUpDown_BlueValue.Value, (byte)comboBox_FxBackground.SelectedIndex, comboBox_FxType.SelectedIndex, comboBox_FxColour.SelectedIndex, (byte)numericUpDown_FxSpeed.Value, (byte)numericUpDown_FxOffset.Value, activeSetupMap, activeMultiplierMap, checkbox_Randomiser.Checked, button_Background.Visible, typeChecked, colourChecked, speedChecked, offsetChecked);
+            //if (changesMadeTemp && !changesMade) changesMade = true;
+            //if (presetLoaded && !presetChangesMade && changesMadeTemp) presetChangesMade = true;
 
             if (administration.brokenDataTester()) MessageBox.Show("Hey one of the panels has been set up with an incorrect Effect Type or Effect Colour/Number.\nCheck the previews to fix a specific panel or re-apply changes to all panels.", "Panel Error Detected");
             drawSomeTrianglesV2();
@@ -860,11 +726,11 @@ namespace Trinity
                     for (byte xPlaces = 0; xPlaces < 7; xPlaces++)
                     {
                         byte panelCounterpartNumber = activeMultiplierMap[yPlaces, xPlaces];
-                        if (panelCounterpartNumber == numericUpDown_MultiplierSelector.Value)
+                        //if (panelCounterpartNumber == numericUpDown_MultiplierSelector.Value)
                         {
-                            bool changesMadeTemp = administration.getPanel(activeSetupMap.Map[yPlaces, xPlaces]).changePanel(customColoursChecked, (byte)numericUpDown_RedValue.Value, (byte)numericUpDown_GreenValue.Value, (byte)numericUpDown_BlueValue.Value, (byte)comboBox_FxBackground.SelectedIndex, comboBox_FxType.SelectedIndex, comboBox_FxColour.SelectedIndex, (byte)numericUpDown_FxSpeed.Value, (byte)numericUpDown_FxOffset.Value, activeSetupMap, activeMultiplierMap, checkbox_Randomiser.Checked, button_Background.Visible, typeChecked, colourChecked, speedChecked, offsetChecked);
-                            if (changesMadeTemp && !changesMade) changesMade = true;
-                            if (presetLoaded && !presetChangesMade && changesMadeTemp) presetChangesMade = true;
+                            //bool changesMadeTemp = administration.getPanel(activeSetupMap.Map[yPlaces, xPlaces]).changePanel(customColoursChecked, (byte)numericUpDown_RedValue.Value, (byte)numericUpDown_GreenValue.Value, (byte)numericUpDown_BlueValue.Value, (byte)comboBox_FxBackground.SelectedIndex, comboBox_FxType.SelectedIndex, comboBox_FxColour.SelectedIndex, (byte)numericUpDown_FxSpeed.Value, (byte)numericUpDown_FxOffset.Value, activeSetupMap, activeMultiplierMap, checkbox_Randomiser.Checked, button_Background.Visible, typeChecked, colourChecked, speedChecked, offsetChecked);
+                            //if (changesMadeTemp && !changesMade) changesMade = true;
+                            //if (presetLoaded && !presetChangesMade && changesMadeTemp) presetChangesMade = true;
                         }
                     }
                 }
@@ -878,90 +744,35 @@ namespace Trinity
         }
         private void paintMixer(object sender, EventArgs e)//Make a little preview from the custom rgb colours
         {
-            numericUpDown_RedValue.BackColor = Color.FromArgb((int)numericUpDown_RedValue.Value, 0, 0);
-            numericUpDown_GreenValue.BackColor = Color.FromArgb(0, (int)numericUpDown_GreenValue.Value, 0);
-            numericUpDown_BlueValue.BackColor = Color.FromArgb(0, 0, (int)numericUpDown_BlueValue.Value);
+            //numericUpDown_RedValue.BackColor = Color.FromArgb((int)numericUpDown_RedValue.Value, 0, 0);
+            //numericUpDown_GreenValue.BackColor = Color.FromArgb(0, (int)numericUpDown_GreenValue.Value, 0);
+            //numericUpDown_BlueValue.BackColor = Color.FromArgb(0, 0, (int)numericUpDown_BlueValue.Value);
 
-            panel_PanelCustomColour.BackColor = Color.FromArgb((int)numericUpDown_RedValue.Value, (int)numericUpDown_GreenValue.Value, (int)numericUpDown_BlueValue.Value);
+            //panel_PanelCustomColour.BackColor = Color.FromArgb((int)numericUpDown_RedValue.Value, (int)numericUpDown_GreenValue.Value, (int)numericUpDown_BlueValue.Value);
         }
-        
-
 
         //Visual mode switch buttons
-        private void button_SetupMode_Click(object sender, EventArgs e) //Show the setup menu
+        private void switchTab(object sender, EventArgs e) //Show the setup menu
         {
-            groupBox_Setup.Visible = true;
-            groupBox_Editor.Visible = false;
-            groupBox_Presets.Visible = false;
-        }
-        private void button_EditorMode_Click(object sender, EventArgs e) //Show the editor menu
-        {
-            if (comms.getConnectionClearance())
+            if (sender == BTN_setup)
+            {
+                groupBox_Setup.Visible = true;
+                groupBox_Editor.Visible = false;
+                groupBox_Presets.Visible = false;
+            }
+            if (sender == BTN_editor)
             {
                 groupBox_Setup.Visible = false;
                 groupBox_Editor.Visible = true;
                 groupBox_Presets.Visible = false;
             }
-            else
-            {
-                DialogResult dialogResult = MessageBox.Show("System is not connected properly, continue anyway?", "Hol up", MessageBoxButtons.YesNo);
-                if (dialogResult == DialogResult.Yes)
-                {
-                    groupBox_Setup.Visible = false;
-                    groupBox_Editor.Visible = true;
-                    groupBox_Presets.Visible = false;
-                }
-            }
-            drawSomeTrianglesV2();
-        }
-        private void button_PresetsMode_Click(object sender, EventArgs e) //Show the presets menu
-        {
-            if (comms.getConnectionClearance())
+            if (sender == BTN_presets)
             {
                 groupBox_Setup.Visible = false;
                 groupBox_Editor.Visible = false;
                 groupBox_Presets.Visible = true;
             }
-            else
-            {
-                DialogResult dialogResult = MessageBox.Show("System is not connected properly, continue anyway?", "Hol up", MessageBoxButtons.YesNo);
-                if (dialogResult == DialogResult.Yes)
-                {
-                    groupBox_Setup.Visible = false;
-                    groupBox_Editor.Visible = false;
-                    groupBox_Presets.Visible = true;
-                }
-            }
         }
-        private void button_NerdMode_Click(object sender, EventArgs e) //Show the nerd menu
-        {
-            if (groupBox_NerdStuff.Visible) groupBox_NerdStuff.Visible = false;
-            else groupBox_NerdStuff.Visible = true;
-        }
-        private void button_ActiveSetupMap_Click(object sender, EventArgs e) //Show the locmap selector menu
-        {
-            if (listView_SetupMaps.Visible == false) listView_SetupMaps.Visible = true;
-            else listView_SetupMaps.Visible = false;
-        }
-        private void quickConnect(object sender, EventArgs e) //Quickly connect the system
-        {
-            if (!comms.getSerialPortState())
-            {
-                //comPortScanner();
-                comPortConnect(sender, e);
-                if (comms.getConnectionClearance())
-                {
-                    sendRequest(sender, e);
-                    button_EditorMode_Click(sender, e);
-                }
-            }
-            else
-            {
-                comPortConnect(sender, e);
-            }
-        }
-
-
 
         //Buttons
         private void button_Offset_Click(object sender, EventArgs e) //Paintbrush button click
@@ -994,12 +805,6 @@ namespace Trinity
             else colourChecked = true;
             visibilityManager(sender, e);
         }
-        private void button_Background_Click(object sender, EventArgs e) //Paintbrush button click
-        {
-            if (backgroundChecked) backgroundChecked = false;
-            else backgroundChecked = true;
-            visibilityManager(sender, e);
-        }
         private void button_CustomColours_Click(object sender, EventArgs e) //Paintbrush button click
         {
             if (customColoursChecked) customColoursChecked = false;
@@ -1007,12 +812,10 @@ namespace Trinity
             visibilityManager(sender, e);
         }
 
-
-
         //Very random stuff
         private void numericUpDown_MultiplierSelector_ValueChanged(object sender, EventArgs e) //Scroll through the change zone thingy
         {
-            button_ChangeMultiplier.Text = "Change all in zone " + numericUpDown_MultiplierSelector.Value;
+            //button_ChangeMultiplier.Text = "Change all in zone " + numericUpDown_MultiplierSelector.Value;
         }
         void importFiles()
         {
@@ -1035,27 +838,6 @@ namespace Trinity
                 triedOnce = true;
             }
         }
-
-
-        //SetupMaps
-        private void applyNewSetupMap(object sender, EventArgs e) //Applies a locmap chosen from the setup window
-        {
-            if (listView_SetupMaps.SelectedItems.Count != 0 && !(listView_SetupMaps.SelectedItems.Count > 1))
-            {
-                SetupMap setupMap = administration.FindSetupMap(listView_SetupMaps.SelectedItems[0].Text);
-                activeSetupMap = setupMap;
-                activeSetupMap.LatestFavourite = true;
-                //comms.SetupMapClearance = true;
-                
-                MultiplierMap multiplierMap = administration.getMultiplierMap("Panel Order");
-                multiplierMap.Map = setupMap.Map;
-                //administration.exportToJason(activeSetupMap, @"Setup Maps\");
-                activeSetupMap.exportToJason();
-
-                button_ActiveSetupMap.Text = "Active setup:\n" + setupMap.Name;
-                drawSomeTrianglesV2();
-            }
-        }
         void autoLoadFavLocmap()
         {
             //Importing Fav
@@ -1068,7 +850,6 @@ namespace Trinity
                     MultiplierMap multiplierMap = administration.getMultiplierMap("Panel Order");
                     multiplierMap.Map = setupMap.Map;
 
-                    button_ActiveSetupMap.Text = "Active setup:\n" + setupMap.Name;
                     autoloadSuccessful = true;
                     //comms.SetupMapClearance = true;
                 }
@@ -1120,59 +901,6 @@ namespace Trinity
             administration.exportPresetToJason(preset, @"Presets\");
             
         }
-        private void updatePreset(object sender, EventArgs e) //Updates a preset based on the current preset.
-        {
-            if (comboBox_PresetSelector.Text != "")
-            {
-                DialogResult dialogResult = MessageBox.Show("Do you want to save your changes to '" + comboBox_PresetSelector.Text + "' ?", "Preset updater", MessageBoxButtons.YesNo);
-                if (dialogResult == DialogResult.Yes)
-                {
-                    Preset preset = administration.updatePreset(comboBox_PresetSelector.Text, (byte)numericUpDown_brightness.Value, (byte)numericUpDown_millisDelay.Value);
-                    
-                    administration.exportPresetToJason(preset, @"Presets\");
-                    //preset.exportFile2(@"Presets\", preset.ToTextFile());
-                }
-            }
-            else
-            {
-                MessageBox.Show("Eyo you forgot to pick a preset to update");
-            }
-        }
-        private void applyPreset(object sender, EventArgs e) // Applies a preset
-        {
-            if (comboBox_PresetSelector.Text != "Get from the presets tab")
-            {
-                Preset preset = administration.FindPreset(comboBox_PresetSelector.Text);
-
-                if (presetChangesMade)
-                {
-                    DialogResult dialogResult = MessageBox.Show("Changes were made in the last preset, do you want to delete these changes and load '" + preset.Name + "' ?", "Preset Loader", MessageBoxButtons.YesNo);
-                    if (dialogResult == DialogResult.Yes)
-                    {
-                        numericUpDown_brightness.Value = preset.Brightness;
-                        numericUpDown_millisDelay.Value = preset.Slowness;
-                        presetChangesMade = false;
-                        changesMade = true;
-                        administration.applyPreset(preset);
-                        drawSomeTrianglesV2();
-                    }
-                }
-                else
-                {
-                    DialogResult dialogResult = MessageBox.Show("Do you want to load '" + preset.Name + "' ?", "Preset Loader", MessageBoxButtons.YesNo);
-                    if (dialogResult == DialogResult.Yes)
-                    {
-                        numericUpDown_brightness.Value = preset.Brightness;
-                        numericUpDown_millisDelay.Value = preset.Slowness;
-                        presetChangesMade = false;
-                        changesMade = true;
-                        administration.applyPreset(preset);
-                        drawSomeTrianglesV2();
-                    }
-                }
-            }
-
-        }
         private void favouriteNewPreset(object sender, EventArgs e) //Adds a preset to the favourites
         {
             if (doublePresetApplyPreventor) doublePresetApplyPreventor = false;
@@ -1186,7 +914,7 @@ namespace Trinity
                     if (preset.LatestFavourite)
                     {
                         preset.LatestFavourite = false;
-                        if (comboBox_PresetSelector.Text == preset.Name) comboBox_PresetSelector.Text = "Get more from presets tab";
+                        //if (comboBox_PresetSelector.Text == preset.Name) comboBox_PresetSelector.Text = "Get more from presets tab";
                     }
                     else
                     {
@@ -1199,7 +927,6 @@ namespace Trinity
                 }
            }
         }
-        
 
         //MultiplierMaps
         private void button_CreateMultiplierMap_Click(object sender, EventArgs e) //Creating a new zone map from the presets window
@@ -1242,32 +969,6 @@ namespace Trinity
             }
             
         }
-        private void button_updateMultiplierMap_Click(object sender, EventArgs e)// Updates zone maps
-        {
-            if (comboBox_MultiplierMapSelector.Text != "")
-            {
-                DialogResult dialogResult = MessageBox.Show("Do you want to save your changes to '" + comboBox_MultiplierMapSelector.Text + "' ?", "Multiplier Map updater", MessageBoxButtons.YesNo);
-                if (dialogResult == DialogResult.Yes)
-                {
-                    MultiplierMap multiplierMap = administration.getMultiplierMap(comboBox_MultiplierMapSelector.Text);
-                    multiplierMap.Map = activeMultiplierMap;
-                    //administration.exportToJason(multiplierMap, @"Multiplier Maps\");
-                    multiplierMap.exportToJason();
-                }
-            }
-            else
-            {
-                MessageBox.Show("Eyo you forgot to pick a muffmap to edit");
-            }
-        }
-        private void applyNewMultiplierMap(object sender, EventArgs e)//Applies a new zone map
-        {
-            if (comboBox_MultiplierMapSelector.Text != "Get from the presets tab")
-            {
-                if (administration.getMultiplierMap(comboBox_MultiplierMapSelector.Text) != null) activeMultiplierMap = administration.getMultiplierMap(comboBox_MultiplierMapSelector.Text).Map;
-                drawSomeTrianglesV2();
-            }
-        }
         private void favouriteNewMultiplierMap(object sender, EventArgs e)//Favourites a zone map
         {
             if (listView2.SelectedItems.Count != 0 && !(listView2.SelectedItems.Count > 1))
@@ -1276,7 +977,7 @@ namespace Trinity
                 if (multiplierMap.LatestFavourite)
                 {
                     multiplierMap.LatestFavourite = false;
-                    if (comboBox_MultiplierMapSelector.Text == multiplierMap.Name) comboBox_MultiplierMapSelector.Text = "Get more from presets tab";
+                    //if (comboBox_MultiplierMapSelector.Text == multiplierMap.Name) comboBox_MultiplierMapSelector.Text = "Get more from presets tab";
                 }
                 else
                 {
@@ -1288,7 +989,5 @@ namespace Trinity
             }
         }
 
-
-        
     }
 }
