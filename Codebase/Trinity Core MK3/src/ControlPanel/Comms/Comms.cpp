@@ -94,6 +94,15 @@ uint8_t Comms::decodeTransmissionType()
         transmissionData[4] == 'e'
     ) return TRANSMISSION_IN_REQUEST;
 
+    if
+    (
+        transmissionData[0] == 'I' &&
+        transmissionData[1] == 'd' &&
+        transmissionData[2] == 'e' &&
+        transmissionData[3] == 'n' &&
+        transmissionData[4] == 't'
+    ) return TRANSMISSION_IN_IDENT;
+
     return TRANSMISSION_IN_NONE;
 }
 uint8_t Comms::waitAndRead()
@@ -108,7 +117,7 @@ bool    Comms::doTransmissionEndCheck()
         transmissionData[i] = waitAndRead();
     }
     
-    printBuffer();
+    //printBuffer();
     
     if
     (
@@ -123,12 +132,12 @@ bool    Comms::doTransmissionEndCheck()
 }
 void    Comms::printBuffer()
 {
-    Serial.print(F("Printing buffer: "));
+    Serial.println(F("[TRI-PRINTBUF "));
     for(uint8_t i = 0; i < IDENTLENGTH; i++)
     {
         Serial.write(transmissionData[i]);
     }
-    Serial.println( );
+    Serial.println("]");
 }
 
 //Public
@@ -143,8 +152,8 @@ void                            Comms::tick()
         transmissionData[IDENTLENGTH-1] = Serial.read();
 
         uint8_t receivedTransmissionType = decodeTransmissionType();
-        Serial.print(F("Transmisison "));
-        Serial.println(receivedTransmissionType);
+        //Serial.print(F("Transmission "));
+        //Serial.println(receivedTransmissionType);
 
         switch (receivedTransmissionType)
         {
@@ -245,11 +254,11 @@ void                            Comms::tick()
             if (doTransmissionEndCheck())
             {
                 readyTransmissionType = receivedTransmissionType;
-                Serial.println(F("Transmission completed"));
+                Serial.println(F("[TRI-TRANS-ACK]"));
             }
             else
             {
-                Serial.println(F("TRANS ERR"));
+                Serial.println(F("[TRI-TRANS-ERR]"));
             }
         }
         
@@ -279,6 +288,11 @@ void                            Comms::transmit(uint8_t transmissionType, String
             Serial.print("TXDIO");
         }
         break;
+        case TRANSMISSION_OUT_IDENT:
+        {
+            Serial.print("IDENT");
+        }
+        break;
     }
 
     /*
@@ -295,10 +309,11 @@ void                            Comms::transmit(uint8_t transmissionType, String
 }
 uint8_t                         Comms::getReadyTransmissionType()
 {
-    if(readyTransmissionType == TRANSMISSION_IN_REQUEST)
+    if(readyTransmissionType == TRANSMISSION_IN_REQUEST || readyTransmissionType == TRANSMISSION_IN_IDENT)
     {
+        uint8_t transmissionTypeToSend = readyTransmissionType;
         readyTransmissionType = TRANSMISSION_IN_NONE;
-        return TRANSMISSION_IN_REQUEST;
+        return transmissionTypeToSend;
     }
     return readyTransmissionType;
 }

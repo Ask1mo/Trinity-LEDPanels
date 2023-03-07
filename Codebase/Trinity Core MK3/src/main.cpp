@@ -276,6 +276,11 @@ void loop()
       }
     }
     break;
+    case TRANSMISSION_IN_IDENT:
+    {
+      comms->transmit(TRANSMISSION_OUT_IDENT, "");
+    }
+    break;
   }
 
   ledManager->tick();

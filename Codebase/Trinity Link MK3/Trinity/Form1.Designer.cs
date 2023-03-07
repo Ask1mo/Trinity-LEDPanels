@@ -109,7 +109,10 @@
             this.columnHeader11 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.button_Create = new System.Windows.Forms.Button();
             this.groupBox_Setup = new System.Windows.Forms.GroupBox();
+            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.button5 = new System.Windows.Forms.Button();
             this.groupBox_NerdStuff = new System.Windows.Forms.GroupBox();
+            this.F_baudrate = new System.Windows.Forms.ComboBox();
             this.checkBox_ComportScanner = new System.Windows.Forms.CheckBox();
             this.checkBox_AllowDifferentPresets = new System.Windows.Forms.CheckBox();
             this.textBox_BaudRate = new System.Windows.Forms.TextBox();
@@ -124,7 +127,8 @@
             this.button3 = new System.Windows.Forms.Button();
             this.comboBox_PresetSelector = new System.Windows.Forms.ComboBox();
             this.button_Update = new System.Windows.Forms.Button();
-            this.timer_ComPortPoller = new System.Windows.Forms.Timer(this.components);
+            this.timer_PortPoller = new System.Windows.Forms.Timer(this.components);
+            this.timerSerial = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_millisDelay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_brightness)).BeginInit();
             this.groupBox_Editor_Globals.SuspendLayout();
@@ -1198,6 +1202,8 @@
             // groupBox_Setup
             // 
             this.groupBox_Setup.BackColor = System.Drawing.Color.Transparent;
+            this.groupBox_Setup.Controls.Add(this.listBox1);
+            this.groupBox_Setup.Controls.Add(this.button5);
             this.groupBox_Setup.Controls.Add(this.groupBox_NerdStuff);
             this.groupBox_Setup.Controls.Add(this.groupBox_Setup_Connect);
             this.groupBox_Setup.Controls.Add(this.listView_SetupMaps);
@@ -1210,9 +1216,32 @@
             this.groupBox_Setup.TabStop = false;
             this.groupBox_Setup.Text = "Setup";
             // 
+            // listBox1
+            // 
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 24;
+            this.listBox1.Location = new System.Drawing.Point(6, 313);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(206, 124);
+            this.listBox1.TabIndex = 133;
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.manualConnect);
+            // 
+            // button5
+            // 
+            this.button5.BackColor = System.Drawing.Color.Transparent;
+            this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button5.Location = new System.Drawing.Point(9, 265);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(203, 42);
+            this.button5.TabIndex = 132;
+            this.button5.Text = "Scan";
+            this.button5.UseVisualStyleBackColor = false;
+            this.button5.Click += new System.EventHandler(this.autoConnect);
+            // 
             // groupBox_NerdStuff
             // 
             this.groupBox_NerdStuff.BackColor = System.Drawing.Color.Transparent;
+            this.groupBox_NerdStuff.Controls.Add(this.F_baudrate);
             this.groupBox_NerdStuff.Controls.Add(this.checkBox_ComportScanner);
             this.groupBox_NerdStuff.Controls.Add(this.checkBox_AllowDifferentPresets);
             this.groupBox_NerdStuff.Controls.Add(this.textBox_BaudRate);
@@ -1229,6 +1258,22 @@
             this.groupBox_NerdStuff.TabStop = false;
             this.groupBox_NerdStuff.Text = "Nerd Stuff";
             this.groupBox_NerdStuff.Visible = false;
+            // 
+            // F_baudrate
+            // 
+            this.F_baudrate.BackColor = System.Drawing.Color.Black;
+            this.F_baudrate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.F_baudrate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.F_baudrate.ForeColor = System.Drawing.Color.White;
+            this.F_baudrate.FormattingEnabled = true;
+            this.F_baudrate.Items.AddRange(new object[] {
+            "9600",
+            "115200"});
+            this.F_baudrate.Location = new System.Drawing.Point(222, 11);
+            this.F_baudrate.MaxDropDownItems = 2;
+            this.F_baudrate.Name = "F_baudrate";
+            this.F_baudrate.Size = new System.Drawing.Size(126, 32);
+            this.F_baudrate.TabIndex = 148;
             // 
             // checkBox_ComportScanner
             // 
@@ -1258,7 +1303,7 @@
             this.textBox_BaudRate.BackColor = System.Drawing.Color.Black;
             this.textBox_BaudRate.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox_BaudRate.ForeColor = System.Drawing.Color.White;
-            this.textBox_BaudRate.Location = new System.Drawing.Point(288, 31);
+            this.textBox_BaudRate.Location = new System.Drawing.Point(354, 11);
             this.textBox_BaudRate.Name = "textBox_BaudRate";
             this.textBox_BaudRate.Size = new System.Drawing.Size(100, 25);
             this.textBox_BaudRate.TabIndex = 5;
@@ -1401,18 +1446,23 @@
             this.button_Update.UseVisualStyleBackColor = true;
             this.button_Update.Click += new System.EventHandler(this.updatePreset);
             // 
-            // timer_ComPortPoller
+            // timer_PortPoller
             // 
-            this.timer_ComPortPoller.Enabled = true;
-            this.timer_ComPortPoller.Interval = 1000;
-            this.timer_ComPortPoller.Tick += new System.EventHandler(this.comPortScanner);
+            this.timer_PortPoller.Enabled = true;
+            this.timer_PortPoller.Interval = 1000;
+            this.timer_PortPoller.Tick += new System.EventHandler(this.scanComPorts);
+            // 
+            // timerSerial
+            // 
+            this.timerSerial.Enabled = true;
+            this.timerSerial.Tick += new System.EventHandler(this.serialTick);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(1478, 1777);
+            this.ClientSize = new System.Drawing.Size(1084, 1061);
             this.Controls.Add(this.groupBox_Editor);
             this.Controls.Add(this.groupBox_Setup);
             this.Controls.Add(this.groupBox_Presets);
@@ -1537,7 +1587,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox textBox_PresetName;
         private System.Windows.Forms.CheckBox checkBox_ComportScanner;
-        private System.Windows.Forms.Timer timer_ComPortPoller;
+        private System.Windows.Forms.Timer timer_PortPoller;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox textBox_MultiplierMapCollection;
@@ -1548,6 +1598,10 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.ComboBox F_baudrate;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Timer timerSerial;
+        private System.Windows.Forms.ListBox listBox1;
     }
 }
 

@@ -52,7 +52,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Comms.cs" />
+    <Compile Include="Classes\Comms\TransmissionTypes.cs" />
+    <Compile Include="Classes\Comms\Comms.cs" />
+    <Compile Include="Classes\Panel.cs" />
     <Compile Include="Administration.cs" />
     <Compile Include="FileManager.cs" />
     <Compile Include="Form1.cs">
@@ -62,7 +64,6 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="ISavable.cs" />
-    <Compile Include="Panel.cs" />
     <Compile Include="SetupMap.cs" />
     <Compile Include="panelMap.cs" />
     <Compile Include="Preset.cs" />

@@ -132,8 +132,12 @@ namespace Trinity
         public Form1()
         {
             InitializeComponent();
+            F_baudrate.SelectedIndex = 1;
             comboBox_FxBackground.SelectedIndex = 0;
             comboBox_SystemViewSelector.SelectedIndex = 0;
+
+
+
 
             groupBox_Setup.Location = new Point(93, 12);
             groupBox_Presets.Location = new Point(93, 12);
@@ -176,21 +180,45 @@ namespace Trinity
 
 
         //Serial Communication
-        void comPortScanner(object sender, EventArgs e) //Scans for available com ports and puts them in a combobox under the setup menu. Runs automatically every second
+        private void scanComPorts(object sender, EventArgs e)
         {
-            if (!comms.getSerialPortState() && checkBox_ComportScanner.Checked)
+            string[] ports = comms.getPorts();
+
+            if (ports.Length != listBox1.Items.Count)
             {
-                //Takes all the ports and puts it in a string array, then puts those ports in a combobox
-                comboBox_PortSelector.Items.Clear();
-                comboBox_PortSelector.Text = "No device found";
-                string[] ports = SerialPort.GetPortNames();
+                listBox1.Items.Clear();
                 foreach (string port in ports)
                 {
-                    comboBox_PortSelector.Items.Add(port);
-                    comboBox_PortSelector.Text = port;
+                    listBox1.Items.Add(port);
                 }
             }
         }
+        private void autoConnect(object sender, EventArgs e)
+        {
+            comms.autoConnect(Convert.ToInt32(F_baudrate.Text));
+
+            while (true)
+            {
+                if (comms.autoConnect_tick() != 2) //2 = AUTOCONNECT_BUSY
+                {
+                    Console.WriteLine("Auto Connect Finished");
+                    return;
+                }
+            }
+        }
+        private void manualConnect(object sender, EventArgs e)
+        {
+            comms.manuallyConnect(F_baudrate.SelectedIndex, listBox1.SelectedItem.ToString());
+        }
+        private void serialTick(object sender, EventArgs e)
+        {
+            comms.tick();
+        }
+        
+
+
+
+
         private void comPortConnect(object sender, EventArgs e) //Connects to the com port currently selected in the com port combobox
         {
             if (!comms.getSerialPortState()) //Checks if the port is already connected
@@ -224,10 +252,28 @@ namespace Trinity
             }
             catch (Exception) { MessageBox.Show("Unable to disconnect. Check if anything is connected"); } //Lol you were already disconnected
         }
-
-
+        private void select(object sender, EventArgs e)//Favourites a zone map
+        {
+            if (listView2.SelectedItems.Count != 0 && !(listBox1.SelectedItems.Count > 1))
+            {
+                MultiplierMap multiplierMap = administration.getMultiplierMap(listView2.SelectedItems[0].Text);
+                if (multiplierMap.LatestFavourite)
+                {
+                    multiplierMap.LatestFavourite = false;
+                    if (comboBox_MultiplierMapSelector.Text == multiplierMap.Name) comboBox_MultiplierMapSelector.Text = "Get more from presets tab";
+                }
+                else
+                {
+                    multiplierMap.LatestFavourite = true;
+                }
+                updateLists();
+                //administration.exportToJason(multiplierMap, @"Multiplier Maps\");
+                multiplierMap.exportToJason();
+            }
+        }
         private byte waitAndRead()
         {
+            throw new NotImplementedException();
             while (comms.getBufferSize() == 0) Thread.Sleep(1);
             return (comms.serialRead2());
         }
@@ -306,10 +352,6 @@ namespace Trinity
                 MessageBox.Show("Unauthorized Access Exception ", "Jacking out");
             }
         }
-
-
-
-
         private void sendRequest(object sender, EventArgs e)//Let the trinity device know that you want to download panel data
         {
             if (comms.getConnectionClearance()) //Check if the system is properly connected
@@ -1003,7 +1045,7 @@ namespace Trinity
                 SetupMap setupMap = administration.FindSetupMap(listView_SetupMaps.SelectedItems[0].Text);
                 activeSetupMap = setupMap;
                 activeSetupMap.LatestFavourite = true;
-                comms.SetupMapClearance = true;
+                //comms.SetupMapClearance = true;
                 
                 MultiplierMap multiplierMap = administration.getMultiplierMap("Panel Order");
                 multiplierMap.Map = setupMap.Map;
@@ -1028,7 +1070,7 @@ namespace Trinity
 
                     button_ActiveSetupMap.Text = "Active setup:\n" + setupMap.Name;
                     autoloadSuccessful = true;
-                    comms.SetupMapClearance = true;
+                    //comms.SetupMapClearance = true;
                 }
             }
         }
@@ -1246,7 +1288,7 @@ namespace Trinity
             }
         }
 
-        
 
+        
     }
 }
