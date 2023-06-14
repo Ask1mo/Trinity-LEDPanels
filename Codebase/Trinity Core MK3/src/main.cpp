@@ -98,16 +98,25 @@ void setup()
 
   for (uint8_t i = 0; i < PANELAMOUNT; i++)
   {
-    panels[i]->setDataFx(i, 255, EFFECT_STOCK_APPEAR, COLOUR_RED, 0, 1, true);
+    //panels[i]->setDataFx(BRIGHTNESS_3_MAX, EFFECT_STOCK_APPEAR, COLOUR_RED, 0, 1, true, true);
     for (uint8_t j = 0; j < panels[i]->getDiodeAmount(); j++)
     {
-      panels[i]->setDiodeDataFx(j, 255, EFFECT_STOCK_APPEAR, COLOUR_RED, offset, 1, true);
+      /*
+      VFXData vfxData = {EFFECT_SPECIAL_RAINBOW, COLOUR_RED, offset, 1, true};
+      panels[i]->setDiodeVfx(j, vfxData);
+      */
+
+      panels[i]->setDiodeVfx(j, VFXData{EFFECT_SPECIAL_RAINBOW, COLOUR_RED, offset, 1, true});
+
+
+
       offset++;
     }
   }
 
   Serial.println(F("---===SETUP COMPLETED===---"));
 }
+
 void loop()
 {
   delay(10);
@@ -205,7 +214,7 @@ void loop()
       //Serial.println("Panel transmission retrieved from comms");
       Transmission_PanelFX data = comms->getTransmission_PanelFX();
       //Serial.println("Yom");
-      ledManager->setPanelData(data.panelNumber, data.brightness, data.effect, data.colour, data.offset, data.speed, data.repeat, data.detailed);
+      ledManager->setPanelVfx(data.panelNumber, data.vfxData);
       //Serial.println("Done");
     }
     break;
@@ -219,7 +228,7 @@ void loop()
       //Serial.println("Panel transmission retrieved from comms");
       Transmission_DiodeFX data = comms->getTransmission_DiodeFX();
       //Serial.println("Yom");
-      ledManager->setPanelDiodeData(data.panelNumber, data.diodeNumber, data.brightness, data.effect, data.colour, data.offset, data.speed, data.repeat);
+      ledManager->setPanelDiodeVfx(data.panelNumber, data.diodeNumber, data.vfxData);
       //Serial.println("Done");
     }
     break;

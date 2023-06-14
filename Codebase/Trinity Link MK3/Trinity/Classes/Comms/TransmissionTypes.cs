@@ -15,7 +15,7 @@ namespace Trinity
     {
         public byte number;
         public byte compassDir;
-        public byte clockDir;
+        public bool clockDir;
         public byte diodeAmount;
 
         public byte brightness;
@@ -32,6 +32,7 @@ namespace Trinity
     };
     public struct Transmission_Diode
     {
+        public byte panelNumber;
         public byte number;
 
         public byte brightness;

@@ -1,7 +1,7 @@
 #include "ledManager.h"
 
 //Constructor
-LedManager::LedManager(Panel **panelsArg)
+LedManager::LedManager                              (Panel **panelsArg)
 {
   Serial.println(F("LedManager Starting..."));
 
@@ -32,56 +32,72 @@ LedManager::LedManager(Panel **panelsArg)
 }
 
 //Public
-void    LedManager::tick() 
+//Standard
+void    LedManager::tick                            () 
 {
-  for (uint8_t panelNumber = 0; panelNumber < panelsAmount; panelNumber++)
+  for (uint8_t i = 0; i < panelsAmount; i++)
   {
-    panels[panelNumber]->tick();
-    for(byte diodeNumber = 0; diodeNumber < panels[panelNumber]->getDiodeAmount(); diodeNumber++)
+    panels[i]->tick();
+
+    for(uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
     {
-      leds[panels[panelNumber]->getDiodeStart()+diodeNumber] = panels[panelNumber]->getDiodeRGB(diodeNumber, brightness);
+      leds[panels[i]->getDiodeStart()+j] = panels[i]->getDiodeRGB(j, brightness);
     }
   }
-}
-void    LedManager::print() 
+} 
+void    LedManager::print                           () 
 {
   FastLED.show(); 
 }
-uint8_t LedManager::getBrightness()
+//Effects
+uint8_t LedManager::getBrightness                   ()
 {
   return brightness;
 }
-void    LedManager::setBrightness(uint8_t brightness)
+void    LedManager::setBrightness                   (uint8_t brightness)
 {
   this->brightness = brightness;
 }
-uint8_t LedManager::getPanelAmount()
-{
-  return panelsAmount;
-}
-uint8_t LedManager::getPanelDiodeAmount(uint8_t panelNumber)
-{
-  return panels[panelNumber]->getDiodeAmount();
-}
-void    LedManager::setPanelData(uint8_t panelNumber, uint8_t brightness, uint8_t effect, uint8_t colour, uint16_t offset, uint8_t speed, bool repeat, bool detailed)
+//Panel Effects
+void    LedManager::setPanelBrightness              (uint8_t panelNumber, uint8_t brightness)
 {
   //Serial.println("Setting panel data (In ledmanager)");
-  panels[panelNumber]->setDataFx(brightness, effect, colour, offset, speed, repeat, detailed);
+  panels[panelNumber]->setBrightness(brightness);
 }
-void    LedManager::setPanelCustomData(uint8_t panelNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
+void    LedManager::setPanelVfx                     (uint8_t panelNumber, VFXData vfxData)
+{
+  //Serial.println("Setting panel data (In ledmanager)");
+  panels[panelNumber]->setVfx(vfxData);
+}
+void    LedManager::setPanelCustomData              (uint8_t panelNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
 {
   panels[panelNumber]->setDataCustom(customRGBAmount, customRGB);
 }
-void    LedManager::setPanelDiodeData(uint8_t panelNumber, uint8_t diodeNumber, uint8_t brightness, uint8_t effect, uint8_t colour, uint16_t offset, uint8_t speed, bool repeat)
+//Diode Effects
+void    setPanelBrightness                          (uint8_t panelNumber, uint8_t diodeNumber, uint8_t brightness)
+{
+  
+}
+void    LedManager::setPanelDiodeVfx                (uint8_t panelNumber, uint8_t diodeNumber, VFXData vfxData)
 {
   //Serial.println("Setting diode data (In ledmanager)");
-  panels[panelNumber]->setDiodeDataFx(diodeNumber, brightness, effect, colour, offset, speed, repeat);
+  panels[panelNumber]->setDiodeVfx(diodeNumber, vfxData);
 }
-void    LedManager::setEnabled(bool enabled)
+//Technical
+void    LedManager::setEnabled                      (bool enabled)
 {
   this->enabled = enabled;
 }
-String  LedManager::convertToTansmission()
+uint8_t LedManager::getPanelAmount                  ()
+{
+  return panelsAmount;
+}
+uint8_t LedManager::getPanelDiodeAmount             (uint8_t panelNumber)
+{
+  return panels[panelNumber]->getDiodeAmount();
+}
+//Transmissions
+String  LedManager::convertToTansmission            ()
 {
   String data = "";
   
@@ -91,11 +107,11 @@ String  LedManager::convertToTansmission()
 
   return data;
 }
-String  LedManager::convertPanelToTransmission(uint8_t panelNumber)
+String  LedManager::convertPanelToTransmission      (uint8_t panelNumber)
 {
   return panels[panelNumber]->convertToTransmission();
 }
-String  LedManager::convertPanelDiodeToTransmission(uint8_t panelNumber,uint8_t diodeNumber)
+String  LedManager::convertPanelDiodeToTransmission (uint8_t panelNumber,uint8_t diodeNumber)
 {
   return panels[panelNumber]->convertDiodeToTransmission(diodeNumber);
 }

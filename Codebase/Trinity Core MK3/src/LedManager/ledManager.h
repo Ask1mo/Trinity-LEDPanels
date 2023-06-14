@@ -7,31 +7,38 @@
 class LedManager
 {
 private:
-  uint8_t   panelsAmount;
-  uint8_t   brightness;
-  bool      speed;
-  bool      enabled;
-  Panel     **panels;
-  CRGB      leds[LEDAMOUNT];
+  uint8_t                                 panelsAmount;
+  uint8_t                                 brightness;
+  bool                                    speed;
+  bool                                    enabled;
+  Panel                                   **panels;
+  CRGB                                    leds[LEDAMOUNT];
   
 
 public:
-  LedManager(Panel **panelsArg);
-  void tick();
-  void print();
-  uint8_t getBrightness();
-  void setBrightness(uint8_t brightness);
-  uint8_t getPanelAmount();
-  uint8_t getPanelDiodeAmount(uint8_t panelNumber);
-  void setPanelData(uint8_t panelNumber, uint8_t brightness, uint8_t effect, uint8_t colour, uint16_t offset, uint8_t speed, bool repeat, bool detailed);
-  void setPanelCustomData(uint8_t panelNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);
-  void setPanelDiodeData(uint8_t panelNumber, uint8_t diodeNumber, uint8_t brightness, uint8_t effect, uint8_t colour, uint16_t offset, uint8_t speed, bool repeat);
-  void setEnabled(bool enabled);
-  String convertToTansmission();
-  String convertPanelToTransmission(uint8_t panelNumber);
-  String convertPanelDiodeToTransmission(uint8_t panelNumber,uint8_t diodeNumber);
+  LedManager                              (Panel **panelsArg);
+  //Standard
+  void    tick                            ();
+  void    print                           ();
+  //Effects
+  uint8_t getBrightness                   ();
+  void    setBrightness                   (uint8_t brightness);
+  //Panel Effects
+  void    setPanelBrightness              (uint8_t panelNumber, uint8_t brightness);
+  void    setPanelVfx                     (uint8_t panelNumber, VFXData vfxData);
+  void    setPanelCustomData              (uint8_t panelNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);
+  //Diode Effects
+  void    setPanelBrightness              (uint8_t panelNumber, uint8_t diodeNumber, uint8_t brightness);
+  void    setPanelDiodeVfx                (uint8_t panelNumber, uint8_t diodeNumber, VFXData vfxData);
+  void    setPanelCustomData              (uint8_t panelNumber, uint8_t diodeNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);
+  //Technical
+  void    setEnabled                      (bool enabled);
+  uint8_t getPanelAmount                  ();
+  uint8_t getPanelDiodeAmount             (uint8_t panelNumber);
+  //Transmissions
+  String  convertToTansmission            ();
+  String  convertPanelToTransmission      (uint8_t panelNumber);
+  String  convertPanelDiodeToTransmission (uint8_t panelNumber,uint8_t diodeNumber);
 };
-
-
 
 #endif

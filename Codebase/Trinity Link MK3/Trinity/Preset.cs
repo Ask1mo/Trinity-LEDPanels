@@ -62,8 +62,8 @@ namespace Trinity
         {
             if (panel != null)
             {
-                Panel panelToAdd = FindPresetPanel(panel.PanelNumber); 
-                if (panelToAdd == null)
+                //Panel panelToAdd = FindPresetPanel(panel.PanelNumber); 
+                //if (panelToAdd == null)
                 {
                     PresetPanels.Add(panel);
                     return true; 
@@ -75,7 +75,7 @@ namespace Trinity
         {
             foreach (Panel panel in PresetPanels)
             {
-                if (panel.PanelNumber == panelNumber)
+                //if (panel.PanelNumber == panelNumber)
                 {
                     return panel;
                 }

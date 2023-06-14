@@ -52,8 +52,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\LedManager.cs" />
     <Compile Include="Classes\Comms\TransmissionTypes.cs" />
     <Compile Include="Classes\Comms\Comms.cs" />
+    <Compile Include="Classes\Diode.cs" />
+    <Compile Include="Classes\EffectApplications.cs" />
+    <Compile Include="Classes\Structs.cs" />
     <Compile Include="Classes\Panel.cs" />
     <Compile Include="Administration.cs" />
     <Compile Include="FileManager.cs" />

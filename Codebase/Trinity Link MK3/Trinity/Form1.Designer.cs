@@ -78,13 +78,15 @@
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.F_baudrate = new System.Windows.Forms.ComboBox();
             this.groupBox_Editor = new System.Windows.Forms.GroupBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.asdasd = new System.Windows.Forms.Button();
             this.timer_PortPoller = new System.Windows.Forms.Timer(this.components);
             this.timerSerial = new System.Windows.Forms.Timer(this.components);
-            this.asdasd = new System.Windows.Forms.Button();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.loop = new System.Windows.Forms.Timer(this.components);
+            this.listBox2 = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_millisDelay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_brightness)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_FxOffset)).BeginInit();
@@ -275,7 +277,7 @@
             "Effect Offset View",
             "Effect Speed View",
             "Multiplier Order View"});
-            this.comboBox_SystemViewSelector.Location = new System.Drawing.Point(1001, 304);
+            this.comboBox_SystemViewSelector.Location = new System.Drawing.Point(1089, 158);
             this.comboBox_SystemViewSelector.Name = "comboBox_SystemViewSelector";
             this.comboBox_SystemViewSelector.Size = new System.Drawing.Size(183, 32);
             this.comboBox_SystemViewSelector.TabIndex = 110;
@@ -683,6 +685,7 @@
             // groupBox_Editor
             // 
             this.groupBox_Editor.BackColor = System.Drawing.Color.Transparent;
+            this.groupBox_Editor.Controls.Add(this.listBox2);
             this.groupBox_Editor.Controls.Add(this.label3);
             this.groupBox_Editor.Controls.Add(this.label2);
             this.groupBox_Editor.Controls.Add(this.label1);
@@ -708,34 +711,38 @@
             this.groupBox_Editor.Text = "Editor";
             this.groupBox_Editor.Visible = false;
             // 
-            // timer_PortPoller
+            // label3
             // 
-            this.timer_PortPoller.Enabled = true;
-            this.timer_PortPoller.Interval = 1000;
-            this.timer_PortPoller.Tick += new System.EventHandler(this.serialScanPorts);
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Calibri", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.Color.White;
+            this.label3.Location = new System.Drawing.Point(215, 196);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(81, 33);
+            this.label3.TabIndex = 114;
+            this.label3.Text = "Speed";
             // 
-            // timerSerial
+            // label2
             // 
-            this.timerSerial.Enabled = true;
-            this.timerSerial.Tick += new System.EventHandler(this.serialTick);
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Calibri", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.White;
+            this.label2.Location = new System.Drawing.Point(215, 162);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(82, 33);
+            this.label2.TabIndex = 113;
+            this.label2.Text = "Offset";
             // 
-            // asdasd
+            // label1
             // 
-            this.asdasd.BackColor = System.Drawing.Color.Transparent;
-            this.asdasd.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.asdasd.Cursor = System.Windows.Forms.Cursors.Default;
-            this.asdasd.FlatAppearance.BorderSize = 0;
-            this.asdasd.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.asdasd.Font = new System.Drawing.Font("Calibri", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.asdasd.ForeColor = System.Drawing.Color.White;
-            this.asdasd.Location = new System.Drawing.Point(1089, 457);
-            this.asdasd.Name = "asdasd";
-            this.asdasd.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.asdasd.Size = new System.Drawing.Size(154, 43);
-            this.asdasd.TabIndex = 45;
-            this.asdasd.Text = "Download";
-            this.asdasd.UseVisualStyleBackColor = false;
-            this.asdasd.Click += new System.EventHandler(this.btn_download);
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Calibri", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(215, 128);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(130, 33);
+            this.label1.TabIndex = 112;
+            this.label1.Text = "Brightness";
             // 
             // numericUpDown1
             // 
@@ -752,38 +759,48 @@
             this.numericUpDown1.Size = new System.Drawing.Size(194, 28);
             this.numericUpDown1.TabIndex = 111;
             // 
-            // label1
+            // asdasd
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Calibri", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(215, 128);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(130, 33);
-            this.label1.TabIndex = 112;
-            this.label1.Text = "Brightness";
+            this.asdasd.BackColor = System.Drawing.Color.Transparent;
+            this.asdasd.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.asdasd.Cursor = System.Windows.Forms.Cursors.Default;
+            this.asdasd.FlatAppearance.BorderSize = 0;
+            this.asdasd.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.asdasd.Font = new System.Drawing.Font("Calibri", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.asdasd.ForeColor = System.Drawing.Color.White;
+            this.asdasd.Location = new System.Drawing.Point(1118, 14);
+            this.asdasd.Name = "asdasd";
+            this.asdasd.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.asdasd.Size = new System.Drawing.Size(154, 43);
+            this.asdasd.TabIndex = 45;
+            this.asdasd.Text = "Download";
+            this.asdasd.UseVisualStyleBackColor = false;
+            this.asdasd.Click += new System.EventHandler(this.btn_download);
             // 
-            // label2
+            // timer_PortPoller
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Calibri", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(215, 162);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(82, 33);
-            this.label2.TabIndex = 113;
-            this.label2.Text = "Offset";
+            this.timer_PortPoller.Enabled = true;
+            this.timer_PortPoller.Interval = 1000;
+            this.timer_PortPoller.Tick += new System.EventHandler(this.serialScanPorts);
             // 
-            // label3
+            // timerSerial
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Calibri", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = System.Drawing.Color.White;
-            this.label3.Location = new System.Drawing.Point(215, 196);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(81, 33);
-            this.label3.TabIndex = 114;
-            this.label3.Text = "Speed";
+            this.timerSerial.Enabled = true;
+            this.timerSerial.Tick += new System.EventHandler(this.serialTick);
+            // 
+            // loop
+            // 
+            this.loop.Enabled = true;
+            this.loop.Tick += new System.EventHandler(this.voidLoop);
+            // 
+            // listBox2
+            // 
+            this.listBox2.FormattingEnabled = true;
+            this.listBox2.ItemHeight = 24;
+            this.listBox2.Location = new System.Drawing.Point(896, 147);
+            this.listBox2.Name = "listBox2";
+            this.listBox2.Size = new System.Drawing.Size(171, 364);
+            this.listBox2.TabIndex = 115;
             // 
             // Form1
             // 
@@ -803,7 +820,7 @@
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "Trinity";
-            this.Load += new System.EventHandler(this.setup);
+            this.Load += new System.EventHandler(this.voidSetup);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_millisDelay)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_brightness)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_FxOffset)).EndInit();
@@ -874,6 +891,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.Timer loop;
+        private System.Windows.Forms.ListBox listBox2;
     }
 }
 

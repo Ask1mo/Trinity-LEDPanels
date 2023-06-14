@@ -1,5 +1,6 @@
 #include "Diode.h"
 
+//Constructor
 Diode::Diode(uint8_t number)
 {
   this->number = number;
@@ -31,7 +32,8 @@ Diode::Diode(uint8_t number)
 
 }
 
-
+//Public
+//Standard
 void Diode::tick()
 {
   //printDebug();
@@ -110,15 +112,19 @@ void Diode::tick()
     }
   }
 }
-void Diode::setDataFx(uint8_t brightness, uint8_t effect, uint8_t colour, uint16_t offset, uint8_t speed, bool repeat)
+//Effects
+void Diode::setBrightness(uint8_t brightness)
+{
+  this->brightness  = brightness;
+}
+void Diode::setVfx(VFXData vfxData)
 {
   //Serial.println("Setting diode data (In Diode)");
-  this->brightness  = brightness;
-  *this->effect      = effect;
-  *this->colour      = colour;
-  this->offset      = offset;
-  this->speed       = speed;
-  this->repeat      = repeat;
+  *this->effect     = vfxData.effect;
+  *this->colour     = vfxData.colour;
+  this->offset      = vfxData.offset;
+  this->speed       = vfxData.speed;
+  this->repeat      = vfxData.repeat;
 }
 void Diode::setDataCustom(uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
 {
@@ -128,6 +134,7 @@ void Diode::setDataCustom(uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOF
     this->customRGB[i]->r = customRGB[i]->r;
   }
 }
+//Technical
 CRGB Diode::getRGB(uint8_t sysBrightness)
 {
   uint8_t r = (((this->rgb.r * this->brightness) / 255) * sysBrightness) / 255;
@@ -135,6 +142,27 @@ CRGB Diode::getRGB(uint8_t sysBrightness)
   uint8_t b = (((this->rgb.b * this->brightness) / 255) * sysBrightness) / 255;
   return CRGB(r, g, b);
 }
+//Transmissions
+String Diode::convertToTransmission()
+{
+  String data = "";
+  
+  data += number;
+
+  data += brightness;
+  data += *effect;
+  data += *colour;
+  data += offset;
+  data += speed;
+  data += repeat;
+
+  data += rgb.r;
+  data += rgb.g;
+  data += rgb.b;
+
+  return data;
+}
+//Debug
 void Diode::printDebug()
 {
   Serial.print(F("Diode "));
@@ -165,24 +193,4 @@ void Diode::printDebug()
   Serial.print(fxProgression);
   Serial.print(F(" | offsetTimer "));
   Serial.println(offsetTimer);
-}
-
-String Diode::convertToTransmission()
-{
-  String data = "";
-  
-  data += number;
-
-  data += brightness;
-  data += *effect;
-  data += *colour;
-  data += offset;
-  data += speed;
-  data += repeat;
-
-  data += rgb.r;
-  data += rgb.g;
-  data += rgb.b;
-
-  return data;
 }

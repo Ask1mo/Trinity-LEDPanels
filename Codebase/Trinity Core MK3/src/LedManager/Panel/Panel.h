@@ -22,50 +22,52 @@
 class Panel
 {
 private:
-  Diode **diodes;
-
-  uint8_t number;
-  uint8_t compassDir;
-  bool    clockDir;
-  uint8_t diodeAmount; // Amount of leds in this panel
-  uint8_t diodeStart;  // The coordinate of the first LED
-
-  uint8_t brightness;
-  uint8_t effect;
-  uint8_t colour;
-  uint16_t offset;
-  uint8_t speed;
-  bool repeat;
-  bool detailed;
-
-  uint8_t rCustom;
-  uint8_t gCustom;
-  uint8_t bCustom;
-
-  uint8_t r;
-  uint8_t g;
-  uint8_t b;
-  uint8_t d;
-  uint8_t fxProgression;      // In effect cycling
-  uint8_t fxCycleProgression; // Cycles of the whole effect (But with different colourss)
-  uint16_t offsetTimer;
+  Diode                                     **diodes;
+  uint8_t                                   number;
+  uint8_t                                   compassDir;
+  bool                                      clockDir;
+  uint16_t                                  diodeAmount; // Amount of leds in this panel
+  uint16_t                                  diodeStart;  // The coordinate of the first LED
+  uint8_t                                   brightness;
+  uint8_t                                   effect;
+  uint8_t                                   colour;
+  uint16_t                                  offset;
+  uint8_t                                   speed;
+  bool                                      repeat;
+  bool                                      detailed;
+  uint8_t                                   rCustom;
+  uint8_t                                   gCustom;
+  uint8_t                                   bCustom;
+  uint8_t                                   r;
+  uint8_t                                   g;
+  uint8_t                                   b;
+  uint8_t                                   d;
+  uint8_t                                   fxProgression;      // In effect cycling
+  uint8_t                                   fxCycleProgression; // Cycles of the whole effect (But with different colourss)
+  uint16_t                                  offsetTimer;
 
 public:
-  Panel(uint8_t number, uint8_t compassDir, bool clockDir, uint8_t diodeAmount);
-  void tick();
-  void setDataFx(uint8_t direction, uint8_t brightness, uint8_t effect, uint8_t colour, uint16_t offset, uint8_t speed, bool repeat);
-  void setDataCustom(uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);
-  void setDiodeDataFx(uint8_t diodeNumber, uint8_t brightness, uint8_t effect, uint8_t colour, uint16_t offset, uint8_t speed, bool repeat);
-  void setDiodeDataCustom(uint8_t diodeNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);
-  CRGB getPanelRGB();
-  CRGB getDiodeRGB(byte number, uint8_t brightness);
-  uint8_t getDiodeAmount();
-  uint8_t getDiodeStart();
-  void setDiodeStart(uint8_t ledStart);
-  void printDebug();
-  String convertToTransmission();
-  String convertDiodeToTransmission(uint8_t diodeNumber);
+  Panel                                     (uint8_t number, uint8_t compassDir, bool clockDir, uint8_t diodeAmount);
+  //Standard
+  void      tick                            ();
+  //Effects
+  void      setBrightness                   (uint8_t brightness);
+  void      setVfx                          (VFXData vfxData);
+  void      setDataCustom                   (uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);
+  //Diode Effects
+  void      setDiodeBrightness              (uint8_t diodeNumber, uint8_t brightness);
+  void      setDiodeVfx                     (uint8_t diodeNumber, VFXData vfxData);
+  void      setDiodeDataCustom              (uint8_t diodeNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);
+  //Technical
+  CRGB      getDiodeRGB                     (uint8_t diodeNumber, uint8_t brightness);
+  uint16_t  getDiodeAmount                  ();
+  uint16_t  getDiodeStart                   ();
+  void      setDiodeStart                   (uint16_t ledStart);
+  //Transmissions
+  String    convertToTransmission           ();
+  String    convertDiodeToTransmission  	  (uint8_t diodeNumber);
+  //Debug
+  void      printDebug                      ();
 };
-
 
 #endif

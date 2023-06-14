@@ -13,12 +13,19 @@ using System.Threading;
 using System.IO;
 using Newtonsoft.Json;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
+using Trinity.Classes.Comms;
 
 namespace Trinity
 {
 
     public partial class Form1 : Form
     {
+        const byte TRANSMISSION_IN_NONE = 0;
+        const byte TRANSMISSION_IN_LEDMANAGER = 1;
+        const byte TRANSMISSION_IN_PANEL = 2;
+        const byte TRANSMISSION_IN_DIODE = 3;
+        const byte TRANSMISSION_IN_IDENT = 4;
+
         const byte TRANSMISSION_OUT_NONE         = 0;
         const byte TRANSMISSION_OUT_PANELFX      = 1;
         const byte TRANSMISSION_OUT_PANELCUSTOM  = 2;
@@ -93,6 +100,7 @@ namespace Trinity
         };
 
         Administration administration = new Administration(fileDirectory, effectNumbers, effectColours);
+        LedManager ledManager = new LedManager();
         Comms comms = new Comms();
         
 
@@ -184,11 +192,15 @@ namespace Trinity
             }
             updateLists();
         }
-        private void setup(object sender, EventArgs e)
+        private void voidSetup(object sender, EventArgs e)
         {
             serialAutoConnect(sender, e);
         }
 
+        private void voidLoop(object sender, EventArgs e)
+        {
+            ledManager.tick();
+        }
         //Serial Connecting
         private void serialScanPorts(object sender, EventArgs e)
         {
@@ -232,6 +244,19 @@ namespace Trinity
         private void serialTick(object sender, EventArgs e)
         {
             comms.tick();
+
+            switch (comms.getReadyTransmissionType())
+            {
+                case TRANSMISSION_IN_LEDMANAGER:
+                    ledManager.setDataFromTransmission(comms.getTransmission_LedManager());
+                    break;
+                case TRANSMISSION_IN_PANEL:
+                    ledManager.setPanelDataFromTransmission(comms.getTransmission_Panel());
+                    break;
+                case TRANSMISSION_IN_DIODE:
+                    ledManager.setPanelDiodeDataFromTransmission(comms.getTransmission_Diode());
+                    break;
+            }
         }
         //Serial Transmitting
         private void btn_download(object sender, EventArgs e)
@@ -292,8 +317,8 @@ namespace Trinity
                     comms.serialWrite("Transmitting...");
                     foreach (Panel panel in administration.Panels)
                     {
-                        comms.serialWrite(panel.ToCommand());
-                        panel.Changed = false;
+                        //comms.serialWrite(panel.ToCommand());
+                        //panel.Changed = false;
                     }
                     changesMade = false;
                     drawSomeTrianglesV2();
@@ -400,7 +425,7 @@ namespace Trinity
                     if (foundPanel != null)
                     {
                         pen.Color = Color.FromArgb(255, 255, 255);
-                        solidBrush.Color = Color.FromArgb(foundPanel.RedValue, foundPanel.GreenValue, foundPanel.BlueValue);
+                        //solidBrush.Color = Color.FromArgb(foundPanel.RedValue, foundPanel.GreenValue, foundPanel.BlueValue);
                     }
                     else
                     {
@@ -442,7 +467,7 @@ namespace Trinity
                     graphics.DrawLine(pen, v3, v1);
                     graphics.FillPolygon(solidBrush, new Point[] { v1, v2, v3 });
 
-                    if (foundPanel != null && foundPanel.Changed)
+                    //if (foundPanel != null && foundPanel.Changed)
                     {
                         if (upsideDown)
                         {
@@ -458,7 +483,7 @@ namespace Trinity
                     if (foundPanel != null && comboBox_SystemViewSelector.SelectedIndex != 0)
                     {
                         int effectColourArraySelector = 0;
-                        if (foundPanel.FxType == 0) effectColourArraySelector = 1;
+                        //if (foundPanel.FxType == 0) effectColourArraySelector = 1;
 
                         if (upsideDown)
                         {
@@ -468,13 +493,13 @@ namespace Trinity
                                     {
                                         try
                                         {
-                                            graphics.DrawString(effectNumbers[foundPanel.FxType], this.Font, Brushes.White, v1.X - trianglesize / 3, v1.Y + trianglesize / 10 * 7);
-                                            graphics.DrawString(effectNumbers[foundPanel.FxType], this.Font, Brushes.Black, v1.X - trianglesize / 3 + 1, v1.Y + trianglesize / 10 * 7 + 1);
+                                            //graphics.DrawString(effectNumbers[foundPanel.FxType], this.Font, Brushes.White, v1.X - trianglesize / 3, v1.Y + trianglesize / 10 * 7);
+                                            //graphics.DrawString(effectNumbers[foundPanel.FxType], this.Font, Brushes.Black, v1.X - trianglesize / 3 + 1, v1.Y + trianglesize / 10 * 7 + 1);
                                         }
                                         catch (System.IndexOutOfRangeException)
                                         {
-                                            graphics.DrawString("!Range: " + foundPanel.FxType.ToString(), this.Font, Brushes.White, v1.X - trianglesize / 3, v1.Y + trianglesize / 10 * 7);
-                                            graphics.DrawString("!Range: " + foundPanel.FxType.ToString(), this.Font, Brushes.Black, v1.X - trianglesize / 3 + 1, v1.Y + trianglesize / 10 * 7 + 1);
+                                            //graphics.DrawString("!Range: " + foundPanel.FxType.ToString(), this.Font, Brushes.White, v1.X - trianglesize / 3, v1.Y + trianglesize / 10 * 7);
+                                            //graphics.DrawString("!Range: " + foundPanel.FxType.ToString(), this.Font, Brushes.Black, v1.X - trianglesize / 3 + 1, v1.Y + trianglesize / 10 * 7 + 1);
                                         }
                                     }
                                     break;
@@ -483,36 +508,36 @@ namespace Trinity
                                     {
                                         try
                                         {
-                                            graphics.DrawString(effectColours[effectColourArraySelector, foundPanel.FxNumber], this.Font, Brushes.White, v1.X - trianglesize / 3, v1.Y + trianglesize / 10 * 7);
-                                            graphics.DrawString(effectColours[effectColourArraySelector, foundPanel.FxNumber], this.Font, Brushes.Black, v1.X - trianglesize / 3 + 1, v1.Y + trianglesize / 10 * 7 + 1);
+                                            //graphics.DrawString(effectColours[effectColourArraySelector, foundPanel.FxNumber], this.Font, Brushes.White, v1.X - trianglesize / 3, v1.Y + trianglesize / 10 * 7);
+                                            //graphics.DrawString(effectColours[effectColourArraySelector, foundPanel.FxNumber], this.Font, Brushes.Black, v1.X - trianglesize / 3 + 1, v1.Y + trianglesize / 10 * 7 + 1);
 
                                         }
                                         catch (System.IndexOutOfRangeException)
                                         {
-                                            graphics.DrawString("!Range: " + foundPanel.FxNumber.ToString(), this.Font, Brushes.White, v1.X - trianglesize / 3, v1.Y + trianglesize / 10 * 7);
-                                            graphics.DrawString("!Range: " + foundPanel.FxNumber.ToString(), this.Font, Brushes.Black, v1.X - trianglesize / 3 + 1, v1.Y + trianglesize / 10 * 7 + 1);
+                                            //graphics.DrawString("!Range: " + foundPanel.FxNumber.ToString(), this.Font, Brushes.White, v1.X - trianglesize / 3, v1.Y + trianglesize / 10 * 7);
+                                            //graphics.DrawString("!Range: " + foundPanel.FxNumber.ToString(), this.Font, Brushes.Black, v1.X - trianglesize / 3 + 1, v1.Y + trianglesize / 10 * 7 + 1);
                                         }
                                     }
                                     break;
 
                                 case 3: //FxOffset
                                     {
-                                        graphics.DrawString(foundPanel.FxOffset.ToString(), this.Font, Brushes.White, v1.X - trianglesize / 10, v1.Y + trianglesize / 10 * 7);
-                                        graphics.DrawString(foundPanel.FxOffset.ToString(), this.Font, Brushes.Black, v1.X - trianglesize / 10 + 1, v1.Y + trianglesize / 10 * 7 + 1);
+                                        //graphics.DrawString(foundPanel.FxOffset.ToString(), this.Font, Brushes.White, v1.X - trianglesize / 10, v1.Y + trianglesize / 10 * 7);
+                                        //graphics.DrawString(foundPanel.FxOffset.ToString(), this.Font, Brushes.Black, v1.X - trianglesize / 10 + 1, v1.Y + trianglesize / 10 * 7 + 1);
                                     }
                                     break;
 
                                 case 4: //FxSpeed
                                     {
-                                        graphics.DrawString(foundPanel.FxSpeed.ToString(), this.Font, Brushes.White, v1.X - trianglesize / 10, v1.Y + trianglesize / 10 * 7);
-                                        graphics.DrawString(foundPanel.FxSpeed.ToString(), this.Font, Brushes.Black, v1.X - trianglesize / 10 + 1, v1.Y + trianglesize / 10 * 7 + 1);
+                                        //graphics.DrawString(foundPanel.FxSpeed.ToString(), this.Font, Brushes.White, v1.X - trianglesize / 10, v1.Y + trianglesize / 10 * 7);
+                                        //graphics.DrawString(foundPanel.FxSpeed.ToString(), this.Font, Brushes.Black, v1.X - trianglesize / 10 + 1, v1.Y + trianglesize / 10 * 7 + 1);
                                     }
                                     break;
 
                                 case 5: //Multipliers
                                     {
-                                        graphics.DrawString(activeMultiplierMap[yPlaces, xPlaces].ToString(), this.Font, Brushes.White, v1.X - trianglesize / 10, v1.Y + trianglesize / 10 * 7);
-                                        graphics.DrawString(activeMultiplierMap[yPlaces, xPlaces].ToString(), this.Font, Brushes.Black, v1.X - trianglesize / 10 + 1, v1.Y + trianglesize / 10 * 7 + 1);
+                                        //graphics.DrawString(activeMultiplierMap[yPlaces, xPlaces].ToString(), this.Font, Brushes.White, v1.X - trianglesize / 10, v1.Y + trianglesize / 10 * 7);
+                                        //graphics.DrawString(activeMultiplierMap[yPlaces, xPlaces].ToString(), this.Font, Brushes.Black, v1.X - trianglesize / 10 + 1, v1.Y + trianglesize / 10 * 7 + 1);
                                     }
                                     break;
 
@@ -526,13 +551,13 @@ namespace Trinity
                                     {
                                         try
                                         {
-                                            graphics.DrawString(effectNumbers[foundPanel.FxType], this.Font, Brushes.White, v1.X - trianglesize / 3, v1.Y - trianglesize);
-                                            graphics.DrawString(effectNumbers[foundPanel.FxType], this.Font, Brushes.Black, v1.X - trianglesize / 3 + 1, v1.Y - trianglesize + 1);
+                                            //graphics.DrawString(effectNumbers[foundPanel.FxType], this.Font, Brushes.White, v1.X - trianglesize / 3, v1.Y - trianglesize);
+                                            //graphics.DrawString(effectNumbers[foundPanel.FxType], this.Font, Brushes.Black, v1.X - trianglesize / 3 + 1, v1.Y - trianglesize + 1);
                                         }
                                         catch (System.IndexOutOfRangeException)
                                         {
-                                            graphics.DrawString("!Range: " + foundPanel.FxType.ToString(), this.Font, Brushes.White, v1.X - trianglesize / 3, v1.Y - trianglesize);
-                                            graphics.DrawString("!Range: " + foundPanel.FxType.ToString(), this.Font, Brushes.Black, v1.X - trianglesize / 3 + 1, v1.Y - trianglesize + 1);
+                                            //graphics.DrawString("!Range: " + foundPanel.FxType.ToString(), this.Font, Brushes.White, v1.X - trianglesize / 3, v1.Y - trianglesize);
+                                            //graphics.DrawString("!Range: " + foundPanel.FxType.ToString(), this.Font, Brushes.Black, v1.X - trianglesize / 3 + 1, v1.Y - trianglesize + 1);
                                         }
                                     }
                                     break;
@@ -541,35 +566,35 @@ namespace Trinity
                                     {
                                         try
                                         {
-                                            graphics.DrawString(effectColours[effectColourArraySelector, foundPanel.FxNumber], this.Font, Brushes.White, v1.X - trianglesize / 3, v1.Y - trianglesize);
-                                            graphics.DrawString(effectColours[effectColourArraySelector, foundPanel.FxNumber], this.Font, Brushes.Black, v1.X - trianglesize / 3 + 1, v1.Y - trianglesize + 1);
+                                            //graphics.DrawString(effectColours[effectColourArraySelector, foundPanel.FxNumber], this.Font, Brushes.White, v1.X - trianglesize / 3, v1.Y - trianglesize);
+                                            //graphics.DrawString(effectColours[effectColourArraySelector, foundPanel.FxNumber], this.Font, Brushes.Black, v1.X - trianglesize / 3 + 1, v1.Y - trianglesize + 1);
                                         }
                                         catch (System.IndexOutOfRangeException)
                                         {
-                                            graphics.DrawString("!Range: " + foundPanel.FxNumber.ToString(), this.Font, Brushes.White, v1.X - trianglesize / 3, v1.Y - trianglesize);
-                                            graphics.DrawString("!Range: " + foundPanel.FxNumber.ToString(), this.Font, Brushes.Black, v1.X - trianglesize / 3 + 1, v1.Y - trianglesize + 1);
+                                            //graphics.DrawString("!Range: " + foundPanel.FxNumber.ToString(), this.Font, Brushes.White, v1.X - trianglesize / 3, v1.Y - trianglesize);
+                                            //graphics.DrawString("!Range: " + foundPanel.FxNumber.ToString(), this.Font, Brushes.Black, v1.X - trianglesize / 3 + 1, v1.Y - trianglesize + 1);
                                         }
                                     }
                                     break;
 
                                 case 3: //FxOffset
                                     {
-                                        graphics.DrawString(foundPanel.FxOffset.ToString(), this.Font, Brushes.White, v1.X - trianglesize / 10, v1.Y - trianglesize);
-                                        graphics.DrawString(foundPanel.FxOffset.ToString(), this.Font, Brushes.Black, v1.X - trianglesize / 10 + 1, v1.Y - trianglesize + 1);
+                                        //graphics.DrawString(foundPanel.FxOffset.ToString(), this.Font, Brushes.White, v1.X - trianglesize / 10, v1.Y - trianglesize);
+                                        //graphics.DrawString(foundPanel.FxOffset.ToString(), this.Font, Brushes.Black, v1.X - trianglesize / 10 + 1, v1.Y - trianglesize + 1);
                                     }
                                     break;
 
                                 case 4: //FxSpeed
                                     {
-                                        graphics.DrawString(foundPanel.FxSpeed.ToString(), this.Font, Brushes.White, v1.X - trianglesize / 10, v1.Y - trianglesize);
-                                        graphics.DrawString(foundPanel.FxSpeed.ToString(), this.Font, Brushes.Black, v1.X - trianglesize / 10 + 1, v1.Y - trianglesize + 1);
+                                        //graphics.DrawString(foundPanel.FxSpeed.ToString(), this.Font, Brushes.White, v1.X - trianglesize / 10, v1.Y - trianglesize);
+                                        //graphics.DrawString(foundPanel.FxSpeed.ToString(), this.Font, Brushes.Black, v1.X - trianglesize / 10 + 1, v1.Y - trianglesize + 1);
                                     }
                                     break;
 
                                 case 5: //Multipliers
                                     {
-                                        graphics.DrawString(activeMultiplierMap[yPlaces, xPlaces].ToString(), this.Font, Brushes.White, v1.X - trianglesize / 10, v1.Y - trianglesize);
-                                        graphics.DrawString(activeMultiplierMap[yPlaces, xPlaces].ToString(), this.Font, Brushes.Black, v1.X - trianglesize / 10 + 1, v1.Y - trianglesize + 1);
+                                        //graphics.DrawString(activeMultiplierMap[yPlaces, xPlaces].ToString(), this.Font, Brushes.White, v1.X - trianglesize / 10, v1.Y - trianglesize);
+                                        //graphics.DrawString(activeMultiplierMap[yPlaces, xPlaces].ToString(), this.Font, Brushes.Black, v1.X - trianglesize / 10 + 1, v1.Y - trianglesize + 1);
                                     }
                                     break;
 
@@ -878,7 +903,7 @@ namespace Trinity
                 Preset preset = new Preset(textBox_PresetName.Text, textBox_PresetCreator.Text, textBox_PresetCollection.Text, activeSetupMap.Name, (byte)numericUpDown_brightness.Value, (byte)numericUpDown_millisDelay.Value);
                 foreach (Panel panel in administration.Panels)
                 {
-                    preset.PresetPanels.Add(new Panel(panel.PanelNumber, panel.FxOffset, panel.FxSpeed, panel.FxType, panel.FxNumber, panel.RedValue, panel.GreenValue, panel.BlueValue));
+                    //preset.PresetPanels.Add(new Panel(panel.PanelNumber, panel.FxOffset, panel.FxSpeed, panel.FxType, panel.FxNumber, panel.RedValue, panel.GreenValue, panel.BlueValue));
                 }
             if (!administration.AddPreset(preset))
             {
@@ -989,5 +1014,6 @@ namespace Trinity
             }
         }
 
+        
     }
 }

@@ -264,7 +264,7 @@ namespace Trinity
 
                                 buffer_panel.number = waitAndRead();
                                 buffer_panel.compassDir = waitAndRead();
-                                buffer_panel.clockDir = waitAndRead();
+                                buffer_panel.clockDir = Convert.ToBoolean(waitAndRead());
                                 buffer_panel.diodeAmount = waitAndRead();
 
                                 buffer_panel.brightness = waitAndRead();
@@ -367,7 +367,7 @@ namespace Trinity
             serial.Write(data);
             serial.Write("Clear");
         }
-        byte getReadyTransmissionType()
+        public byte getReadyTransmissionType()
         {
             if (readyTransmissionType == TRANSMISSION_IN_IDENT)
             {
@@ -389,13 +389,22 @@ namespace Trinity
             ports = SerialPort.GetPortNames();
             return ports;
         }
+        public Transmission_LedManager getTransmission_LedManager()
+        {
+            return buffer_ledManager;
+        }
+        public Transmission_Panel getTransmission_Panel()
+        {
+            return buffer_panel;
+        }
+        public Transmission_Diode getTransmission_Diode()
+        {
+            return buffer_diode;
+        }
+        
 
         //Old Code
         public bool getConnectionClearance() //Checks if the system is connected properly in order to safely transmit.
-        {
-            throw new NotImplementedException();
-        }
-        public void disconnectSerialPort() //Closes the serial port
         {
             throw new NotImplementedException();
         }
@@ -403,17 +412,6 @@ namespace Trinity
         {
             throw new NotImplementedException();
         }
-        public byte serialRead2()
-        {
-            throw new NotImplementedException();
-        }
-        public byte messageCompleteChecker()
-        {
-            throw new NotImplementedException();
-        }   
-        public int getBufferSize()
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

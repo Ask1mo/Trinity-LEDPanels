@@ -37,14 +37,14 @@ namespace Trinity
         public void interpretPanelTransmission(Panel receivedPanel)//Takes the information taken from the serial monitor and makes/updates panels.
         {
 
-            Panel foundPanel = getPanel(receivedPanel.PanelNumber);
-            if (foundPanel == null) AddPanel(receivedPanel);
-            else
+            //Panel foundPanel = getPanel(receivedPanel.PanelNumber);
+            //if (foundPanel == null) AddPanel(receivedPanel);
+            //else
             {
-                foundPanel.UpdatePanel(receivedPanel.PanelNumber, receivedPanel.FxOffset, receivedPanel.FxSpeed, receivedPanel.FxType, receivedPanel.FxNumber, receivedPanel.RedValue, receivedPanel.GreenValue, receivedPanel.BlueValue);
-                foundPanel.Changed = false;
+               // foundPanel.UpdatePanel(receivedPanel.PanelNumber, receivedPanel.FxOffset, receivedPanel.FxSpeed, receivedPanel.FxType, receivedPanel.FxNumber, receivedPanel.RedValue, receivedPanel.GreenValue, receivedPanel.BlueValue);
+                //foundPanel.Changed = false;
             }
-            receivedPanel.Changed = false;
+            //receivedPanel.Changed = false;
         }
         public bool brokenDataTester() //Tests if broken data has been added to one of the panels.
         {
@@ -54,10 +54,10 @@ namespace Trinity
                 try
                 {
                     byte effectColourArraySelector = 0;
-                    if (panel.FxType == 0) effectColourArraySelector = 1;
+                    //if (panel.FxType == 0) effectColourArraySelector = 1;
 
-                    invisiString = EffectNumbers[panel.FxType];
-                    invisiString = EffectColours[effectColourArraySelector, panel.FxNumber];
+                    //invisiString = EffectNumbers[panel.FxType];
+                    //invisiString = EffectColours[effectColourArraySelector, panel.FxNumber];
                 }
                 catch (System.IndexOutOfRangeException)
                 {
@@ -362,7 +362,7 @@ namespace Trinity
             preset.PresetPanels.Clear();
             foreach (Panel panel in Panels)
             {
-                preset.PresetPanels.Add(new Panel(panel.PanelNumber, panel.FxOffset, panel.FxSpeed, panel.FxType, panel.FxNumber, panel.RedValue, panel.GreenValue, panel.BlueValue));
+                //preset.PresetPanels.Add(new Panel(panel.PanelNumber, panel.FxOffset, panel.FxSpeed, panel.FxType, panel.FxNumber, panel.RedValue, panel.GreenValue, panel.BlueValue));
             }
             return preset;
         }
@@ -371,12 +371,12 @@ namespace Trinity
             Panels.Clear();
             foreach (Panel presetPanel in preset.PresetPanels)
             {
-                Panels.Add(new Panel(presetPanel.PanelNumber, presetPanel.FxOffset, presetPanel.FxSpeed, presetPanel.FxType, presetPanel.FxNumber, presetPanel.RedValue, presetPanel.GreenValue, presetPanel.BlueValue));
+                //Panels.Add(new Panel(presetPanel.PanelNumber, presetPanel.FxOffset, presetPanel.FxSpeed, presetPanel.FxType, presetPanel.FxNumber, presetPanel.RedValue, presetPanel.GreenValue, presetPanel.BlueValue));
             }
 
             foreach (Panel panel in Panels)
             {
-                panel.Changed = true;
+                //panel.Changed = true;
             }
         }
         public void importPresets() //Importing presets
@@ -396,8 +396,8 @@ namespace Trinity
         {
             if (panel != null)
             {
-                Panel panelToAdd = getPanel(panel.PanelNumber);
-                if (panelToAdd == null)
+                //Panel panelToAdd = getPanel(panel.PanelNumber);
+                //if (panelToAdd == null)
                 {
                     Panels.Add(panel);
                     return true;
@@ -409,7 +409,7 @@ namespace Trinity
         {
             foreach (Panel panel in Panels)
             {
-                if (panel.PanelNumber == panelNumber)
+                //if (panel.PanelNumber == panelNumber)
                 {
                     return panel;
                 }

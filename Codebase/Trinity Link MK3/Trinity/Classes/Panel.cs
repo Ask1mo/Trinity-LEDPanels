@@ -8,161 +8,228 @@ namespace Trinity
 {
     public class Panel
     {
-        public byte PanelNumber { get; set; }
-
-        public byte FxOffset { get; set; }
-        public byte FxSpeed { get; set; }
-        public byte FxType { get; set; }
-        public byte FxNumber { get; set; }
-
-        public byte RedValue { get; set; }
-        public byte GreenValue { get; set; }
-        public byte BlueValue { get; set; }
-
-        public bool Changed { get; set; }
+        static int AMOUNTOFCOLOURS = 8;
 
 
-        public Panel(byte panelNumber, byte fxOffset, byte fxSpeed, byte fxType, byte fxNumber, byte redValue, byte greenValue, byte blueValue)//Constructor
+        public List<Diode> diodes = new List<Diode>();
+
+        byte number;
+        byte compassDir;
+        bool clockDir;
+        byte diodeAmount;
+
+        byte brightness;
+        byte effect;
+        byte colour;
+        Int16 offset;
+        byte speed;
+        bool repeat;
+        bool detailed;
+
+        ColourRGB rgb = new ColourRGB();
+
+        byte customRGBAmount;
+        ColourRGB[] customRGB = new ColourRGB[AMOUNTOFCOLOURS];
+
+        byte d;
+        byte c;
+        byte progFx;
+        Int16 offsetTimer;
+        EffectApplications effectApplications;
+
+        public Panel(byte number, byte compassDir, bool clockDir, byte diodeAmount)
         {
-            if(panelNumber > 15) panelNumber = 15;
-            if (fxOffset > 255) fxOffset = 255;
-            if (fxSpeed > 31) fxSpeed = 31;
-            if (fxType > 15) fxType = 15;
-            if (fxNumber > 15) fxNumber = 15;
-            if (redValue > 255) redValue = 255;
-            if (greenValue > 255) greenValue = 255;
-            if (blueValue > 255) blueValue = 255;
+          //diodes = (Diode**) malloc(sizeof(Diode*)* diodeAmount);
+          for (byte i = 0; i<diodeAmount; i++)
+          {
+                addDiode(new Diode(number, i));
+          }
 
+          this.number        = number;
+          this.compassDir    = compassDir;
+          this.clockDir      = clockDir;
+          this.diodeAmount   = diodeAmount;
+          //this.diodeStart    = 0;  // The coordinate of the first LED
 
-
-
-
-            PanelNumber = panelNumber;
-
-            FxOffset = fxOffset;
-            FxSpeed = fxSpeed;
-            FxType = fxType;
-            FxNumber = fxNumber;
-
-            RedValue = redValue;
-            GreenValue = greenValue;
-            BlueValue = blueValue;
-        }
-        public bool UpdatePanel(byte panelNumber, byte fxOffset, byte fxSpeed, byte fxType, byte fxNumber, byte redValue, byte greenValue, byte blueValue)//Updates a panel from a couple of pre-determined parameters
-        {
-            if (PanelNumber == panelNumber)
-            {
-                FxOffset = fxOffset;
-                FxSpeed = fxSpeed;
-                FxType = fxType;
-                FxNumber = fxNumber;
-
-                RedValue = redValue;
-                GreenValue = greenValue;
-                BlueValue = blueValue;
-                return true;
+          brightness   = 255;
+          effect       = 0;
+          colour       = 0;
+          offset       = 0;
+          speed        = 1;
+          //this.rCustom      = 255;
+          //this.gCustom      = 255;
+          //this.bCustom      = 255;
+  
+          this.rgb.r                   = 0;
+          this.rgb.g                   = 0;
+          this.rgb.b                   = 0;
+          this.d                   = 0;
+          this.progFx       = 0;      // In effect cycling
+          this.c  = 0; // Cycles of the whole effect (But with different colourss)
+          this.offsetTimer         = 0;
             }
-            return false;
-        }
-        public bool changePanel(bool customColoursChecked, byte redValue, byte greenValue, byte blueValue, byte fxBackground, int fxType, int fxColour, byte fxSpeed, byte fxOffset, SetupMap activeSetupMap, byte[,] activeMultiplierMap, bool random, bool buttonBackgroundVisible, bool typeChecked, bool colourChecked, bool speedChecked, bool offsetChecked)//Updates a panel based upon the settings in the paintbrush
-        {
-            if (customColoursChecked)
-            {
-                RedValue = (byte)(redValue / 2);
-                GreenValue = (byte)(greenValue / 2);
-                BlueValue = (byte)(blueValue / 2);
-                FxType = 15;
-                FxNumber = 15;
 
-                Changed = true;
-                return true;
+        private Diode getDiode(byte panelNumber) //Searches for a panel in active panel storage
+        {
+            foreach (Diode diode in diodes)
+            {
+                if (diode.getNumber() == panelNumber)
+                {
+                    return diode;
+                }
+            }
+            return null;
+        }
+
+        private void addDiode(Diode diodeToAdd)
+        {
+            Diode existingDiode = getDiode(diodeToAdd.getNumber());
+            if (existingDiode == null)
+            {
+                diodes.Add(diodeToAdd);
+                return;
+            }
+            return;
+        }
+
+        public void tick()
+        {
+            printDebug();
+
+
+            if (offsetTimer < offset)
+            {
+                offsetTimer++;
             }
             else
             {
-                byte panelFxBoost = 0;
-                if (fxBackground == 1 && buttonBackgroundVisible) panelFxBoost = 6;
-                int offset = 0;
-                byte speed = (byte)fxSpeed;
-
-                for (byte yPlaces = 0; yPlaces < 4; yPlaces++)
+                for (byte i = 0; i < diodeAmount; i++)
                 {
-                    for (byte xPlaces = 0; xPlaces < 7; xPlaces++)
-                    {
-                        byte panelCounterpartNumber = activeSetupMap.Map[yPlaces, xPlaces];
-                        if (panelCounterpartNumber == PanelNumber)
-                        {
-                            offset = ((activeMultiplierMap[yPlaces, xPlaces]) * fxOffset);
-                        }
-                    }
-                }
-                if (random)
-                {
-                    speed = GetSomeRandomNumber(1, speed);
-                    offset = GetSomeRandomNumber(0, offset);
-                }
-                if (typeChecked) FxType = (byte)(fxType + panelFxBoost);
-                if (colourChecked) FxNumber = (byte)fxColour;
-                if (speedChecked) FxSpeed = speed;
-                if (offsetChecked) FxOffset = (byte)offset;
-
-                if (typeChecked || colourChecked || speedChecked || offsetChecked)
-                {
-                    Changed = true;
-                    return true;
+                    diodes[i].tick();
                 }
             }
-            return false;
         }
-        public override string ToString() //Converts a panel into human-readable text
+        //Setters
+        public void setDataFromTransmisison(Transmission_Panel data)
         {
+            compassDir = data.compassDir;
+            clockDir = data.clockDir;
+            diodeAmount = data.diodeAmount;
 
-            string panelStringToSend = "/ "
-                + PanelNumber
-                + " / "
-                + FxOffset + ", "
-                + FxSpeed + ", "
-                + FxType + ", "
-                + FxNumber
-                + " / "
-                + RedValue + ", "
-                + GreenValue + ", "
-                + BlueValue
-                + " /";
+            brightness = data.brightness;
+            effect = data.effect;
+            colour = data.colour;
+            offset = data.offset;
+            speed = data.speed;
+            repeat = data.repeat;
+            detailed = data.detailed;
 
-            return panelStringToSend;
+            rgb.r = data.r;
+            rgb.g = data.g;
+            rgb.b = data.b;
+    }
+        public void setDiodeDataFromTransmisison(Transmission_Diode data)
+        {
+            Diode existingDiode = getDiode(data.number);
+            if (existingDiode == null) //If the diode doesn't exist in the panel (Create new one)
+            {
+                Diode newDiode = new Diode(data.panelNumber, data.number);
+                newDiode.setDataFromTransmission(data);
+                addDiode(newDiode);
+            }
+            else //If the panel exists in the ledmanager (Update it)
+            {
+                existingDiode.setDataFromTransmission(data);
+            }
         }
-        public string ToCommand() //Converts a panel into a serial-transmittable command
+        //Getters
+        public ColourRGB getPanelRGB()
         {
-            int charlie;
+            ColourRGB colourRGB;
+            colourRGB.r = (byte)((rgb.r * brightness) / 255);
+            colourRGB.g = (byte)((rgb.g * brightness) / 255);
+            colourRGB.b = (byte)((rgb.b * brightness) / 255);
 
-            charlie = FxType;
-            charlie = charlie << 4;
-            charlie = charlie | FxNumber;
-
-
-            string panelStringToSend = "/"
-                + (char)PanelNumber
-                + '/'
-                + (char)FxOffset
-                + (char)FxSpeed
-                + (char)charlie
-                + '/'
-                + (char)RedValue
-                + (char)GreenValue
-                + (char)BlueValue
-                + '/';
-
-            Console.WriteLine(charlie);
-
-            return panelStringToSend;
+            return colourRGB;
         }
-
-
-        //Stuff required for a randomiser
-        private static Random random = new Random();
-        public static byte GetSomeRandomNumber(int min, int max)
+        public ColourRGB getDiodeRGB(byte number, byte brightness)
         {
-            return (byte)random.Next(min, max);
+            return diodes[number].getRGB(brightness);
+        }
+        public byte getDiodeAmount()
+        {
+            return diodeAmount;
+        }
+        public byte getNumber()
+        {
+            return number;
+        }
+        //Prints and Converts
+        public void printDebug()
+        {
+            Console.WriteLine();
+            Console.Write("Panel ");
+            Console.WriteLine(number);
+
+            Console.Write("compassDir ");
+            Console.Write(compassDir);
+            Console.Write(" | clockDir ");
+            Console.Write(clockDir);
+            Console.Write(" | diodeAmount ");
+            Console.Write(diodeAmount);
+
+            Console.Write("brightness ");
+            Console.Write(brightness);
+            Console.Write(" | effect ");
+            Console.Write(effect);
+            Console.Write(" | colour ");
+            Console.Write(colour);
+            Console.Write(" | offset ");
+            Console.Write(offset);
+            Console.Write(" | speed ");
+            Console.WriteLine(speed);
+
+
+            Console.Write("r ");
+            Console.Write(rgb.r);
+            Console.Write(" | g ");
+            Console.Write(rgb.g);
+            Console.Write(" | b ");
+            Console.Write(rgb.b);
+            Console.Write(" | d ");
+            Console.Write(d);
+            Console.Write(" | progFx ");
+            Console.Write(progFx);
+            Console.Write(" | offsetTimer ");
+            Console.WriteLine(offsetTimer);
+
+        }
+        public string convertToTransmission()
+        {
+            String data = "";
+
+            data += (char)number;
+            data += (char)compassDir;
+            data += Convert.ToChar(clockDir);
+            data += (char)diodeAmount; // Amount of leds in this panel
+
+            data += (char)brightness;
+            data += (char)effect;
+            data += (char)colour;
+            data += (char)offset;
+            data += (char)speed;
+            data += Convert.ToChar(repeat);
+            data += Convert.ToChar(detailed);
+
+            data += (char)rgb.r;
+            data += (char)rgb.g;
+            data += (char)rgb.b;
+
+            return data;
+        }
+        public String convertDiodeToTransmission(byte diodeNumber)
+        {
+            return diodes[diodeNumber].convertToTransmission();
         }
     }
 }

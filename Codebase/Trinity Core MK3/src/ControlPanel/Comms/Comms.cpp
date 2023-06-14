@@ -159,13 +159,11 @@ void                            Comms::tick()
         {
             case TRANSMISSION_IN_PANELFX:
             {
-                buffer_PanelFX->brightness  = waitAndRead();
-                buffer_PanelFX->effect      = waitAndRead();
-                buffer_PanelFX->colour      = waitAndRead();
-                buffer_PanelFX->offset      = waitAndRead();
-                buffer_PanelFX->speed       = waitAndRead();
-                buffer_PanelFX->repeat      = 1;
-                buffer_PanelFX->detailed    = 1;
+                buffer_PanelFX->vfxData.effect      = waitAndRead();
+                buffer_PanelFX->vfxData.colour      = waitAndRead();
+                buffer_PanelFX->vfxData.offset      = waitAndRead();
+                buffer_PanelFX->vfxData.speed       = waitAndRead();
+                buffer_PanelFX->vfxData.repeat      = true;
                 Serial.println("DD");
             }
             break;
@@ -195,12 +193,11 @@ void                            Comms::tick()
             {
                 buffer_DiodeFX->panelNumber   = waitAndRead();
                 buffer_DiodeFX->diodeNumber   = waitAndRead();
-                buffer_DiodeFX->brightness    = waitAndRead();
-                buffer_DiodeFX->effect        = waitAndRead();
-                buffer_DiodeFX->colour        = waitAndRead();
-                buffer_DiodeFX->offset        = waitAndRead();
-                buffer_DiodeFX->speed         = waitAndRead();
-                buffer_DiodeFX->repeat        = 1;
+                buffer_DiodeFX->vfxData.effect        = waitAndRead();
+                buffer_DiodeFX->vfxData.colour        = waitAndRead();
+                buffer_DiodeFX->vfxData.offset        = waitAndRead();
+                buffer_DiodeFX->vfxData.speed         = waitAndRead();
+                buffer_DiodeFX->vfxData.repeat        = true;
                 Serial.println("DD");
             }
             break;

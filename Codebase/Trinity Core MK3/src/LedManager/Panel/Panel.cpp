@@ -1,6 +1,7 @@
 #include "Panel.h"
 
-Panel::Panel(uint8_t number, uint8_t compassDir, bool clockDir, uint8_t diodeAmount)
+//Constructor
+Panel::Panel                                (uint8_t number, uint8_t compassDir, bool clockDir, uint8_t diodeAmount)
 {
 
   diodes = (Diode**)malloc(sizeof(Diode*) * diodeAmount);
@@ -33,7 +34,9 @@ Panel::Panel(uint8_t number, uint8_t compassDir, bool clockDir, uint8_t diodeAmo
   this->offsetTimer         = 0;
 }
 
-void Panel::tick()
+//Public
+//Standard
+void      Panel::tick                       ()
 {
   //printDebug();
 
@@ -50,56 +53,52 @@ void Panel::tick()
     }
   }
 }
-void Panel::setDataFx(uint8_t direction, uint8_t brightness, uint8_t effect, uint8_t colour, uint16_t offset, uint8_t speed, bool repeat)
+//Effects
+void      Panel::setBrightness              (uint8_t brightness)
+{
+  this->brightness  = brightness;
+}
+void      Panel::setVfx                     (VFXData vfxData)
 {
   //Serial.println("Setting Panel Data Fx (In panel)");
-  this->brightness  = brightness;
-  this->effect      = effect;
-  this->colour      = colour;
-  this->offset      = offset;
-  this->speed       = speed;
+  this->effect      = vfxData.effect;
+  this->colour      = vfxData.colour;
+  this->offset      = vfxData.offset;
+  this->speed       = vfxData.speed;
+  this->repeat      = vfxData.repeat;
+  this->detailed    = false;
 
-  //Serial.println("PreSpeed");
-
-  this->repeat      = repeat;
-
-  //Serial.println("Doing some diode shit?");
-
-  for (uint8_t i = 0; i < diodeAmount; i++)
-  {
-    diodes[i]->setDataFx(brightness, effect, colour, offset, speed, repeat);
-  }
   //Serial.println("Done in panel");
 }
-void Panel::setDataCustom(uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
+void      Panel::setDataCustom              (uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
 {
   for (uint8_t i = 0; i < diodeAmount; i++)
   {
     diodes[i]->setDataCustom(customRGBAmount, customRGB);
   }
 }
-void Panel::setDiodeDataFx(uint8_t diodeNumber, uint8_t brightness, uint8_t effect, uint8_t colour, uint16_t offset, uint8_t speed, bool repeat)
+//Diode Effects
+void      Panel::setDiodeBrightness         (uint8_t diodeNumber, uint8_t brightness)
 {
-  diodes[diodeNumber]->setDataFx(brightness, effect, colour, offset, speed, repeat);
+  diodes[diodeNumber]->setBrightness(brightness);
 }
-void Panel::setDiodeDataCustom(uint8_t diodeNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
+void      Panel::setDiodeVfx                (uint8_t diodeNumber, VFXData vfxData)
+{
+  diodes[diodeNumber]->setVfx(vfxData);
+}
+void      Panel::setDiodeDataCustom         (uint8_t diodeNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
 {
   for (uint8_t i = 0; i < diodeAmount; i++)
   {
     diodes[i]->setDataCustom(customRGBAmount, customRGB);
   }
 }
-
-CRGB Panel::getPanelRGB()
+//Technical
+CRGB      Panel::getDiodeRGB                (uint8_t diodeNumber, uint8_t brightness) //Todo: Send own RGB if !detailed
 {
-  uint8_t redValue    = (this->r * this->brightness)/255;
-  uint8_t greenValue  = (this->g * this->brightness)/255;
-  uint8_t blueValue   = (this->b * this->brightness)/255;
   
-  return CRGB(redValue, greenValue, blueValue);
-}
-CRGB Panel::getDiodeRGB(byte number, uint8_t brightness)
-{
+
+
   if(number >= diodeAmount)
   {
     Serial.println(F("Too high diode number requested"));
@@ -107,20 +106,56 @@ CRGB Panel::getDiodeRGB(byte number, uint8_t brightness)
   }
 
   return diodes[number]->getRGB(brightness);
+
+  /*
+  uint8_t redValue    = (this->r * this->brightness)/255;
+  uint8_t greenValue  = (this->g * this->brightness)/255;
+  uint8_t blueValue   = (this->b * this->brightness)/255;
+  return CRGB(redValue, greenValue, blueValue);
+  */
 }
-uint8_t Panel::getDiodeAmount()
+uint16_t  Panel::getDiodeAmount             ()
 {
   return diodeAmount;
 }
-uint8_t Panel::getDiodeStart()
+uint16_t  Panel::getDiodeStart              ()
 {
   return diodeStart;
 }
-void Panel::setDiodeStart(byte ledStart)
+void      Panel::setDiodeStart              (uint16_t ledStart)
 {
   this->diodeStart = ledStart;
 }
-void Panel::printDebug()
+//Transmissions
+String    Panel::convertToTransmission      ()
+{
+  String data = "";
+  
+  data += (char)number;
+  data += (char)compassDir;
+  data += (char)clockDir;
+  data += (char)diodeAmount; // Amount of leds in this panel
+
+  data += (char)brightness;
+  data += (char)effect;
+  data += (char)colour;
+  data += (char)offset;
+  data += (char)speed;
+  data += (char)repeat;
+  data += (char)detailed;
+
+  data += (char)r;
+  data += (char)g;
+  data += (char)b;
+
+  return data;
+}
+String    Panel::convertDiodeToTransmission (uint8_t diodeNumber)
+{
+  return diodes[diodeNumber]->convertToTransmission();
+}
+//Debug
+void      Panel::printDebug                 ()
 {
   Serial.println();
   Serial.print(F("Panel "));
@@ -169,30 +204,3 @@ void Panel::printDebug()
   
 }
 
-String Panel::convertToTransmission()
-{
-  String data = "";
-  
-  data += (char)number;
-  data += (char)compassDir;
-  data += (char)clockDir;
-  data += (char)diodeAmount; // Amount of leds in this panel
-
-  data += (char)brightness;
-  data += (char)effect;
-  data += (char)colour;
-  data += (char)offset;
-  data += (char)speed;
-  data += (char)repeat;
-  data += (char)detailed;
-
-  data += (char)r;
-  data += (char)g;
-  data += (char)b;
-
-  return data;
-}
-String Panel::convertDiodeToTransmission(uint8_t diodeNumber)
-{
-  return diodes[diodeNumber]->convertToTransmission();
-}
