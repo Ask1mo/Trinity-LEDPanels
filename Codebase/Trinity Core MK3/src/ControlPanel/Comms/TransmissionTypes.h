@@ -3,7 +3,7 @@
 #define TRANSMISSIONTYPES_H
 
 #include <Arduino.h>
-#include "./LedManager/effectApplications.h"
+#include "./LedManager/effectProcessor/effectProcessor.h"
 //#include "./LedManager/Panel/Diode/Diode.h"
 #include "DataTypes.h"
 

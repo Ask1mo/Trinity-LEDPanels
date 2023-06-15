@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 #include <FastLED.h>
-#include "ledManager/effectApplications.h"
+#include "ledManager/effectProcessor/effectProcessor.h"
 #include "DataTypes.h"
 
 
@@ -38,7 +38,6 @@ private:
   uint8_t                                   c; //Current colour (Can cycle because of COLOUR_COLOURCYCLE)
   uint8_t                                   fxProgression; //Current part of the effect
   uint16_t                                  offsetTimer;
-  EffectApplications                        effectApplications;
 
 public:
   Diode                                     (uint8_t number);

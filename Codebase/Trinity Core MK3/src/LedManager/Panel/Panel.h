@@ -23,17 +23,22 @@ class Panel
 {
 private:
   Diode                                     **diodes;
+
   uint8_t                                   number;
+
   uint8_t                                   compassDir;
   bool                                      clockDir;
+
   uint16_t                                  diodeAmount; // Amount of leds in this panel
   uint16_t                                  diodeStart;  // The coordinate of the first LED
   uint8_t                                   brightness;
+
   uint8_t                                   effect;
   uint8_t                                   colour;
   uint16_t                                  offset;
   uint8_t                                   speed;
   bool                                      repeat;
+  
   bool                                      detailed;
   uint8_t                                   rCustom;
   uint8_t                                   gCustom;

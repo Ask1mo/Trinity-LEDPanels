@@ -39,7 +39,7 @@ bool EffectApplications::getColourClearance(byte colourToClear, byte colourChann
 }
 
 //Public
-bool EffectApplications::stock_static(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
+bool EffectApplications::stock_static           (ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
 {
   bool allowR = getColourClearance(colour, COLOUR_RED);
   bool allowG = getColourClearance(colour, COLOUR_GREEN);
@@ -72,7 +72,7 @@ bool EffectApplications::stock_static(ColourRGB *rgb, uint8_t *d, uint8_t *progF
 
   return false;
 }
-bool EffectApplications::stock_blink(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
+bool EffectApplications::stock_blink            (ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
 {
   bool allowR = getColourClearance(colour, COLOUR_RED);
   bool allowG = getColourClearance(colour, COLOUR_GREEN);
@@ -118,7 +118,7 @@ bool EffectApplications::stock_blink(ColourRGB *rgb, uint8_t *d, uint8_t *progFx
   }
   return false;
 }
-bool EffectApplications::stock_plane(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
+bool EffectApplications::stock_plane            (ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
 {
   bool allowR = getColourClearance(colour, COLOUR_RED);
   bool allowG = getColourClearance(colour, COLOUR_GREEN);
@@ -192,7 +192,7 @@ bool EffectApplications::stock_plane(ColourRGB *rgb, uint8_t *d, uint8_t *progFx
   }
   return false;
 }
-bool EffectApplications::stock_breathing(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
+bool EffectApplications::stock_breathing        (ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
 {
   bool allowR = getColourClearance(colour, COLOUR_RED);
   bool allowG = getColourClearance(colour, COLOUR_GREEN);
@@ -233,7 +233,7 @@ bool EffectApplications::stock_breathing(ColourRGB *rgb, uint8_t *d, uint8_t *pr
   }
   return false;
 }
-bool EffectApplications::stock_pausedbreathing(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
+bool EffectApplications::stock_pausedbreathing  (ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
 {
   bool allowR = getColourClearance(colour, COLOUR_RED);
   bool allowG = getColourClearance(colour, COLOUR_GREEN);
@@ -286,7 +286,7 @@ bool EffectApplications::stock_pausedbreathing(ColourRGB *rgb, uint8_t *d, uint8
   }
   return false;
 }
-bool EffectApplications::stock_flash(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
+bool EffectApplications::stock_flash            (ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
 {
   bool allowR = getColourClearance(colour, COLOUR_RED);
   bool allowG = getColourClearance(colour, COLOUR_GREEN);
@@ -321,7 +321,7 @@ bool EffectApplications::stock_flash(ColourRGB *rgb, uint8_t *d, uint8_t *progFx
   }
   return false;
 }
-bool EffectApplications::stock_pausedFlash(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
+bool EffectApplications::stock_pausedFlash      (ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
 {
   bool allowR = getColourClearance(colour, COLOUR_RED);
   bool allowG = getColourClearance(colour, COLOUR_GREEN);
@@ -361,7 +361,7 @@ bool EffectApplications::stock_pausedFlash(ColourRGB *rgb, uint8_t *d, uint8_t *
   }
   return false;
 }
-bool EffectApplications::stock_heartbeat(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
+bool EffectApplications::stock_heartbeat        (ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
 {
   bool allowR = getColourClearance(colour, COLOUR_RED);
   bool allowG = getColourClearance(colour, COLOUR_GREEN);
@@ -414,7 +414,7 @@ bool EffectApplications::stock_heartbeat(ColourRGB *rgb, uint8_t *d, uint8_t *pr
   }
   return false;
 }
-bool EffectApplications::stock_appear(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
+bool EffectApplications::stock_appear           (ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
 {
   bool allowR = getColourClearance(colour, COLOUR_RED);
   bool allowG = getColourClearance(colour, COLOUR_GREEN);
@@ -478,7 +478,7 @@ bool EffectApplications::stock_appear(ColourRGB *rgb, uint8_t *d, uint8_t *progF
   return false;
 }
 
-bool EffectApplications::custom_static(ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour)
+bool EffectApplications::custom_static          (ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour)
 {
   /*
   if (colour != COLOUR_CYCLE) c = colour;
@@ -519,7 +519,7 @@ bool EffectApplications::custom_static(ColourRGB rgb, uint8_t d, uint8_t c, uint
   */
 }
 
-bool EffectApplications::special_rainbow(ColourRGB *rgb, uint8_t *d, uint8_t *progFx)
+bool EffectApplications::special_rainbow        (ColourRGB *rgb, uint8_t *d, uint8_t *progFx)
 {
   switch (*progFx)
   {
@@ -571,7 +571,7 @@ bool EffectApplications::special_rainbow(ColourRGB *rgb, uint8_t *d, uint8_t *pr
   }
   return false;
 }
-bool EffectApplications::special_fire(ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour)
+bool EffectApplications::special_fire           (ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour)
 {
   /*
   if ((*progFx) == 0)

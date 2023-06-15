@@ -56,43 +56,43 @@ void Diode::tick()
       switch (*effect)
       {
         case EFFECT_STOCK_STATIC:
-        effectFinished = effectApplications.stock_static(&rgb, &d, &fxProgression, c);
+        effectFinished = stock_static(&rgb, &d, &fxProgression, c);
         break;
 
         case EFFECT_STOCK_BLINK:
-        effectFinished = effectApplications.stock_blink(&rgb, &d, &fxProgression, c);
+        effectFinished = stock_blink(&rgb, &d, &fxProgression, c);
         break;
 
         case EFFECT_STOCK_PLANE:
-        effectFinished = effectApplications.stock_plane(&rgb, &d, &fxProgression, c);
+        effectFinished = stock_plane(&rgb, &d, &fxProgression, c);
         break;
 
         case EFFECT_STOCK_BREATHING:
-        effectFinished = effectApplications.stock_breathing(&rgb, &d, &fxProgression, c);
+        effectFinished = stock_breathing(&rgb, &d, &fxProgression, c);
         break;
 
         case EFFECT_STOCK_PAUSEDBREATHING:
-        effectFinished = effectApplications.stock_pausedbreathing(&rgb, &d, &fxProgression, c);
+        effectFinished = stock_pausedbreathing(&rgb, &d, &fxProgression, c);
         break;
 
         case EFFECT_STOCK_FLASH:
-        effectFinished = effectApplications.stock_flash(&rgb, &d, &fxProgression, c);
+        effectFinished = stock_flash(&rgb, &d, &fxProgression, c);
         break;
 
         case EFFECT_STOCK_PAUSEDFLASH:
-        effectFinished = effectApplications.stock_pausedFlash(&rgb, &d, &fxProgression, c);
+        effectFinished = stock_pausedFlash(&rgb, &d, &fxProgression, c);
         break;
 
         case EFFECT_STOCK_HEARTBEAT:
-        effectFinished = effectApplications.stock_heartbeat(&rgb, &d, &fxProgression, c);
+        effectFinished = stock_heartbeat(&rgb, &d, &fxProgression, c);
         break;
 
         case EFFECT_STOCK_APPEAR:
-        effectFinished = effectApplications.stock_appear(&rgb, &d, &fxProgression, c);
+        effectFinished = stock_appear(&rgb, &d, &fxProgression, c);
         break;
 
         case EFFECT_SPECIAL_RAINBOW:
-        effectFinished = effectApplications.special_rainbow(&rgb, &d, &fxProgression);
+        effectFinished = special_rainbow(&rgb, &d, &fxProgression);
         break;
 
         case EFFECT_SPECIAL_FIRE:
