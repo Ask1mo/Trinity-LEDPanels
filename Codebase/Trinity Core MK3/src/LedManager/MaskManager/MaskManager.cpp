@@ -1,117 +1,93 @@
-#include "ledManager.h"
+#include "MaskManager.h"
 
 //Constructor
-LedManager::LedManager                              (Panel **panelsArg)
+MaskManager::MaskManager                              (Panel **panels)
 {
-  Serial.println(F("LedManager Starting..."));
+  Serial.println(F("MaskManager Starting..."));
 
-  panelsAmount  = PANELAMOUNT;
-  brightness    = 100;
-  speed         = 1;
-  enabled       = 1;
-  panels        = panelsArg;
+  maskMode = MASKMODE_DISABLED;
 
-  int ledAmount = 0;
-  for (uint8_t i = 0; i < PANELAMOUNT; i++)
+  for (uint8_t i = 0; i < CANVASWIDTH; i++)
   {
-    panels[i]->setDiodeStart(ledAmount);
-    ledAmount += panels[i]->getDiodeAmount();
+    for (uint8_t j = 0; j < CANVASWIDTH; j++)
+    {
+      canvasPanels[i][j] = NULL;
+    }
   }
 
-  #ifdef PLATFORM_ARDUINO
-  FastLED.addLeds<WS2812, PIN_LEDS, GRB>(leds, LEDAMOUNT);
-  #endif
-  #ifdef PLATFORM_ESP32FIREBEETLE2
-  FastLED.addLeds<WS2812, PIN_LEDS, GRB>(leds, LEDAMOUNT);
-  #endif
-  #ifdef PLATFORM_ESP32FIREBEETLE2_DEBUG
-  FastLED.addLeds<NEOPIXEL, PIN_LEDS>(leds, LEDAMOUNT);
-  #endif
+  for (uint8_t i = 0; i < PANELAMOUNT; i++)
+  {
+    canvasPanels[panels[i]->getX()][panels[i]->getY()] = panels[i];
+  }
 
-  Serial.println(F("...LedManager Started"));
+  printDebugCanvas();
+  
+
+
+  Serial.println(F("...MaskManager Started"));
+}
+
+//Private
+void    MaskManager::printDebugCanvas                 ()
+{
+  Serial.println(F("Printing Panel Canvas"));
+
+  for (uint8_t i = 0; i < CANVASWIDTH; i++)
+  {
+    Serial.print(F("X"));
+    Serial.print(i);
+    Serial.print("] ");
+    for (uint8_t j = 0; j < CANVASWIDTH; j++)
+    {
+      if (canvasPanels[i][j])
+      {
+        uint8_t panelNumber = canvasPanels[i][j]->getPanelNumber();
+        if(panelNumber < 10)
+        {
+          Serial.print(0);//Addds a 0 to numbers lower than 10 for uniformity
+        }
+        Serial.print(panelNumber);
+        Serial.print(F(", "));
+      }
+      else
+      {
+        Serial.print(F("__"));
+      }
+    }
+    Serial.println();
+  }
 }
 
 //Public
-//Standard
-void    LedManager::tick                            () 
+void    MaskManager::tick                             () 
 {
-  for (uint8_t i = 0; i < panelsAmount; i++)
+  switch (maskMode)
   {
-    panels[i]->tick();
+    case MASKMODE_DISABLED:
+    return;
+    break;
 
-    for(uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
-    {
-      leds[panels[i]->getDiodeStart()+j] = panels[i]->getDiodeRGB(j, brightness);
-    }
+    case MASKMODE_ONETIME_FADEIN:
+    break;
+
+    case MASKMODE_ONETIME_FADEOUT:
+    break;
+
+    case MASKMODE_REPEATING_MUSIC:
+    break;
+
+    case MASKMODE_REPEATING_EMERGENCY:
+    break;
+
+    case MASKMODE_REPEATING_STROKE:
+    break;
   }
 } 
-void    LedManager::print                           () 
+void    MaskManager::print                            () 
 {
   FastLED.show(); 
 }
-//Effects
-uint8_t LedManager::getBrightness                   ()
+void    MaskManager::setMode                    	    (uint8_t maskMode)
 {
-  return brightness;
-}
-void    LedManager::setBrightness                   (uint8_t brightness)
-{
-  this->brightness = brightness;
-}
-//Panel Effects
-void    LedManager::setPanelBrightness              (uint8_t panelNumber, uint8_t brightness)
-{
-  //Serial.println("Setting panel data (In ledmanager)");
-  panels[panelNumber]->setBrightness(brightness);
-}
-void    LedManager::setPanelVfx                     (uint8_t panelNumber, VFXData vfxData)
-{
-  //Serial.println("Setting panel data (In ledmanager)");
-  panels[panelNumber]->setVfx(vfxData);
-}
-void    LedManager::setPanelCustomData              (uint8_t panelNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
-{
-  panels[panelNumber]->setDataCustom(customRGBAmount, customRGB);
-}
-//Diode Effects
-void    setPanelBrightness                          (uint8_t panelNumber, uint8_t diodeNumber, uint8_t brightness)
-{
-  
-}
-void    LedManager::setPanelDiodeVfx                (uint8_t panelNumber, uint8_t diodeNumber, VFXData vfxData)
-{
-  //Serial.println("Setting diode data (In ledmanager)");
-  panels[panelNumber]->setDiodeVfx(diodeNumber, vfxData);
-}
-//Technical
-void    LedManager::setEnabled                      (bool enabled)
-{
-  this->enabled = enabled;
-}
-uint8_t LedManager::getPanelAmount                  ()
-{
-  return panelsAmount;
-}
-uint8_t LedManager::getPanelDiodeAmount             (uint8_t panelNumber)
-{
-  return panels[panelNumber]->getDiodeAmount();
-}
-//Transmissions
-String  LedManager::convertToTansmission            ()
-{
-  String data = "";
-  
-  data += (char)brightness;
-  data += (char)speed;
-  data += (char)enabled;
-
-  return data;
-}
-String  LedManager::convertPanelToTransmission      (uint8_t panelNumber)
-{
-  return panels[panelNumber]->convertToTransmission();
-}
-String  LedManager::convertPanelDiodeToTransmission (uint8_t panelNumber,uint8_t diodeNumber)
-{
-  return panels[panelNumber]->convertDiodeToTransmission(diodeNumber);
+  this->maskMode = maskMode;
 }

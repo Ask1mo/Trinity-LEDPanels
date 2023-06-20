@@ -1,44 +1,29 @@
 #ifndef MASKMANAGERR_H
 #define MASKMANAGERR_H
 
-#include "Panel/Panel.h"
-#include "../setup.h"
+#include "LedManager/ledManager.h"
+#include "setup.h"
 
-class LedManager
+#define MASKMODE_DISABLED             0
+#define MASKMODE_ONETIME_FADEIN       1
+#define MASKMODE_ONETIME_FADEOUT      2
+#define MASKMODE_REPEATING_MUSIC      3
+#define MASKMODE_REPEATING_EMERGENCY  4
+#define MASKMODE_REPEATING_STROKE     5
+
+class MaskManager
 {
 private:
-  uint8_t                                 panelsAmount;
-  uint8_t                                 brightness;
-  bool                                    speed;
-  bool                                    enabled;
-  Panel                                   **panels;
-  CRGB                                    leds[LEDAMOUNT];
+  Panel                                   *canvasPanels[CANVASWIDTH][CANVASHEIGHT];
+  uint8_t                                 maskMode;
+  void    printDebugCanvas                ();
   
 
 public:
-  LedManager                              (Panel **panelsArg);
-  //Standard
+  MaskManager                             (Panel **panels);                       
   void    tick                            ();
   void    print                           ();
-  //Effects
-  uint8_t getBrightness                   ();
-  void    setBrightness                   (uint8_t brightness);
-  //Panel Effects
-  void    setPanelBrightness              (uint8_t panelNumber, uint8_t brightness);
-  void    setPanelVfx                     (uint8_t panelNumber, VFXData vfxData);
-  void    setPanelCustomData              (uint8_t panelNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);
-  //Diode Effects
-  void    setPanelBrightness              (uint8_t panelNumber, uint8_t diodeNumber, uint8_t brightness);
-  void    setPanelDiodeVfx                (uint8_t panelNumber, uint8_t diodeNumber, VFXData vfxData);
-  void    setPanelCustomData              (uint8_t panelNumber, uint8_t diodeNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);
-  //Technical
-  void    setEnabled                      (bool enabled);
-  uint8_t getPanelAmount                  ();
-  uint8_t getPanelDiodeAmount             (uint8_t panelNumber);
-  //Transmissions
-  String  convertToTansmission            ();
-  String  convertPanelToTransmission      (uint8_t panelNumber);
-  String  convertPanelDiodeToTransmission (uint8_t panelNumber,uint8_t diodeNumber);
+  void    setMode                         (uint8_t maskMode);
 };
 
 #endif

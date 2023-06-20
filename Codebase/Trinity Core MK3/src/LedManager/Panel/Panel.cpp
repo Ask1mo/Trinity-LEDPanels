@@ -1,7 +1,7 @@
 #include "Panel.h"
 
 //Constructor
-Panel::Panel                                (uint8_t number, uint8_t compassDir, bool clockDir, uint8_t diodeAmount)
+Panel::Panel                                (uint8_t number, uint8_t x, uint8_t y, uint8_t compassDir, bool clockDir, uint8_t diodeAmount)
 {
 
   diodes = (Diode**)malloc(sizeof(Diode*) * diodeAmount);
@@ -11,8 +11,12 @@ Panel::Panel                                (uint8_t number, uint8_t compassDir,
   }
 
   this->number        = number;
+
+  this->x             = x;
+  this->y             = y;
   this->compassDir    = compassDir;
   this->clockDir      = clockDir;
+
   this->diodeAmount   = diodeAmount;
   this->diodeStart    = 0;  // The coordinate of the first LED
 
@@ -93,7 +97,24 @@ void      Panel::setDiodeDataCustom         (uint8_t diodeNumber, uint8_t custom
     diodes[i]->setDataCustom(customRGBAmount, customRGB);
   }
 }
+//Mask Effects
+void      Panel::setMaskPercentage          (uint8_t percentage)
+{
+  
+}
 //Technical
+uint8_t   Panel::getPanelNumber             ()
+{
+  return number;
+}
+uint8_t   Panel::getX                       ()
+{
+  return x;
+}
+uint8_t   Panel::getY                       ()
+{
+  return y;
+}
 CRGB      Panel::getDiodeRGB                (uint8_t diodeNumber, uint8_t brightness) //Todo: Send own RGB if !detailed
 {
   

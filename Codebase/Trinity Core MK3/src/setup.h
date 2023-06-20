@@ -46,8 +46,10 @@
     #define LEDAMOUNT 170
 #endif
 #ifdef PANELSETUP_PRIME
-    #define PANELAMOUNT 16
-    #define LEDAMOUNT 272
+    #define PANELAMOUNT     16
+    #define LEDAMOUNT       272
+    #define CANVASWIDTH     7
+    #define CANVASHEIGHT    7
 #endif
 #ifdef PANELSETUP_TEST
     #define PANELAMOUNT 6
