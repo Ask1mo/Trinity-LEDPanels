@@ -14,6 +14,8 @@
 #define BRIGHTNESS_3_MAX 255
 #define BRIGHTNESS_4_AUT 99
 
+#define NEXTEFFECTTIME 20000
+
 Panel         **panels;
 LedManager    *ledManager;
 AskButton     *button;
@@ -21,7 +23,10 @@ LightSensor   *lightSensor;
 SleepTimer    *sleepTimer;
 Comms         *comms;
 
+uint64_t prevMillis;
+uint8_t currentShowingEffect;
 //uint8_t brightnessLevel;
+
 void setupPanels();
 
 void tick();

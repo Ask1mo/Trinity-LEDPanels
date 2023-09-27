@@ -731,6 +731,81 @@ void loop()
 
   ledManager->tick();
   ledManager->print();
+
+
+  //Cycle code?
+    uint64_t currentMillis = millis();
+    if(currentMillis >= (prevMillis+NEXTEFFECTTIME))
+    {
+      prevMillis = currentMillis;
+      currentShowingEffect++;
+      if (currentShowingEffect == 18)
+      {
+        currentShowingEffect = 0;
+      }
+      playResetAnimation();
+      
+
+      switch (currentShowingEffect)
+      {
+        case 0:
+        setAnimation_Default();
+        break;
+        case 1:
+        setAnimation_BreathingLines();
+        break;
+        case 2:
+        setAnimation_FlashingLines();
+        break;
+        case 3:
+        setAnimation_Rain();
+        break;
+        case 4:
+        setAnimation_Matrix();
+        break;
+        case 5:
+        setAnimation_SuperRainbow();
+        break;
+        case 6:
+        setAnimation_ADHDRainbow();
+        break;
+        case 7:
+        setAnimation_BurningRainbow();
+        break;
+        case 8:
+        setAnimation_LowFPSRainbow();
+        break;
+        case 9:
+        setAnimation_HeartbeatTower();
+        break;
+        case 10:
+        setAnimation_Stoplight();
+        break;
+        case 11:
+        setAnimation_PowerRise();
+        break;
+        case 12:
+        setAnimation_Fishbowl();
+        break;
+        case 13:
+        setAnimation_Coils();
+        break;
+        case 14:
+        setAnimation_AppearThing();
+        break;
+        case 15:
+        setAnimation_AppearThing2();
+        break;
+        case 16:
+        setAnimation_AppearThing3();
+        break;
+        case 17:
+        setAnimation_AppearThing4();
+        break;
+
+      }
+    }
+//End cycle code?
 }
 
 
