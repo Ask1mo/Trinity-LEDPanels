@@ -23,6 +23,7 @@ public:
   //Effects
   uint8_t getBrightness                   ();
   void    setBrightness                   (uint8_t brightness);
+  void    setSpeed                        (uint8_t speed);
   //Panel Effects
   void    setPanelBrightness              (uint8_t panelNumber, uint8_t brightness);
   void    setPanelVfx                     (uint8_t panelNumber, VFXData vfxData);
@@ -39,6 +40,8 @@ public:
   String  convertToTansmission            ();
   String  convertPanelToTransmission      (uint8_t panelNumber);
   String  convertPanelDiodeToTransmission (uint8_t panelNumber,uint8_t diodeNumber);
-};
+
+  
+};  
 
 #endif

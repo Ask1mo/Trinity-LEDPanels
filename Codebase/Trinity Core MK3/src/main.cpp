@@ -71,6 +71,430 @@ void setupPanels()
   return;
 }
 
+void playResetAnimation()
+{
+  int panelMultiplier = 2;
+
+  ledManager->setBrightness(255);
+  ledManager->setSpeed(1);
+
+  for (uint16_t i = 0; i < PANELAMOUNT; i++)
+  {
+    VFXData vfxData;
+    vfxData.effect = EFFECT_STOCK_APPEAR;
+    vfxData.colour = COLOUR_RED;
+    vfxData.offset = (i*panelMultiplier);
+    vfxData.speed = 1;
+    vfxData.repeat = 1;
+    panels[i]->setVfx(vfxData);
+    for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+    {
+      panels[i]->setDiodeVfx(j, (VFXData){EFFECT_STOCK_FLASH, COLOUR_VIOLET, j, 1, false});
+    }
+
+    Serial.print("Editing panel ");
+    Serial.println(i);
+  }
+
+
+  for (int i = 0; i < (PANELAMOUNT*panelMultiplier*2); i++) //*2 is just to make sure all the diodes in every panel have lit up
+  {
+    delay(1);
+    ledManager->tick();
+    ledManager->print();
+  }
+
+  delay(1000);
+  
+}
+void playDroneResetAnimation()
+{
+  ledManager->setBrightness(255);
+  ledManager->setSpeed(5);
+
+  for (uint16_t i = 0; i < PANELAMOUNT; i++)
+  {
+    panels[i]->setVfx((VFXData){EFFECT_STOCK_APPEAR, COLOUR_RED, i, 1, true});
+    for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+    {
+      panels[i]->setDiodeVfx(j, (VFXData){EFFECT_STOCK_PLANE, COLOUR_WHITE, 0, 1, false});
+    }
+
+  Serial.print("Editing panel ");
+  Serial.println(i);
+  }
+
+
+  for (int i = 0; i < 20; i++)
+  {
+    ledManager->tick();
+    ledManager->print();
+  }
+  
+}
+
+void setAnimation_FullWhite()
+{
+  
+
+
+    uint16_t offset = 0;
+    for (uint16_t i = 0; i < PANELAMOUNT; i++)
+    {
+    panels[i]->setVfx((VFXData){EFFECT_STOCK_STATIC, COLOUR_WHITE, (uint8_t)random(0, 10)*15, 1, true});
+    for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+    {
+      panels[i]->setDiodeVfx(j, (VFXData){EFFECT_STOCK_STATIC, COLOUR_WHITE, 0, 5, true});
+      offset++;
+    }
+
+    Serial.print("Editing panel ");
+    Serial.println(i);
+    }
+}
+void setAnimation_Default()
+{
+  
+
+
+    uint16_t offset = 0;
+    for (uint16_t i = 0; i < PANELAMOUNT; i++)
+    {
+    panels[i]->setVfx((VFXData){EFFECT_STOCK_APPEAR, COLOUR_RED, (uint8_t)random(0, 10)*15, 1, true});
+    for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+    {
+      panels[i]->setDiodeVfx(j, (VFXData){EFFECT_SPECIAL_RAINBOW, COLOUR_RED, 0, 5, true});
+      offset++;
+    }
+
+    Serial.print("Editing panel ");
+    Serial.println(i);
+    }
+}
+void setAnimation_BreathingLines()
+{
+  uint16_t offset = 0;
+    for (uint16_t i = 0; i < PANELAMOUNT; i++)
+    {
+      panels[i]->setVfx((VFXData){EFFECT_STOCK_APPEAR, COLOUR_RED, (uint8_t)random(0, 10)*15, 1, true});
+      for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+      {
+        panels[i]->setDiodeVfx(j, (VFXData){EFFECT_STOCK_PAUSEDBREATHING, COLOUR_CYCLE, j, 20, true});
+      }
+
+      Serial.print("Editing panel ");
+      Serial.println(i);
+    }
+}
+void setAnimation_FlashingLines()
+{
+  uint16_t offset = 0;
+    for (uint16_t i = 0; i < PANELAMOUNT; i++)
+    {
+      panels[i]->setVfx((VFXData){EFFECT_STOCK_APPEAR, COLOUR_RED, (uint8_t)random(0, 10)*15, 1, true});
+      for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+      {
+        panels[i]->setDiodeVfx(j, (VFXData){EFFECT_STOCK_PAUSEDFLASH, COLOUR_WHITE, j, 10, true});
+      }
+
+      Serial.print("Editing panel ");
+      Serial.println(i);
+    }
+}
+void setAnimation_Rain()
+{
+  uint16_t offset = 0;
+    for (uint16_t i = 0; i < PANELAMOUNT; i++)
+    {
+      panels[i]->setVfx((VFXData){EFFECT_STOCK_APPEAR, COLOUR_RED, (uint8_t)random(0, 10)*15, 1, true});
+      for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+      {
+        panels[i]->setDiodeVfx(j, (VFXData){EFFECT_STOCK_PAUSEDFLASH, COLOUR_BLUE, j, (uint8_t)random(0, 10), true});
+      }
+
+      Serial.print("Editing panel ");
+      Serial.println(i);
+    }
+}
+void setAnimation_Matrix()
+{
+  uint16_t offset = 0;
+    for (uint16_t i = 0; i < PANELAMOUNT; i++)
+    {
+      panels[i]->setVfx((VFXData){EFFECT_STOCK_APPEAR, COLOUR_RED, (uint8_t)random(0, 10)*15, 1, true});
+      for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+      {
+        panels[i]->setDiodeVfx(j, (VFXData){EFFECT_STOCK_APPEAR, COLOUR_GREEN, j, 10, true});
+      }
+
+      Serial.print("Editing panel ");
+      Serial.println(i);
+    }
+}
+void setAnimation_SuperRainbow()
+{
+  ledManager->setSpeed(5);
+  uint16_t offset = 0;
+    for (uint16_t i = 0; i < PANELAMOUNT; i++)
+    {
+      panels[i]->setVfx((VFXData){EFFECT_STOCK_APPEAR, COLOUR_RED, 0, 1, true});
+      for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+      {
+        panels[i]->setDiodeVfx(j, (VFXData){EFFECT_SPECIAL_RAINBOW, COLOUR_RED, offset, 10, true});
+        offset++;
+      }
+  
+
+      Serial.print("Editing panel ");
+      Serial.println(i);
+    }
+}
+void setAnimation_ADHDRainbow()
+{
+  //ledManager->setSpeed(10);
+  uint16_t offset = 0;
+    for (uint16_t i = 0; i < PANELAMOUNT; i++)
+    {
+      panels[i]->setVfx((VFXData){EFFECT_STOCK_APPEAR, COLOUR_RED, 0, 1, true});
+      for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+      {
+        panels[i]->setDiodeVfx(j, (VFXData){EFFECT_SPECIAL_RAINBOW, COLOUR_RED, offset, 100, true});
+        offset++;
+      }
+      Serial.print("Editing panel ");
+      Serial.println(i);
+    }
+
+    for (int i = 0; i < 500; i++)
+  {
+    ledManager->tick();
+  }
+}
+void setAnimation_BurningRainbow()
+{
+  ledManager->setSpeed(10);
+
+  uint16_t offset = 0;
+    for (uint16_t i = 0; i < PANELAMOUNT; i++)
+    {
+      panels[i]->setVfx((VFXData){EFFECT_STOCK_APPEAR, COLOUR_RED, i*5, 10, true});
+      for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+      {
+        panels[i]->setDiodeVfx(j, (VFXData){EFFECT_SPECIAL_RAINBOW, COLOUR_RED, j*5, 10, true});
+        offset++;
+      }
+  
+
+      Serial.print("Editing panel ");
+      Serial.println(i);
+    }
+}
+void setAnimation_LowFPSRainbow()
+{
+  ledManager->setSpeed(100);
+
+  uint16_t offset = 0;
+    for (uint16_t i = 0; i < PANELAMOUNT; i++)
+    {
+      panels[i]->setVfx((VFXData){EFFECT_STOCK_APPEAR, COLOUR_RED, i*5, 10, true});
+      for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+      {
+        panels[i]->setDiodeVfx(j, (VFXData){EFFECT_SPECIAL_RAINBOW, COLOUR_RED, j*5, 10, true});
+        offset++;
+      }
+  
+
+      Serial.print("Editing panel ");
+      Serial.println(i);
+    }
+}
+void setAnimation_HeartbeatTower()
+{
+  ledManager->setSpeed(10);
+
+  uint16_t offset = 0;
+    for (uint16_t i = 0; i < PANELAMOUNT; i++)
+    {
+      panels[i]->setVfx((VFXData){EFFECT_STOCK_APPEAR, COLOUR_RED, i*4, 1, true});
+      for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+      {
+        panels[i]->setDiodeVfx(j, (VFXData){EFFECT_STOCK_HEARTBEAT, COLOUR_RED, 0, 1, true});
+        offset++;
+      }
+  
+
+      Serial.print("Editing panel ");
+      Serial.println(i);
+    }
+}
+void setAnimation_Stoplight()
+{
+  ledManager->setSpeed(25);
+
+  uint16_t offset = 0;
+    for (uint16_t i = 0; i < PANELAMOUNT; i++)
+    {
+      panels[i]->setVfx((VFXData){EFFECT_STOCK_APPEAR, COLOUR_RED, offset, 1, true});
+      for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+      {
+        panels[i]->setDiodeVfx(j, (VFXData){EFFECT_STOCK_PAUSEDFLASH, COLOUR_CYCLE, offset, 1, true});
+        offset+=3;
+      }
+  
+
+      Serial.print("Editing panel ");
+      Serial.println(i);
+    }
+}
+void setAnimation_PowerRise()
+{
+  ledManager->setSpeed(50);
+
+  uint16_t offset = 0;
+    for (uint16_t i = 0; i < PANELAMOUNT; i++)
+    {
+      panels[i]->setVfx((VFXData){EFFECT_STOCK_APPEAR, COLOUR_RED, offset, 1, true});
+      for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+      {
+        panels[i]->setDiodeVfx(j, (VFXData){EFFECT_STOCK_PAUSEDFLASH, COLOUR_CYAN, offset, 1, true});
+        offset++;
+      }
+  
+
+      Serial.print("Editing panel ");
+      Serial.println(i);
+    }
+}
+void setAnimation_Fishbowl()
+{
+  ledManager->setSpeed(10);
+
+  uint16_t offset = 0;
+    for (uint16_t i = 0; i < PANELAMOUNT; i++)
+    {
+      panels[i]->setVfx((VFXData){EFFECT_STOCK_APPEAR, COLOUR_RED, offset, 1, true});
+      for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+      {
+        panels[i]->setDiodeVfx(j, (VFXData){EFFECT_STOCK_PAUSEDFLASH, COLOUR_CYCLE, offset, 1, true});
+        offset+=10;
+      }
+  
+
+      Serial.print("Editing panel ");
+      Serial.println(i);
+    }
+
+
+  for (int i = 0; i < 900; i++)
+  {
+    ledManager->tick();
+  }
+}
+void setAnimation_Coils()
+{
+  ledManager->setSpeed(10);
+
+  uint16_t offset = 0;
+
+  for (uint8_t i = 0; i < PANELAMOUNT; i++)
+  {
+    panels[i]->setVfx((VFXData){EFFECT_STOCK_APPEAR, COLOUR_RED, 0, 1, true});
+    for (uint8_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+    {
+      panels[i]->setDiodeVfx(i, VFXData{ EFFECT_STOCK_APPEAR, COLOUR_CYCLE, offset, 1, true});
+      offset++;
+    }
+  }
+}
+void setAnimation_AppearThing()
+{
+  ledManager->setSpeed(20);
+
+  uint16_t offset = 0;
+
+  for (uint8_t i = 0; i < PANELAMOUNT; i++)
+  {
+    panels[i]->setVfx((VFXData){EFFECT_STOCK_APPEAR, COLOUR_RED, (uint8_t)random(0, 100), 1, true});
+    for (uint8_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+    {
+      panels[i]->setDiodeVfx(i, VFXData{ EFFECT_STOCK_APPEAR, COLOUR_CYCLE, (uint8_t)random(0, 100), 1, true});
+      offset++;
+    }
+  }
+
+}
+void setAnimation_AppearThing2()
+{
+  ledManager->setSpeed(10);
+
+  uint16_t offset = 0;
+
+  for (uint8_t i = 0; i < PANELAMOUNT; i++)
+  {
+    panels[i]->setVfx((VFXData){EFFECT_STOCK_APPEAR, COLOUR_RED, (uint8_t)random(0, 100), 1, true});
+    for (uint8_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+    {
+      panels[i]->setDiodeVfx(i, VFXData{ EFFECT_STOCK_STATIC, COLOUR_CYCLE, (uint8_t)random(0, 100), 1, true});
+      offset++;
+    }
+  }
+
+}
+void setAnimation_AppearThing3()
+{
+  ledManager->setSpeed(10);
+
+  uint16_t offset = 0;
+
+  for (uint8_t i = 0; i < PANELAMOUNT; i++)
+  {
+    panels[i]->setVfx((VFXData){EFFECT_STOCK_APPEAR, COLOUR_RED, 0, 1, true});
+    for (uint8_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+    {
+      panels[i]->setDiodeVfx(i, VFXData{ EFFECT_STOCK_STATIC, COLOUR_CYCLE, (uint16_t)random(0, 1000), 1, true});
+      offset++;
+    }
+  }
+}
+void setAnimation_AppearThing4()
+{
+  ledManager->setSpeed(4);
+
+  uint16_t offset = 0;
+
+  for (uint8_t i = 0; i < PANELAMOUNT; i++)
+  {
+    panels[i]->setVfx((VFXData){EFFECT_STOCK_APPEAR, COLOUR_RED, 0, 1, true});
+    for (uint8_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+    {
+      panels[i]->setDiodeVfx(i, VFXData{ EFFECT_STOCK_PAUSEDFLASH, COLOUR_CYCLE, (uint8_t)random(0, 250), 1, true});
+      offset++;
+    }
+  }
+}
+void setAnimation_ColourBlink()
+{
+  ledManager->setSpeed(4);
+
+  uint16_t offset = 0;
+
+  for (uint8_t i = 0; i < PANELAMOUNT; i++)
+  {
+    panels[i]->setVfx((VFXData){EFFECT_STOCK_APPEAR, COLOUR_RED, 0, 1, true});
+    for (uint8_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+    {
+      panels[i]->setDiodeVfx(i, VFXData{ EFFECT_STOCK_STATIC, COLOUR_CYCLE, i, 1, true});
+      offset++;
+    }
+  }
+
+  for (int i = 0; i < 64; i++)
+  {
+    ledManager->tick();
+  }
+}
+
+
 void setup()
 {
   Serial.begin(115200);
@@ -111,7 +535,7 @@ void setup()
 
   for (uint8_t i = 0; i < PANELAMOUNT; i++)
   {
-    //panels[i]->setDataFx(BRIGHTNESS_3_MAX, EFFECT_STOCK_APPEAR, COLOUR_RED, 0, 1, true, true);
+    //panels[i]->setVfx((VFXData){EFFECT_STOCK_APPEAR, COLOUR_RED, 0, 1, true});
     for (uint8_t j = 0; j < panels[i]->getDiodeAmount(); j++)
     {
       /*

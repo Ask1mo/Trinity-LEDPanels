@@ -58,6 +58,10 @@ void    LedManager::setBrightness                   (uint8_t brightness)
 {
   this->brightness = brightness;
 }
+void    LedManager::setSpeed                        (uint8_t speed)
+{
+  this->speed = speed;
+}
 //Panel Effects
 void    LedManager::setPanelBrightness              (uint8_t panelNumber, uint8_t brightness)
 {
