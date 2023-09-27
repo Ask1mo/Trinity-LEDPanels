@@ -53,6 +53,19 @@ void setupPanels()
   panels[4] = new Panel(4, CLOCK_CLOCKWISE,   COMPASS_NORTH,      3);
   panels[5] = new Panel(5, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, 3);
   #endif
+  #ifdef PANELSETUP_CHRISTMAS
+  panels[0] = new Panel(0, 0, 0, CLOCK_CLOCKWISE,   COMPASS_SOUTH_EAST, 10);
+  panels[1] = new Panel(1, 0, 0, CLOCK_CLOCKWISE,   COMPASS_SOUTH,      10);
+  panels[2] = new Panel(2, 0, 0, CLOCK_CLOCKWISE,   COMPASS_SOUTH_WEST, 10);
+  panels[3] = new Panel(3, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, 10);
+  panels[4] = new Panel(4, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10);
+  panels[5] = new Panel(5, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, 10);
+  panels[6] = new Panel(6, 0, 0, CLOCK_CLOCKWISE,   COMPASS_SOUTH_EAST, 10);
+  panels[7] = new Panel(7, 0, 0, CLOCK_CLOCKWISE,   COMPASS_SOUTH,      10);
+  panels[8] = new Panel(8, 0, 0, CLOCK_CLOCKWISE,   COMPASS_SOUTH_WEST, 10);
+  panels[9] = new Panel(9, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, 10);
+
+  #endif
 
   Serial.println(F("Allocating complete"));
   return;

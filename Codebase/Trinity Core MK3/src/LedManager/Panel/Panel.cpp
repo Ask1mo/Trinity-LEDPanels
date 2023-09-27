@@ -3,6 +3,7 @@
 //Constructor
 Panel::Panel                                (uint8_t number, uint8_t x, uint8_t y, uint8_t compassDir, bool clockDir, uint8_t diodeAmount)
 {
+  if(number > 250) Serial.println("Watch out: Panel created with value higher than 250. Remember: This system only supports up to 255 panels.");
 
   diodes = (Diode**)malloc(sizeof(Diode*) * diodeAmount);
   for (uint8_t i = 0; i < diodeAmount; i++)

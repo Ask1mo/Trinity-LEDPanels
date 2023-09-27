@@ -1,6 +1,6 @@
 /*---=== Setup stuff ===---*/
 
-#define PANELSETUP_PRIME //Select your panel setup here:
+#define PANELSETUP_CHRISTMAS //Select your panel setup here:
 //PANELSETUP_ATOS
 //PANELSETUP_EVA
 //PANELSETUP_LIAM
@@ -54,4 +54,8 @@
 #ifdef PANELSETUP_TEST
     #define PANELAMOUNT 6
     #define LEDAMOUNT 18
+#endif
+#ifdef PANELSETUP_CHRISTMAS
+    #define PANELAMOUNT 10
+    #define LEDAMOUNT 50
 #endif

@@ -1,7 +1,7 @@
 #include "Diode.h"
 
 //Constructor
-Diode::Diode(uint8_t number)
+Diode::Diode(uint16_t number)
 {
   this->number = number;
 

@@ -1,3 +1,4 @@
+/*
 #include "MaskManager.h"
 
 //Constructor
@@ -91,3 +92,4 @@ void    MaskManager::setMode                    	    (uint8_t maskMode)
 {
   this->maskMode = maskMode;
 }
+*/

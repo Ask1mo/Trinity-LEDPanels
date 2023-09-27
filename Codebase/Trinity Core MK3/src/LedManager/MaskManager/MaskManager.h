@@ -1,3 +1,4 @@
+/*
 #ifndef MASKMANAGERR_H
 #define MASKMANAGERR_H
 
@@ -27,3 +28,4 @@ public:
 };
 
 #endif
+*/
