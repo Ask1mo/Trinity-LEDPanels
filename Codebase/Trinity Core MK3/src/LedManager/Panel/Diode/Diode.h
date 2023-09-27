@@ -20,7 +20,7 @@
 class Diode
 {
 private:
-  uint8_t                                   number;
+  uint16_t                                  number;
 
   uint8_t                                   brightness;
   uint8_t                                   *effect;
@@ -40,7 +40,7 @@ private:
   uint16_t                                  offsetTimer;
 
 public:
-  Diode                                     (uint8_t number);
+  Diode                                     (uint16_t number);
   //Standard
   void      tick                            ();
   //Effects
