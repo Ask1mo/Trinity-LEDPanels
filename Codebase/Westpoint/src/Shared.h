@@ -1,0 +1,71 @@
+#define ADDR_MASTER             //Address doesn't have to be defined
+#define ADDR_WESTPOINT          42
+#define ADDR_SUNFLOWER_SERVO    43
+#define ADDR_SUNFLOWER_LEDS     44
+#define ADDR_GATE          	    45
+#define ADDR_RING_A		        46
+#define ADDR_RING_B		        47
+#define ADDR_RING_C		        48
+#define ADDR_RING_D		        49
+/*
+#define ADDR_TRIPWIRE_STATION   22
+#define ADDR_TRIPWIRE_SUNFLOWER 23
+#define ADDR_TRIPWIRE
+*/
+
+//Debug Codes: 0-14
+#define CODERANGE_DEBUG_MIN 0
+#define CODERANGE_DEBUG_MAX 14
+#define CODE_DEBUG_VOID                 0
+#define CODE_DEBUG_ACKREQUEST           1
+#define CODE_DEBUG_RECEIVEDWRONGCODE    2
+#define CODE_DEBUG_FALSE                3
+#define CODE_DEBUG_TRUE                 4
+#define CODE_DEBUG_RESET                5   
+#define CODE_DEBUG_RESTART              6
+//Tripwire Codes: 15-24
+#define CODERANGE_TRIPWIRE_MIN 15
+#define CODERANGE_TRIPWIRE_MAX 24
+#define CODE_TRIPWIRE_NODRONE           15   
+#define CODE_TRIPWIRE_YESDRONE          16
+#define CODE_TRIPWIRE_GETDRONE          17
+//Westpoint Codes: 25-39
+#define CODERANGE_WESTPOINT_MIN 25
+#define CODERANGE_WESTPOINT_MAX 39
+#define CODE_WESTPOINT_TURNOFF          25
+#define CODE_WESTPOINT_DEFAULT          26
+#define CODE_WESTPOINT_PERCENTAGE20     27
+#define CODE_WESTPOINT_PERCENTAGE40     28
+#define CODE_WESTPOINT_PERCENTAGE60     29
+#define CODE_WESTPOINT_PERCENTAGE80     30
+#define CODE_WESTPOINT_FINISH           31
+#define CODE_WESTPOINT_RANDOM           32
+#define CODE_WESTPOINT_EFFECT_EYE       33
+#define CODE_WESTPOINT_EFFECT_ZAP       34
+#define CODE_WESTPOINT_EFFECT_HEART     35
+#define CODE_WESTPOINT_EFFECT_GAY       36
+#define CODE_WESTPOINT_EFFECT_SOUND     37
+#define CODE_WESTPOINT_EFFECT_WIND      38
+//Ring Codes: 40-49
+#define CODERANGE_RING_MIN 40
+#define CODERANGE_RING_MAX 49
+#define CODE_RING_TURNOFF		        40
+#define CODE_RING_TURNON		        41
+#define CODE_RING_PLAYPASSEFFECT	    42
+//Sunflower Codes: 50-59
+#define CODERANGE_SUNFLOWER_MIN 50
+#define CODERANGE_SUNFLOWER_MAX 59
+#define CODE_SUNFLOWER_START		    50
+#define CODE_SUNFLOWER_STOP		        51
+//Special Codes: 60-80
+#define CODERANGE_SPECIAL_MIN 60
+#define CODERANGE_SPECIAL_MAX 80
+#define CODE_SPECIAL_RACE_PREPARE       60
+#define CODE_SPECIAL_RACE_GATEOPEN      62
+#define CODE_SPECIAL_RACE_GATEA         63
+#define CODE_SPECIAL_RACE_GATEB         64
+#define CODE_SPECIAL_RACE_GATEC         65
+#define CODE_SPECIAL_RACE_FINISHED      66
+#define CODE_SPECIAL_RACE_COMPLETED     67
+#define CODE_SPECIAL_PLANB	            68
+
