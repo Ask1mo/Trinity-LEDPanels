@@ -19,10 +19,10 @@ LedManager::LedManager                              (Panel **panelsArg)
   }
 
   #ifdef PLATFORM_ARDUINO
-  FastLED.addLeds<WS2812, PIN_LEDS, GRB>(leds, LEDAMOUNT);
+  FastLED.addLeds<WS2812, PIN_LEDS, LEDCOLORDER>(leds, LEDAMOUNT);
   #endif
   #ifdef PLATFORM_ESP32FIREBEETLE2
-  FastLED.addLeds<WS2812, PIN_LEDS, GRB>(leds, LEDAMOUNT);
+  FastLED.addLeds<WS2812, PIN_LEDS, LEDCOLORDER>(leds, LEDAMOUNT);
   #endif
   #ifdef PLATFORM_ESP32FIREBEETLE2_DEBUG
   FastLED.addLeds<NEOPIXEL, PIN_LEDS>(leds, LEDAMOUNT);

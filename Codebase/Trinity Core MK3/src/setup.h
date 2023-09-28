@@ -1,38 +1,47 @@
 /*---=== Setup stuff ===---*/
 
-#define PANELSETUP_CHRISTMAS //Select your panel setup here:
+#define PANELSETUP_CHRISTMAS
+#define PLATFORM_ESP32FIREBEETLE2
+#define LEDTYPE_STANDARD
+
 //PANELSETUP_ATOS
 //PANELSETUP_EVA
 //PANELSETUP_LIAM
 //PANELSETUP_PRIME
 //PANELSETUP_TEST
-#define PLATFORM_ESP32FIREBEETLE2
+
 //PLATFORM_ARDUINO
-//PLATFORM_ESP32FIREBEETLE2
-//PLATFORM_ESP32FIREBEETLE2_DEBUG
+//PLATFORM_ESP32_FIREBEETLE2
+//PLATFORM_ESP32_FIREBEETLE2_DEBUG
+//PLATFORM_ESP32_WROOMDEVKIT
+
+//LEDTYPE_STANDARD
+//LEDTYPE_CHRISTMASSTRING
 
 
 /*---=== Pin Mapping ===---*/
-
 #ifdef PLATFORM_ARDUINO
     #define PIN_BUTTON      2     //D2
     #define PIN_LEDS        12    //D12
     #define PIN_LIGHTSENSOR A0    //A0
 #endif
-#ifdef PLATFORM_ESP32FIREBEETLE2
+#ifdef PLATFORM_ESP32_FIREBEETLE2
     #define PIN_BUTTON      27    //On board button
     #define PIN_LEDS        4     //D?
     #define PIN_LIGHTSENSOR 15    //D?
 #endif
-#ifdef PLATFORM_ESP32FIREBEETLE2_DEBUG
+#ifdef PLATFORM_ESP32_FIREBEETLE2_DEBUG
+    #define PIN_BUTTON      27    //On board button
+    #define PIN_LEDS        5     //On boadr LED
+    #define PIN_LIGHTSENSOR 15    //D?
+#endif
+#ifdef PLATFORM_ESP32_WROOMDEVKIT
     #define PIN_BUTTON      27    //On board button
     #define PIN_LEDS        5     //On boadr LED
     #define PIN_LIGHTSENSOR 15    //D?
 #endif
 
-
 /* ---=== LED Setup ===---*/
-
 #ifdef PANELSETUP_ATOS
     #define PANELAMOUNT 1
     #define LEDAMOUNT 38
@@ -58,4 +67,12 @@
 #ifdef PANELSETUP_CHRISTMAS
     #define PANELAMOUNT 10
     #define LEDAMOUNT 50
+#endif
+
+/* ---=== LED Setup ===---*/
+#ifdef LEDTYPE_STANDARD
+    #define LEDCOLORDER GRB
+#endif
+#ifdef LEDTYPE_CHRISTMASSTRING
+    #define LEDCOLORDER RGB
 #endif
