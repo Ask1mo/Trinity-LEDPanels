@@ -58,7 +58,7 @@ void playDroneResetAnimation()
 
 void setAnimation_FullWhite()
 {
-  
+  Serial.print(F("setAnimation_FullWhite"));
 
 
     uint16_t offset = 0;
@@ -77,7 +77,7 @@ void setAnimation_FullWhite()
 }
 void setAnimation_Default()
 {
-  
+  Serial.print(F("setAnimation_Default"));
 
 
     uint16_t offset = 0;
@@ -96,6 +96,7 @@ void setAnimation_Default()
 }
 void setAnimation_BreathingLines()
 {
+  Serial.print(F("setAnimation_BREATHINGLINES"));
   uint16_t offset = 0;
     for (uint16_t i = 0; i < PANELAMOUNT; i++)
     {
@@ -111,6 +112,7 @@ void setAnimation_BreathingLines()
 }
 void setAnimation_FlashingLines()
 {
+  Serial.print(F("setAnimation_FlashingGLINES"));
   uint16_t offset = 0;
     for (uint16_t i = 0; i < PANELAMOUNT; i++)
     {
@@ -126,6 +128,7 @@ void setAnimation_FlashingLines()
 }
 void setAnimation_Rain()
 {
+  Serial.print(F("setAnimation_Rain"));
   uint16_t offset = 0;
     for (uint16_t i = 0; i < PANELAMOUNT; i++)
     {
@@ -141,6 +144,7 @@ void setAnimation_Rain()
 }
 void setAnimation_Matrix()
 {
+  Serial.print(F("setAnimation_Matrix"));
   uint16_t offset = 0;
     for (uint16_t i = 0; i < PANELAMOUNT; i++)
     {
@@ -156,6 +160,7 @@ void setAnimation_Matrix()
 }
 void setAnimation_SuperRainbow()
 {
+  Serial.print(F("setAnimation_SuperRainbow"));
   trinity->setSpeed(5);
   uint16_t offset = 0;
     for (uint16_t i = 0; i < PANELAMOUNT; i++)
@@ -174,6 +179,7 @@ void setAnimation_SuperRainbow()
 }
 void setAnimation_ADHDRainbow()
 {
+  Serial.print(F("setAnimation_ADHDRAINBOW"));
   //trinity->setSpeed(10);
   uint16_t offset = 0;
     for (uint16_t i = 0; i < PANELAMOUNT; i++)
@@ -195,6 +201,7 @@ void setAnimation_ADHDRainbow()
 }
 void setAnimation_BurningRainbow()
 {
+  Serial.print(F("setAnimation_BurningRainbow"));
   trinity->setSpeed(10);
 
   uint16_t offset = 0;
@@ -214,6 +221,7 @@ void setAnimation_BurningRainbow()
 }
 void setAnimation_LowFPSRainbow()
 {
+  Serial.print(F("setAnimation_LowFPSRainbow"));
   trinity->setSpeed(100);
 
   uint16_t offset = 0;
@@ -233,6 +241,7 @@ void setAnimation_LowFPSRainbow()
 }
 void setAnimation_HeartbeatTower()
 {
+  Serial.print(F("setAnimation_HeartbeatTower"));
   trinity->setSpeed(10);
 
   uint16_t offset = 0;
@@ -252,6 +261,7 @@ void setAnimation_HeartbeatTower()
 }
 void setAnimation_Stoplight()
 {
+  Serial.print(F("setAnimation_Stoplight"));
   trinity->setSpeed(25);
 
   uint16_t offset = 0;
@@ -271,6 +281,7 @@ void setAnimation_Stoplight()
 }
 void setAnimation_PowerRise()
 {
+  Serial.print(F("setAnimation_Powerrize"));
   trinity->setSpeed(50);
 
   uint16_t offset = 0;
@@ -290,6 +301,7 @@ void setAnimation_PowerRise()
 }
 void setAnimation_Fishbowl()
 {
+  Serial.print(F("setAnimation_Fishbowl"));
   trinity->setSpeed(10);
 
   uint16_t offset = 0;
@@ -315,6 +327,7 @@ void setAnimation_Fishbowl()
 }
 void setAnimation_Coils()
 {
+  Serial.print(F("setAnimation_Coils"));
   trinity->setSpeed(10);
 
   uint16_t offset = 0;
@@ -331,6 +344,7 @@ void setAnimation_Coils()
 }
 void setAnimation_AppearThing()
 {
+  Serial.print(F("setAnimation_AppearThing"));
   trinity->setSpeed(20);
 
   uint16_t offset = 0;
@@ -348,6 +362,7 @@ void setAnimation_AppearThing()
 }
 void setAnimation_AppearThing2()
 {
+  Serial.print(F("setAnimation_AppearThing2"));
   trinity->setSpeed(10);
 
   uint16_t offset = 0;
@@ -365,6 +380,7 @@ void setAnimation_AppearThing2()
 }
 void setAnimation_AppearThing3()
 {
+  Serial.print(F("setAnimation_AppearThing3"));
   trinity->setSpeed(10);
 
   uint16_t offset = 0;
@@ -381,6 +397,7 @@ void setAnimation_AppearThing3()
 }
 void setAnimation_AppearThing4()
 {
+  Serial.print(F("setAnimation_AppearThing4"));
   trinity->setSpeed(4);
 
   uint16_t offset = 0;
@@ -397,6 +414,7 @@ void setAnimation_AppearThing4()
 }
 void setAnimation_ColourBlink()
 {
+  Serial.print(F("setAnimation_ColourBlink"));
   trinity->setSpeed(4);
 
   uint16_t offset = 0;
@@ -422,7 +440,9 @@ void setup()
 {
   Serial.begin(115200);
   
-  trinity = new Trinity(PIN_LEDS, PIN_BUTTON, PIN_LIGHTSENSOR, 30);
+  trinity = new Trinity(PIN_LEDS, PIN_BUTTON, PIN_LIGHTSENSOR, 20);
+
+  currentShowingEffect = 0;
 
   Serial.println(F("---===SETUP COMPLETED===---"));
 }

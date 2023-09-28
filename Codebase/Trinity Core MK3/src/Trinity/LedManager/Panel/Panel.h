@@ -54,7 +54,7 @@ private:
   uint16_t                                  offsetTimer;
 
 public:
-  Panel                                     (uint8_t number, uint8_t x, uint8_t y, uint8_t compassDir, bool clockDir, uint8_t diodeAmount);
+  Panel                                     (uint8_t number, uint8_t x, uint8_t y, uint8_t compassDir, bool clockDir, uint16_t diodeAmount);
   //Standard
   void      tick                            ();
   //Effects
@@ -62,22 +62,22 @@ public:
   void      setVfx                          (VFXData vfxData);
   void      setDataCustom                   (uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);
   //Diode Effects
-  void      setDiodeBrightness              (uint8_t diodeNumber, uint8_t brightness);
-  void      setDiodeVfx                     (uint8_t diodeNumber, VFXData vfxData);
-  void      setDiodeDataCustom              (uint8_t diodeNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);
+  void      setDiodeBrightness              (uint16_t diodeNumber, uint8_t brightness);
+  void      setDiodeVfx                     (uint16_t diodeNumber, VFXData vfxData);
+  void      setDiodeDataCustom              (uint16_t diodeNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);
   //Mask Effects
   void      setMaskPercentage               (uint8_t percentage);
   //Technical
   uint8_t   getPanelNumber                  ();
   uint8_t   getX                            ();
   uint8_t   getY                            ();
-  CRGB      getDiodeRGB                     (uint8_t diodeNumber, uint8_t brightness);
+  CRGB      getDiodeRGB                     (uint8_t number, uint8_t brightness);
   uint16_t  getDiodeAmount                  ();
   uint16_t  getDiodeStart                   ();
   void      setDiodeStart                   (uint16_t ledStart);
   //Transmissions
   String    convertToTransmission           ();
-  String    convertDiodeToTransmission  	  (uint8_t diodeNumber);
+  String    convertDiodeToTransmission  	  (uint16_t diodeNumber);
   //Debug
   void      printDebug                      ();
 };

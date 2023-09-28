@@ -10,11 +10,12 @@ Trinity::Trinity(uint8_t ledPin, uint8_t buttonPin, uint8_t ldrPin, uint8_t maxF
 
   setupPanels();
   ledManager      = new LedManager(panels); //Todo: Made LedManager accept const ints
-  button          = new AskButton(buttonPin, 1000);
+  button          = new AskButton(buttonPin, 100);
   lightSensor     = new LightSensor(ldrPin);
   sleepTimer      = new SleepTimer();
   comms           = new Comms();
 
+  prevFrameMillis = 0;
   frameTime = 1000/maxFramerate;
 
   Serial.print(F("...Trinity Initialised with frame time of: "));
@@ -122,6 +123,8 @@ void Trinity::tick()
   if(currentMillis >= (prevFrameMillis+frameTime))
   {
     prevFrameMillis = currentMillis;
+
+    Serial.print(".");
     ledManager->tick();
     ledManager->print();
   }

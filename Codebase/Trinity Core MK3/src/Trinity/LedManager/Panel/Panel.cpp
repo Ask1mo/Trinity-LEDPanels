@@ -1,7 +1,7 @@
 #include "Panel.h"
 
 //Constructor
-Panel::Panel                                (uint8_t number, uint8_t x, uint8_t y, uint8_t compassDir, bool clockDir, uint8_t diodeAmount)
+Panel::Panel                                (uint8_t number, uint8_t x, uint8_t y, uint8_t compassDir, bool clockDir, uint16_t diodeAmount)
 {
   if(number > 250) Serial.println("Watch out: Panel created with value higher than 250. Remember: This system only supports up to 255 panels.");
 
@@ -83,15 +83,15 @@ void      Panel::setDataCustom              (uint8_t customRGBAmount, ColourRGB 
   }
 }
 //Diode Effects
-void      Panel::setDiodeBrightness         (uint8_t diodeNumber, uint8_t brightness)
+void      Panel::setDiodeBrightness         (uint16_t diodeNumber, uint8_t brightness)
 {
   diodes[diodeNumber]->setBrightness(brightness);
 }
-void      Panel::setDiodeVfx                (uint8_t diodeNumber, VFXData vfxData)
+void      Panel::setDiodeVfx                (uint16_t diodeNumber, VFXData vfxData)
 {
   diodes[diodeNumber]->setVfx(vfxData);
 }
-void      Panel::setDiodeDataCustom         (uint8_t diodeNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
+void      Panel::setDiodeDataCustom         (uint16_t diodeNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
 {
   for (uint8_t i = 0; i < diodeAmount; i++)
   {
@@ -116,14 +116,15 @@ uint8_t   Panel::getY                       ()
 {
   return y;
 }
-CRGB      Panel::getDiodeRGB                (uint8_t diodeNumber, uint8_t brightness) //Todo: Send own RGB if !detailed
+CRGB      Panel::getDiodeRGB                (uint8_t number, uint8_t brightness) //Todo: Send own RGB if !detailed
 {
   
 
 
   if(number >= diodeAmount)
   {
-    Serial.println(F("Too high diode number requested"));
+    Serial.print(F("Too high diode number requested: "));
+    Serial.println(number);
     return CRGB(0);
   }
 
@@ -172,7 +173,7 @@ String    Panel::convertToTransmission      ()
 
   return data;
 }
-String    Panel::convertDiodeToTransmission (uint8_t diodeNumber)
+String    Panel::convertDiodeToTransmission (uint16_t diodeNumber)
 {
   return diodes[diodeNumber]->convertToTransmission();
 }
