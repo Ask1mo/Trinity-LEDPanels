@@ -3,7 +3,11 @@
 
 #include <Arduino.h>
 
-
+#define BRIGHTNESS_0_OFF 1
+#define BRIGHTNESS_1_DIM 10
+#define BRIGHTNESS_2_NOR 100
+#define BRIGHTNESS_3_MAX 255
+#define BRIGHTNESS_4_AUT 99
 
 class LightSensor
 {

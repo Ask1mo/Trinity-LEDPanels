@@ -2,7 +2,7 @@
 #define LEDMANAGER_H
 
 #include "Panel/Panel.h"
-#include "../setup.h"
+#include "../src/setup.h"
 
 class LedManager
 {

@@ -6,7 +6,7 @@ LedManager::LedManager                              (Panel **panelsArg)
   Serial.println(F("LedManager Starting..."));
 
   panelsAmount  = PANELAMOUNT;
-  brightness    = 100;
+  brightness    = 255;
   speed         = 1;
   enabled       = 1;
   panels        = panelsArg;
@@ -21,10 +21,10 @@ LedManager::LedManager                              (Panel **panelsArg)
   #ifdef PLATFORM_ARDUINO
   FastLED.addLeds<WS2812, PIN_LEDS, LEDCOLORDER>(leds, LEDAMOUNT);
   #endif
-  #ifdef PLATFORM_ESP32FIREBEETLE2
+  #ifdef PLATFORM_ESP32_FIREBEETLE2
   FastLED.addLeds<WS2812, PIN_LEDS, LEDCOLORDER>(leds, LEDAMOUNT);
   #endif
-  #ifdef PLATFORM_ESP32FIREBEETLE2_DEBUG
+  #ifdef PLATFORM_ESP32_FIREBEETLE2_DEBUG
   FastLED.addLeds<NEOPIXEL, PIN_LEDS>(leds, LEDAMOUNT);
   #endif
 

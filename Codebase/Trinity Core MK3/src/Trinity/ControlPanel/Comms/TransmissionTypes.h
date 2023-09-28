@@ -3,9 +3,9 @@
 #define TRANSMISSIONTYPES_H
 
 #include <Arduino.h>
-#include "./LedManager/effectProcessor/effectProcessor.h"
+#include "Trinity/LedManager/effectProcessor/effectProcessor.h"
 //#include "./LedManager/Panel/Diode/Diode.h"
-#include "DataTypes.h"
+#include "Trinity/DataTypes.h"
 
 #define TRANSMISSION_IN_NONE                   0
 #define TRANSMISSION_IN_PANELFX                1

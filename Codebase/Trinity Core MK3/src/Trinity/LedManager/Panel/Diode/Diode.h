@@ -3,8 +3,8 @@
 
 #include <Arduino.h>
 #include <FastLED.h>
-#include "ledManager/effectProcessor/effectProcessor.h"
-#include "DataTypes.h"
+#include "Trinity/ledManager/effectProcessor/effectProcessor.h"
+#include "Trinity/DataTypes.h"
 
 
 

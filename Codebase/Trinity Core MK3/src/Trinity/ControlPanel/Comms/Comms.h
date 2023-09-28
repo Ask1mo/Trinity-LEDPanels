@@ -37,7 +37,4 @@ class Comms
     Transmission_SleepTimerData     getTransmission_SleepTimerData();
     Transmission_LightSensorData    getTransmission_LightSensorData();
 };
-
-
-
 #endif
