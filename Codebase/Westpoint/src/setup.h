@@ -24,6 +24,10 @@
     #define PIN_BUTTON      27    //On board button
     #define PIN_LEDS        2     //D?   //pin 4 for ESP32, 2 for WROOM
     #define PIN_LIGHTSENSOR 15    //D?
+    #define DRONESENSOR_A 32
+    #define DRONESENSOR_B 33
+    #define DRONESENSOR_C 25
+    #define DRONESENSOR_D 26
 #endif
 #ifdef PLATFORM_ESP32FIREBEETLE2_DEBUG
     #define PIN_BUTTON      27    //On board button
@@ -56,6 +60,7 @@
 #endif
 #ifdef PANELSETUP_DRONE
     #define PANELAMOUNT 33
+    #define PANELAMOUNT_TOWERONLY 29
     //#define LEDAMOUNT 272
     #define LEDAMOUNT 450
 #endif

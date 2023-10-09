@@ -93,6 +93,10 @@ void Diode::tick()
         effectFinished = effectApplications.special_rainbow(&rgb, &d, &fxProgression);
         break;
 
+        case EFFECT_SPECIAL_SYNTHBOW:
+        effectFinished = effectApplications.special_synthbow(&rgb, &d, &fxProgression);
+        break;
+
         case EFFECT_SPECIAL_FIRE:
         //effectFinished = special_fire();
         break;

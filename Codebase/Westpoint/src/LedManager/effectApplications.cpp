@@ -571,6 +571,48 @@ bool EffectApplications::special_rainbow(ColourRGB *rgb, uint8_t *d, uint8_t *pr
   }
   return false;
 }
+bool EffectApplications::special_synthbow(ColourRGB *rgb, uint8_t *d, uint8_t *progFx)
+{
+  switch (*progFx)
+  {
+    case 0:
+      rgb->r = 0;
+      rgb->g = 0;
+      rgb->b = 255;
+
+      (*progFx)++;
+    break;
+
+    case 1:
+      (rgb->r)++;
+      if (rgb->r == 255) (*progFx)++;
+    break;
+
+    case 2:
+      rgb->b--;
+      if (rgb->b == 0) (*progFx)++;
+    break;
+
+    case 3:
+      rgb->r--;
+      if (rgb->r == 0) (*progFx)++;
+    break;
+
+    case 4:
+      rgb->b++;
+      if (rgb->b == 255)
+      {
+        *progFx = 0;
+        return true;
+      }
+    break;
+
+    default:
+      *progFx = 0;
+    break;
+  }
+  return false;
+}
 bool EffectApplications::special_fire(ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour)
 {
   /*

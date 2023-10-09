@@ -20,12 +20,12 @@ public:
   LedManager(Panel **panelsArg);
   void tick();
   void print();
-  void setDronePercentage(uint8_t dronePercentage);
+  //void setDronePercentage(uint8_t dronePercentage);
   uint8_t getBrightness();
   void setBrightness(uint8_t brightness);
   uint8_t getPanelAmount();
   uint8_t getPanelDiodeAmount(uint8_t panelNumber);
-  void setPanelData(uint8_t panelNumber, uint8_t brightness, uint8_t effect, uint8_t colour, uint16_t offset, uint8_t speed, bool repeat, bool detailed);
+  void setPanelData(uint8_t panelNumber, uint8_t effect, uint8_t colour, uint16_t offset, uint8_t speed, bool repeat, bool detailed);
   void setPanelCustomData(uint8_t panelNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);
   void setPanelDiodeData(uint8_t panelNumber, uint16_t diodeNumber, uint8_t brightness, uint8_t effect, uint8_t colour, uint16_t offset, uint8_t speed, bool repeat);
   void setEnabled(bool enabled);

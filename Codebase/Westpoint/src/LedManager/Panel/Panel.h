@@ -53,7 +53,8 @@ private:
 public:
   Panel(uint8_t number, uint8_t compassDir, bool clockDir, uint8_t diodeAmount);
   void tick();
-  void setDataFx(uint8_t brightness, uint8_t effect, uint8_t colour, uint16_t offset, uint8_t speed, bool repeat, bool detailed);
+  void setBrightness(uint8_t brightness);
+  void setDataFx(uint8_t effect, uint8_t colour, uint16_t offset, uint8_t speed, bool repeat, bool detailed);
   void setDataCustom(uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);
   void setDiodeDataFx(uint16_t diodeNumber, uint8_t brightness, uint8_t effect, uint8_t colour, uint16_t offset, uint8_t speed, bool repeat);
   void setDiodeDataCustom(uint16_t diodeNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);

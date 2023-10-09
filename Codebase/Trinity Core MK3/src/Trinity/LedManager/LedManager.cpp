@@ -35,6 +35,8 @@ LedManager::LedManager                              (Panel **panelsArg)
 //Standard
 void    LedManager::tick                            () 
 {
+  if(DEBUGLEVEL >=DEBUG_OPERATIONS) Serial.print(F("t"));
+
   for (uint8_t i = 0; i < panelsAmount; i++)
   {
     panels[i]->tick();
@@ -47,6 +49,7 @@ void    LedManager::tick                            ()
 } 
 void    LedManager::print                           () 
 {
+  if(DEBUGLEVEL >=DEBUG_DAYISRUINED) Serial.print(F("p"));
   FastLED.show(); 
 }
 //Effects
@@ -78,11 +81,11 @@ void    LedManager::setPanelCustomData              (uint8_t panelNumber, uint8_
   panels[panelNumber]->setDataCustom(customRGBAmount, customRGB);
 }
 //Diode Effects
-void    setPanelBrightness                          (uint8_t panelNumber, uint8_t diodeNumber, uint8_t brightness)
+void    setPanelBrightness                          (uint8_t panelNumber, uint16_t diodeNumber, uint8_t brightness)
 {
   
 }
-void    LedManager::setPanelDiodeVfx                (uint8_t panelNumber, uint8_t diodeNumber, VFXData vfxData)
+void    LedManager::setPanelDiodeVfx                (uint8_t panelNumber, uint16_t diodeNumber, VFXData vfxData)
 {
   //Serial.println("Setting diode data (In ledmanager)");
   panels[panelNumber]->setDiodeVfx(diodeNumber, vfxData);
@@ -96,7 +99,7 @@ uint8_t LedManager::getPanelAmount                  ()
 {
   return panelsAmount;
 }
-uint8_t LedManager::getPanelDiodeAmount             (uint8_t panelNumber)
+uint16_t LedManager::getPanelDiodeAmount             (uint8_t panelNumber)
 {
   return panels[panelNumber]->getDiodeAmount();
 }
@@ -115,7 +118,7 @@ String  LedManager::convertPanelToTransmission      (uint8_t panelNumber)
 {
   return panels[panelNumber]->convertToTransmission();
 }
-String  LedManager::convertPanelDiodeToTransmission (uint8_t panelNumber,uint8_t diodeNumber)
+String  LedManager::convertPanelDiodeToTransmission (uint8_t panelNumber,uint16_t diodeNumber)
 {
   return panels[panelNumber]->convertDiodeToTransmission(diodeNumber);
 }

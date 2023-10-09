@@ -27,6 +27,7 @@
 #define EFFECT_STOCK_APPEAR           8
 
 #define EFFECT_SPECIAL_RAINBOW        9
+#define EFFECT_SPECIAL_SYNTHBOW       20
 #define EFFECT_SPECIAL_FIRE           10
 #define EFFECT_SPECIAL_SOUND          11
 
@@ -74,6 +75,7 @@ public:
   bool custom_appear(ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour);
   
   bool special_rainbow(ColourRGB *rgb, uint8_t *d, uint8_t *progFx);
+  bool special_synthbow(ColourRGB *rgb, uint8_t *d, uint8_t *progFx);
   bool special_fire(ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour);
   bool special_sound(ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour);
 

@@ -93,11 +93,11 @@ void    LedManager::print()
 
   FastLED.show(); 
 }
-
+/*
 void LedManager::setDronePercentage(uint8_t dronePercentage)
 {
   this->dronePercentage = dronePercentage;
-}
+}*/
 uint8_t LedManager::getBrightness()
 {
   return brightness;
@@ -114,10 +114,10 @@ uint8_t LedManager::getPanelDiodeAmount(uint8_t panelNumber)
 {
   return panels[panelNumber]->getDiodeAmount();
 }
-void    LedManager::setPanelData(uint8_t panelNumber, uint8_t brightness, uint8_t effect, uint8_t colour, uint16_t offset, uint8_t speed, bool repeat, bool detailed)
+void    LedManager::setPanelData(uint8_t panelNumber, uint8_t effect, uint8_t colour, uint16_t offset, uint8_t speed, bool repeat, bool detailed)
 {
   //Serial.println("Setting panel data (In ledmanager)");
-  panels[panelNumber]->setDataFx(brightness, effect, colour, offset, speed, repeat, detailed);
+  panels[panelNumber]->setDataFx(effect, colour, offset, speed, repeat, detailed);
 }
 void    LedManager::setPanelCustomData(uint8_t panelNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
 {

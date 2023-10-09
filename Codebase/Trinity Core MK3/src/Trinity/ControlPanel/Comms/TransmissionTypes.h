@@ -37,7 +37,7 @@ struct Transmission_CustomRGB
 struct Transmission_DiodeFX
 {
     uint8_t panelNumber;
-    uint8_t diodeNumber;
+    uint16_t diodeNumber;
     VFXData vfxData;
 };
 struct Transmission_SleepTimerData

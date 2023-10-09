@@ -43,9 +43,8 @@ Panel::Panel                                (uint8_t number, uint8_t x, uint8_t 
 //Standard
 void      Panel::tick                       ()
 {
-  //printDebug();
-
-
+  if(DEBUGLEVEL >= DEBUG_DAYISRUINED)printDebug();
+  
   if (offsetTimer < offset)
   {
     offsetTimer++;
@@ -65,13 +64,24 @@ void      Panel::setBrightness              (uint8_t brightness)
 }
 void      Panel::setVfx                     (VFXData vfxData)
 {
-  //Serial.println("Setting Panel Data Fx (In panel)");
+  if(DEBUGLEVEL >= DEBUG_OPERATIONS)
+  {
+    Serial.print(F("Panel.setVFX(); Panel: "));
+    Serial.println(number);
+  }
+  
   this->effect      = vfxData.effect;
   this->colour      = vfxData.colour;
   this->offset      = vfxData.offset;
   this->speed       = vfxData.speed;
   this->repeat      = vfxData.repeat;
   this->detailed    = false;
+
+  if(DEBUGLEVEL >= DEBUG_DAYISRUINED)
+  {
+    Serial.println(F("Is now:"));
+    printDebug();
+  }
 
   //Serial.println("Done in panel");
 }

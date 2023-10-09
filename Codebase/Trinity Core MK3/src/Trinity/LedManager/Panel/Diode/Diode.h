@@ -5,6 +5,7 @@
 #include <FastLED.h>
 #include "Trinity/ledManager/effectProcessor/effectProcessor.h"
 #include "Trinity/DataTypes.h"
+#include "setup.h"
 
 
 

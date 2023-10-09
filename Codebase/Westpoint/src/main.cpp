@@ -13,6 +13,63 @@ void receiveEvent(int howMany)
   }
 }
 
+void setDronePercentage(int ringNumber)
+{
+  switch (ringNumber)
+  {
+    case 0:
+    {
+      for (uint16_t i = 0; i < PANELAMOUNT; i++)
+      {
+        panels[i]->setBrightness(BRIGHTNESS_3_MAX);
+      }
+    }
+    break;
+
+    case 1:
+    {
+      for (uint16_t i = 0; i < PANELAMOUNT_TOWERONLY; i++)
+      {
+        if (i > 7)  panels[i]->setBrightness(BRIGHTNESS_0_OFF);
+        else        panels[i]->setBrightness(BRIGHTNESS_3_MAX);
+      }
+    }
+    break;
+
+    case 2:
+    {
+      for (uint16_t i = 0; i < PANELAMOUNT_TOWERONLY; i++)
+      {
+        if (i > 14) panels[i]->setBrightness(BRIGHTNESS_0_OFF);
+        else        panels[i]->setBrightness(BRIGHTNESS_3_MAX);
+      }
+    }
+    break;
+
+    case 3:
+    {
+      for (uint16_t i = 0; i < PANELAMOUNT_TOWERONLY; i++)
+      {
+        if (i > 21) panels[i]->setBrightness(BRIGHTNESS_0_OFF);
+        else        panels[i]->setBrightness(BRIGHTNESS_3_MAX);
+      }
+    }
+    break;
+
+    case 4:
+    {
+      for (uint16_t i = 0; i < PANELAMOUNT_TOWERONLY; i++)
+      {
+        if (i > 28) panels[i]->setBrightness(BRIGHTNESS_0_OFF);
+        else        panels[i]->setBrightness(BRIGHTNESS_3_MAX);
+      }
+    }
+    break;
+  
+  }
+  
+}
+
 void playResetAnimation()
 {
   int panelMultiplier = 2;
@@ -22,7 +79,7 @@ void playResetAnimation()
 
   for (uint16_t i = 0; i < PANELAMOUNT; i++)
   {
-    panels[i]->setDataFx(BRIGHTNESS_3_MAX, EFFECT_STOCK_APPEAR, COLOUR_RED, (i*panelMultiplier), 1, true, false);
+    panels[i]->setDataFx(EFFECT_STOCK_APPEAR, COLOUR_RED, (i*panelMultiplier), 1, true, false);
     for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
     {
       panels[i]->setDiodeDataFx(j, BRIGHTNESS_3_MAX, EFFECT_STOCK_FLASH, COLOUR_VIOLET, j, 1, false);
@@ -44,21 +101,47 @@ void playResetAnimation()
   
 }
 
-void playDroneResetAnimation()
+void playDroneResetAnimation(uint8_t ringNumber)
 {
   ledManager->setBrightness(255);
   ledManager->setSpeed(5);
 
-  for (uint16_t i = 0; i < PANELAMOUNT; i++)
+  for (uint16_t i = 0; i < (PANELAMOUNT_TOWERONLY-1); i++)
   {
-    panels[i]->setDataFx(BRIGHTNESS_3_MAX, EFFECT_STOCK_APPEAR, COLOUR_RED, i, 1, true, false);
+    panels[i]->setDataFx(EFFECT_STOCK_APPEAR, COLOUR_RED, i, 1, true, false);
     for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
     {
       panels[i]->setDiodeDataFx(j, BRIGHTNESS_3_MAX, EFFECT_STOCK_PLANE, COLOUR_WHITE, 0, 1, false);
     }
 
-  Serial.print("Editing panel ");
-  Serial.println(i);
+    Serial.print("Editing panel ");
+    Serial.println(i);
+  }
+
+  for (uint16_t i = PANELAMOUNT_TOWERONLY; i < PANELAMOUNT; i++)
+  {
+    panels[i]->setDataFx(EFFECT_STOCK_APPEAR, COLOUR_RED, 0, 1, true, false);
+
+    if (i == (PANELAMOUNT_TOWERONLY+ringNumber-1))
+    {
+      for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+      {
+        panels[i]->setDiodeDataFx(j, BRIGHTNESS_3_MAX, EFFECT_STOCK_PLANE, COLOUR_WHITE, 0, 1, false);
+      }
+    }
+    else
+    {
+      for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+      {
+        panels[i]->setDiodeDataFx(j, BRIGHTNESS_3_MAX, EFFECT_STOCK_STATIC, COLOUR_BLACK, 0, 1, false);
+      }
+    }
+
+
+    
+
+    Serial.print("Editing Blink Ringpanel ");
+    Serial.println(i);
   }
 
 
@@ -70,6 +153,40 @@ void playDroneResetAnimation()
   
 }
 
+void setRingAnimations(uint8_t ringNumber)
+{
+  for (uint16_t i = PANELAMOUNT_TOWERONLY; i < PANELAMOUNT; i++)
+  {
+    panels[i]->setDataFx(EFFECT_STOCK_APPEAR, COLOUR_RED, 0, 1, true, false);
+
+    if (i == (PANELAMOUNT_TOWERONLY+ringNumber-1))
+    {
+      Serial.print("Panel ");
+      Serial.print(i);
+      Serial.println(" was target!!!");
+
+      for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+      {
+        panels[i]->setDiodeDataFx(j, BRIGHTNESS_3_MAX, EFFECT_SPECIAL_RAINBOW, COLOUR_BLACK, j*5, 5, false);
+      }
+    }
+    else
+    {
+      Serial.print("Panel ");
+      Serial.print(i);
+      Serial.println(" was not target");
+
+      for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+      {
+        panels[i]->setDiodeDataFx(j, BRIGHTNESS_3_MAX, EFFECT_SPECIAL_RAINBOW, COLOUR_BLACK, 0, 1, false);
+      }
+    }
+
+
+    Serial.print("Editing Rainbow Ringpanel ");
+    Serial.println(i);
+  }
+}
 
 void setAnimation_FullWhite()
 {
@@ -79,7 +196,7 @@ void setAnimation_FullWhite()
     uint16_t offset = 0;
     for (uint16_t i = 0; i < PANELAMOUNT; i++)
     {
-    panels[i]->setDataFx(BRIGHTNESS_3_MAX, EFFECT_STOCK_STATIC, COLOUR_WHITE, random(0, 10)*15, 1, true, true);
+    panels[i]->setDataFx(EFFECT_STOCK_STATIC, COLOUR_WHITE, random(0, 10)*15, 1, true, true);
     for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
     {
       panels[i]->setDiodeDataFx(j, BRIGHTNESS_3_MAX, EFFECT_STOCK_STATIC, COLOUR_WHITE, 0, 5, true);
@@ -99,7 +216,7 @@ void setAnimation_Default()
     uint16_t offset = 0;
     for (uint16_t i = 0; i < PANELAMOUNT; i++)
     {
-    panels[i]->setDataFx(BRIGHTNESS_3_MAX, EFFECT_STOCK_APPEAR, COLOUR_RED, random(0, 10)*15, 1, true, true);
+    panels[i]->setDataFx(EFFECT_STOCK_APPEAR, COLOUR_RED, random(0, 10)*15, 1, true, true);
     for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
     {
       panels[i]->setDiodeDataFx(j, BRIGHTNESS_3_MAX, EFFECT_SPECIAL_RAINBOW, COLOUR_RED, 0, 5, true);
@@ -115,7 +232,7 @@ void setAnimation_BreathingLines()
   uint16_t offset = 0;
     for (uint16_t i = 0; i < PANELAMOUNT; i++)
     {
-      panels[i]->setDataFx(BRIGHTNESS_3_MAX, EFFECT_STOCK_APPEAR, COLOUR_RED, random(0, 10)*15, 1, true, true);
+      panels[i]->setDataFx(EFFECT_STOCK_APPEAR, COLOUR_RED, random(0, 10)*15, 1, true, true);
       for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
       {
         panels[i]->setDiodeDataFx(j, BRIGHTNESS_3_MAX, EFFECT_STOCK_PAUSEDBREATHING, COLOUR_CYCLE, j, 20, true);
@@ -130,7 +247,7 @@ void setAnimation_FlashingLines()
   uint16_t offset = 0;
     for (uint16_t i = 0; i < PANELAMOUNT; i++)
     {
-      panels[i]->setDataFx(BRIGHTNESS_3_MAX, EFFECT_STOCK_APPEAR, COLOUR_RED, random(0, 10)*15, 1, true, true);
+      panels[i]->setDataFx(EFFECT_STOCK_APPEAR, COLOUR_RED, random(0, 10)*15, 1, true, true);
       for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
       {
         panels[i]->setDiodeDataFx(j, BRIGHTNESS_3_MAX, EFFECT_STOCK_PAUSEDFLASH, COLOUR_WHITE, j, 10, true);
@@ -145,7 +262,7 @@ void setAnimation_Rain()
   uint16_t offset = 0;
     for (uint16_t i = 0; i < PANELAMOUNT; i++)
     {
-      panels[i]->setDataFx(BRIGHTNESS_3_MAX, EFFECT_STOCK_APPEAR, COLOUR_RED, random(0, 10)*15, 1, true, true);
+      panels[i]->setDataFx(EFFECT_STOCK_APPEAR, COLOUR_RED, random(0, 10)*15, 1, true, true);
       for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
       {
         panels[i]->setDiodeDataFx(j, BRIGHTNESS_3_MAX, EFFECT_STOCK_PAUSEDFLASH, COLOUR_BLUE, j, random(0, 10), true);
@@ -160,7 +277,7 @@ void setAnimation_Matrix()
   uint16_t offset = 0;
     for (uint16_t i = 0; i < PANELAMOUNT; i++)
     {
-      panels[i]->setDataFx(BRIGHTNESS_3_MAX, EFFECT_STOCK_APPEAR, COLOUR_RED, random(0, 10)*15, 1, true, true);
+      panels[i]->setDataFx(EFFECT_STOCK_APPEAR, COLOUR_RED, random(0, 10)*15, 1, true, true);
       for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
       {
         panels[i]->setDiodeDataFx(j, BRIGHTNESS_3_MAX, EFFECT_STOCK_APPEAR, COLOUR_GREEN, j, 10, true);
@@ -176,7 +293,7 @@ void setAnimation_SuperRainbow()
   uint16_t offset = 0;
     for (uint16_t i = 0; i < PANELAMOUNT; i++)
     {
-      panels[i]->setDataFx(BRIGHTNESS_3_MAX, EFFECT_STOCK_APPEAR, COLOUR_RED, 0, 1, true, true);
+      panels[i]->setDataFx(EFFECT_STOCK_APPEAR, COLOUR_RED, 0, 1, true, true);
       for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
       {
         panels[i]->setDiodeDataFx(j, BRIGHTNESS_3_MAX, EFFECT_SPECIAL_RAINBOW, COLOUR_RED, offset, 10, true);
@@ -194,7 +311,7 @@ void setAnimation_ADHDRainbow()
   uint16_t offset = 0;
     for (uint16_t i = 0; i < PANELAMOUNT; i++)
     {
-      panels[i]->setDataFx(BRIGHTNESS_3_MAX, EFFECT_STOCK_APPEAR, COLOUR_RED, 0, 1, true, true);
+      panels[i]->setDataFx(EFFECT_STOCK_APPEAR, COLOUR_RED, 0, 1, true, true);
       for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
       {
         panels[i]->setDiodeDataFx(j, BRIGHTNESS_3_MAX, EFFECT_SPECIAL_RAINBOW, COLOUR_RED, offset, 100, true);
@@ -216,7 +333,7 @@ void setAnimation_BurningRainbow()
   uint16_t offset = 0;
     for (uint16_t i = 0; i < PANELAMOUNT; i++)
     {
-      panels[i]->setDataFx(BRIGHTNESS_3_MAX, EFFECT_STOCK_APPEAR, COLOUR_RED, i*5, 10, true, true);
+      panels[i]->setDataFx(EFFECT_STOCK_APPEAR, COLOUR_RED, i*5, 10, true, true);
       for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
       {
         panels[i]->setDiodeDataFx(j, BRIGHTNESS_3_MAX, EFFECT_SPECIAL_RAINBOW, COLOUR_RED, j*5, 10, true);
@@ -235,7 +352,7 @@ void setAnimation_LowFPSRainbow()
   uint16_t offset = 0;
     for (uint16_t i = 0; i < PANELAMOUNT; i++)
     {
-      panels[i]->setDataFx(BRIGHTNESS_3_MAX, EFFECT_STOCK_APPEAR, COLOUR_RED, i*5, 10, true, true);
+      panels[i]->setDataFx(EFFECT_STOCK_APPEAR, COLOUR_RED, i*5, 10, true, true);
       for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
       {
         panels[i]->setDiodeDataFx(j, BRIGHTNESS_3_MAX, EFFECT_SPECIAL_RAINBOW, COLOUR_RED, j*5, 10, true);
@@ -254,7 +371,7 @@ void setAnimation_HeartbeatTower()
   uint16_t offset = 0;
     for (uint16_t i = 0; i < PANELAMOUNT; i++)
     {
-      panels[i]->setDataFx(BRIGHTNESS_3_MAX, EFFECT_STOCK_APPEAR, COLOUR_RED, i*4, 1, true, true);
+      panels[i]->setDataFx(EFFECT_STOCK_APPEAR, COLOUR_RED, i*4, 1, true, true);
       for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
       {
         panels[i]->setDiodeDataFx(j, BRIGHTNESS_3_MAX, EFFECT_STOCK_HEARTBEAT, COLOUR_RED, 0, 1, true);
@@ -273,7 +390,7 @@ void setAnimation_Stoplight()
   uint16_t offset = 0;
     for (uint16_t i = 0; i < PANELAMOUNT; i++)
     {
-      panels[i]->setDataFx(BRIGHTNESS_3_MAX, EFFECT_STOCK_APPEAR, COLOUR_RED, offset, 1, true, true);
+      panels[i]->setDataFx(EFFECT_STOCK_APPEAR, COLOUR_RED, offset, 1, true, true);
       for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
       {
         panels[i]->setDiodeDataFx(j, BRIGHTNESS_3_MAX, EFFECT_STOCK_PAUSEDFLASH, COLOUR_CYCLE, offset, 1, true);
@@ -292,7 +409,7 @@ void setAnimation_PowerRise()
   uint16_t offset = 0;
     for (uint16_t i = 0; i < PANELAMOUNT; i++)
     {
-      panels[i]->setDataFx(BRIGHTNESS_3_MAX, EFFECT_STOCK_APPEAR, COLOUR_RED, offset, 1, true, true);
+      panels[i]->setDataFx(EFFECT_STOCK_APPEAR, COLOUR_RED, offset, 1, true, true);
       for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
       {
         panels[i]->setDiodeDataFx(j, BRIGHTNESS_3_MAX, EFFECT_STOCK_PAUSEDFLASH, COLOUR_CYAN, offset, 1, true);
@@ -311,7 +428,7 @@ void setAnimation_Fishbowl()
   uint16_t offset = 0;
     for (uint16_t i = 0; i < PANELAMOUNT; i++)
     {
-      panels[i]->setDataFx(BRIGHTNESS_3_MAX, EFFECT_STOCK_APPEAR, COLOUR_RED, offset, 1, true, true);
+      panels[i]->setDataFx(EFFECT_STOCK_APPEAR, COLOUR_RED, offset, 1, true, true);
       for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
       {
         panels[i]->setDiodeDataFx(j, BRIGHTNESS_3_MAX, EFFECT_STOCK_PAUSEDFLASH, COLOUR_CYCLE, offset, 1, true);
@@ -337,7 +454,7 @@ void setAnimation_Coils()
 
   for (uint8_t i = 0; i < PANELAMOUNT; i++)
   {
-    panels[i]->setDataFx(i, 255, EFFECT_STOCK_APPEAR, COLOUR_RED, 0, 1, true);
+    panels[i]->setDataFx( EFFECT_STOCK_APPEAR, COLOUR_RED, 0, 1, true, true);
     for (uint8_t j = 0; j < panels[i]->getDiodeAmount(); j++)
     {
       panels[i]->setDiodeDataFx(j, 255, EFFECT_STOCK_APPEAR, COLOUR_CYCLE, offset, 1, true);
@@ -353,7 +470,7 @@ void setAnimation_AppearThing()
 
   for (uint8_t i = 0; i < PANELAMOUNT; i++)
   {
-    panels[i]->setDataFx(i, 255, EFFECT_STOCK_APPEAR, COLOUR_RED, random(0,100), 1, true);
+    panels[i]->setDataFx( EFFECT_STOCK_APPEAR, COLOUR_RED, random(0,100), 1, true, true);
     for (uint8_t j = 0; j < panels[i]->getDiodeAmount(); j++)
     {
       panels[i]->setDiodeDataFx(j, 255, EFFECT_STOCK_APPEAR, COLOUR_CYCLE, random(0,100), 1, true);
@@ -370,7 +487,7 @@ void setAnimation_AppearThing2()
 
   for (uint8_t i = 0; i < PANELAMOUNT; i++)
   {
-    panels[i]->setDataFx(i, 255, EFFECT_STOCK_APPEAR, COLOUR_RED, random(0,100), 1, true);
+    panels[i]->setDataFx( EFFECT_STOCK_APPEAR, COLOUR_RED, random(0,100), 1, true, true);
     for (uint8_t j = 0; j < panels[i]->getDiodeAmount(); j++)
     {
       panels[i]->setDiodeDataFx(j, 255, EFFECT_STOCK_STATIC, COLOUR_CYCLE, random(0,100), 1, true);
@@ -387,7 +504,7 @@ void setAnimation_AppearThing3()
 
   for (uint8_t i = 0; i < PANELAMOUNT; i++)
   {
-    panels[i]->setDataFx(i, 255, EFFECT_STOCK_APPEAR, COLOUR_RED, 0, 1, true);
+    panels[i]->setDataFx( EFFECT_STOCK_APPEAR, COLOUR_RED, 0, 1, true, true);
     for (uint8_t j = 0; j < panels[i]->getDiodeAmount(); j++)
     {
       panels[i]->setDiodeDataFx(j, 255, EFFECT_STOCK_STATIC, COLOUR_CYCLE, random(0,1000), 1, true);
@@ -403,7 +520,7 @@ void setAnimation_AppearThing4()
 
   for (uint8_t i = 0; i < PANELAMOUNT; i++)
   {
-    panels[i]->setDataFx(i, 255, EFFECT_STOCK_APPEAR, COLOUR_RED, 0, 1, true);
+    panels[i]->setDataFx( EFFECT_STOCK_APPEAR, COLOUR_RED, 0, 1, true, true);
     for (uint8_t j = 0; j < panels[i]->getDiodeAmount(); j++)
     {
       panels[i]->setDiodeDataFx(j, 255, EFFECT_STOCK_PAUSEDFLASH, COLOUR_CYCLE, random(0,250), 1, true);
@@ -419,7 +536,7 @@ void setAnimation_ColourBlink()
 
   for (uint8_t i = 0; i < PANELAMOUNT; i++)
   {
-    panels[i]->setDataFx(i, 255, EFFECT_STOCK_APPEAR, COLOUR_RED, 0, 1, true);
+    panels[i]->setDataFx( EFFECT_STOCK_APPEAR, COLOUR_RED, 0, 1, true, true);
     for (uint8_t j = 0; j < panels[i]->getDiodeAmount(); j++)
     {
       panels[i]->setDiodeDataFx(j, 255, EFFECT_STOCK_STATIC, COLOUR_CYCLE, i, 1, true);
@@ -559,6 +676,7 @@ void setup()
   newDataReceived = false;
   wrongDataReceived = false;
   currentShowingEffect = 0;
+  celebrate = false;
 
   setupPanels();
   ledManager      = new LedManager(panels);
@@ -566,6 +684,11 @@ void setup()
   lightSensor     = new LightSensor(PIN_LIGHTSENSOR);
   sleepTimer      = new SleepTimer();
   comms           = new Comms();
+
+  pinMode(DRONESENSOR_A, INPUT);
+  pinMode(DRONESENSOR_B, INPUT);
+  pinMode(DRONESENSOR_C, INPUT);
+  pinMode(DRONESENSOR_D, INPUT);
 
   enableNavLighting = false;
 
@@ -577,7 +700,12 @@ void setup()
 
 
   playResetAnimation();
-  setAnimation_AppearThing4();
+
+  enableCycleDemoMode = STARTCYCLING;
+  if (STARTCYCLING) setAnimation_AppearThing4();
+  else setAnimation_Default();
+  
+  
     
 
   
@@ -587,8 +715,88 @@ void setup()
 
 void loop()
 {
+  uint64_t currentMillis = millis();
 
     Serial.print(".");
+
+    if (celebrate)
+    {
+      if(currentMillis >= (prevCelebrateTime+CELEBRATETIME))
+      {
+        prevCelebrateTime = currentMillis;
+        celebrate = false;
+
+        newDataReceived = true;
+        receivedCode = CODE_WESTPOINT_DEFAULT;
+      }
+    }
+
+    if(!enableCycleDemoMode)
+    {
+      if(currentMillis >= (prevAntiScreensaverTime+SCREENSAVERTIME))
+      {
+        prevAntiScreensaverTime = currentMillis;
+        enableCycleDemoMode = true;
+        setDronePercentage(0);
+      }
+    }
+    
+
+    
+    if (digitalRead(DRONESENSOR_A))sensorAHits++;
+    if (digitalRead(DRONESENSOR_B))sensorBHits++;
+    if (digitalRead(DRONESENSOR_C))sensorCHits++;
+    if (digitalRead(DRONESENSOR_D))sensorDHits++;
+    sensorPolls++;
+
+    //Serial.print(F("Sensors: "));
+    //Serial.print(digitalRead(DRONESENSOR_A));
+    //Serial.print(digitalRead(DRONESENSOR_B));
+    //Serial.print(digitalRead(DRONESENSOR_C));
+    //Serial.println(digitalRead(DRONESENSOR_D));
+
+    if(currentMillis >= (prevSensorMillis+SENSORPOLLTIME))
+    {
+      prevSensorMillis = currentMillis;
+      uint16_t requiredSensorHits = sensorPolls * SENSORTRIGGERPERCENTAGE;
+
+
+      //Serial.println(requiredSensorHits);
+      //Serial.println(sensorAHits * 100);
+      
+      if((sensorAHits*100) > requiredSensorHits)
+      {
+        Serial.println(F("Sensor A hit"));
+        newDataReceived = true;
+        receivedCode = CODE_WESTPOINT_PERCENTAGE25;
+      }
+      if((sensorBHits*100) > requiredSensorHits)
+      {
+        Serial.println(F("Sensor B hit"));
+        newDataReceived = true;
+        receivedCode = CODE_WESTPOINT_PERCENTAGE50;
+      }
+      if((sensorCHits*100) > requiredSensorHits)
+      {
+        Serial.println(F("Sensor C hit"));
+        newDataReceived = true;
+        receivedCode = CODE_WESTPOINT_PERCENTAGE75;
+      }
+      if((sensorDHits*100) > requiredSensorHits)
+      {
+        Serial.println(F("Sensor D hit"));
+        newDataReceived = true;
+        receivedCode = CODE_WESTPOINT_FINISH;
+      }
+
+
+
+      sensorAHits = 0;
+      sensorBHits = 0;
+      sensorCHits = 0;
+      sensorDHits = 0;
+      sensorPolls = 0;
+    }
 
 
    delay(10);
@@ -678,7 +886,7 @@ void loop()
         //Serial.println("Panel transmission retrieved from comms");
         Transmission_PanelFX data = comms->getTransmission_PanelFX();
         //Serial.println("Yom");
-        ledManager->setPanelData(data.panelNumber, data.brightness, data.effect, data.colour, data.offset, data.speed, data.repeat, data.detailed);
+        ledManager->setPanelData(data.panelNumber, data.effect, data.colour, data.offset, data.speed, data.repeat, data.detailed);
         //Serial.println("Done");
       }
       break;
@@ -761,7 +969,9 @@ void loop()
     ledManager->tick();
     ledManager->print();
 //Cycle code?
-    uint64_t currentMillis = millis();
+  if(enableCycleDemoMode)
+  {
+    
     if(currentMillis >= (prevMillis+NEXTEFFECTTIME))
     {
       prevMillis = currentMillis;
@@ -832,9 +1042,13 @@ void loop()
 
       }
     }
+  }
 //End cycle code?
 
   if (!newDataReceived) return;
+
+  prevAntiScreensaverTime = currentMillis;
+  enableCycleDemoMode = false;
   
   switch (receivedCode)
   {
@@ -845,121 +1059,118 @@ void loop()
     case CODE_WESTPOINT_TURNOFF:
     Serial.println("Action: Turning westpoint off");
     ledManager->setBrightness(0);
-    ledManager->setDronePercentage(100);
+    setDronePercentage(100);
     break;
 
     case CODE_WESTPOINT_DEFAULT:
     Serial.println("Action: Showing default animation");
     ledManager->setBrightness(255);
+    ledManager->setSpeed(1);
     for (uint16_t i = 0; i < PANELAMOUNT; i++)
     {
-      panels[i]->setDataFx(BRIGHTNESS_3_MAX, EFFECT_STOCK_APPEAR, COLOUR_RED, random(0, 10)*15, 1, true, true);
+      panels[i]->setDataFx(EFFECT_STOCK_APPEAR, COLOUR_RED, random(0, 10)*15, 1, true, true);
       for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
       {
-        panels[i]->setDiodeDataFx(j, BRIGHTNESS_3_MAX, EFFECT_SPECIAL_RAINBOW, COLOUR_RED, 0, 5, true);
+        panels[i]->setDiodeDataFx(j, BRIGHTNESS_3_MAX, EFFECT_SPECIAL_SYNTHBOW, COLOUR_RED, 0, 5, true);
       }
 
       Serial.print("Editing panel ");
       Serial.println(i);
     }
-    ledManager->setDronePercentage(100);
+    setDronePercentage(0);
+    setRingAnimations(1);
     break;
 
-    case CODE_WESTPOINT_PERCENTAGE20:
-    Serial.println("Action: Showing 20/ animation");
+    case CODE_WESTPOINT_PERCENTAGE25:
+    Serial.println("Action: Showing 25/ animation");
     ledManager->setBrightness(255);
-    ledManager->setDronePercentage(20);
-    playDroneResetAnimation();
+    setDronePercentage(1);
+    playDroneResetAnimation(1);
     setAnimation_ColourBlink();
+    setRingAnimations(2);
     break;
 
-    case CODE_WESTPOINT_PERCENTAGE40:
-    Serial.println("Action: Showing 40/ animation");
+    case CODE_WESTPOINT_PERCENTAGE50:
+    Serial.println("Action: Showing 50/ animation");
     ledManager->setBrightness(255);
-    ledManager->setDronePercentage(40);
-    playDroneResetAnimation();
+    setDronePercentage(2);
+    playDroneResetAnimation(2);
     setAnimation_Stoplight();
-    for (int i = 0; i < 64; i++)
-  {
-    ledManager->tick();
-  }
+    setRingAnimations(3);
     break;
+    
 
-    case CODE_WESTPOINT_PERCENTAGE60:
-    Serial.println("Action: Showing 60/ animation");
+    case CODE_WESTPOINT_PERCENTAGE75:
+    Serial.println("Action: Showing 75/ animation");
     ledManager->setBrightness(255);
-    ledManager->setDronePercentage(60);
-    playDroneResetAnimation();
-    setAnimation_LowFPSRainbow();
+    setDronePercentage(3);
+    playDroneResetAnimation(3);
+    setAnimation_HeartbeatTower();
+    setRingAnimations(4);
     
     break;
 
-    case CODE_WESTPOINT_PERCENTAGE80:
-    Serial.println("Action: Showing 80/ animation");
-    ledManager->setBrightness(255);
-    ledManager->setDronePercentage(80);
-    playDroneResetAnimation();
-    setAnimation_HeartbeatTower();
-    break;
 
     
     case CODE_WESTPOINT_FINISH:
     Serial.println("Action: Showing race finished animation");
-    ledManager->setBrightness(100);
-    ledManager->setDronePercentage(100);
-    playDroneResetAnimation();
+    //ledManager->setBrightness(100);
+    setDronePercentage(4);
+    playDroneResetAnimation(4);
     ledManager->setBrightness(255);
     setAnimation_BurningRainbow();
+    celebrate = true;
+    prevCelebrateTime = currentMillis;
     break;
 
     case CODE_WESTPOINT_RANDOM:
     Serial.println("Action: Showing random animation");
     ledManager->setBrightness(255);
-    ledManager->setDronePercentage(100);
+    setDronePercentage(100);
     break;
 
 
 
 
     case CODE_WESTPOINT_EFFECT_EYE:
-    Serial.println("Action: Showing race finished animation");
+    Serial.println("Action: Showing Eye animation");
     ledManager->setBrightness(255);
-    ledManager->setDronePercentage(100);
+    setDronePercentage(100);
     playResetAnimation();
     setAnimation_AppearThing2();
     break;
     case CODE_WESTPOINT_EFFECT_ZAP:
-    Serial.println("Action: Showing race finished animation");
+    Serial.println("Action: Showing Zap animation");
     ledManager->setBrightness(255);
-    ledManager->setDronePercentage(100);
+    setDronePercentage(100);
     playResetAnimation();
     setAnimation_PowerRise();
     break;
     case CODE_WESTPOINT_EFFECT_HEART:
-    Serial.println("Action: Showing race finished animation");
+    Serial.println("Action: Showing Heart animation");
     ledManager->setBrightness(255);
-    ledManager->setDronePercentage(100);
+    setDronePercentage(100);
     playResetAnimation();
     setAnimation_HeartbeatTower();
     break;
     case CODE_WESTPOINT_EFFECT_GAY:
-    Serial.println("Action: Showing race finished animation");
+    Serial.println("Action: Showing Gay animation");
     ledManager->setBrightness(255);
-    ledManager->setDronePercentage(100);
+    setDronePercentage(100);
     playResetAnimation();
     setAnimation_ADHDRainbow();
     break;
     case CODE_WESTPOINT_EFFECT_SOUND:
-    Serial.println("Action: Showing race finished animation");
+    Serial.println("Action: Showing Sound animation");
     ledManager->setBrightness(255);
-    ledManager->setDronePercentage(100);
+    setDronePercentage(100);
     playResetAnimation();
     setAnimation_Fishbowl();
     break;
     case CODE_WESTPOINT_EFFECT_WIND:
-    Serial.println("Action: Showing race finished animation");
+    Serial.println("Action: Showing Wind animation");
     ledManager->setBrightness(255);
-    ledManager->setDronePercentage(100);
+    setDronePercentage(100);
     playResetAnimation();
     setAnimation_Rain();
     break;

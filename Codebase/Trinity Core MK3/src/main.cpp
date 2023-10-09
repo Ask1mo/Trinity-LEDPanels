@@ -15,8 +15,7 @@ void playResetAnimation()
       trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_FLASH, COLOUR_VIOLET, j, 1, false});
     }
 
-    Serial.print("Editing panel ");
-    Serial.println(i);
+    
   }
 
 
@@ -42,9 +41,6 @@ void playDroneResetAnimation()
     {
       trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_PLANE, COLOUR_WHITE, 0, 1, false});
     }
-
-  Serial.print("Editing panel ");
-  Serial.println(i);
   }
 
 
@@ -71,8 +67,7 @@ void setAnimation_FullWhite()
       offset++;
     }
 
-    Serial.print("Editing panel ");
-    Serial.println(i);
+    
     }
 }
 void setAnimation_Default()
@@ -90,8 +85,7 @@ void setAnimation_Default()
         offset++;
       }
 
-      Serial.print("Editing panel ");
-      Serial.println(i);
+      
     }
 }
 void setAnimation_BreathingLines()
@@ -106,8 +100,7 @@ void setAnimation_BreathingLines()
         trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_PAUSEDBREATHING, COLOUR_CYCLE, j, 20, true});
       }
 
-      Serial.print("Editing panel ");
-      Serial.println(i);
+      
     }
 }
 void setAnimation_FlashingLines()
@@ -122,8 +115,7 @@ void setAnimation_FlashingLines()
         trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_PAUSEDFLASH, COLOUR_WHITE, j, 10, true});
       }
 
-      Serial.print("Editing panel ");
-      Serial.println(i);
+      
     }
 }
 void setAnimation_Rain()
@@ -138,8 +130,7 @@ void setAnimation_Rain()
         trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_PAUSEDFLASH, COLOUR_BLUE, j, (uint16_t)random(0, 10), true});
       }
 
-      Serial.print("Editing panel ");
-      Serial.println(i);
+      
     }
 }
 void setAnimation_Matrix()
@@ -154,8 +145,7 @@ void setAnimation_Matrix()
         trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_APPEAR, COLOUR_GREEN, j, 10, true});
       }
 
-      Serial.print("Editing panel ");
-      Serial.println(i);
+      
     }
 }
 void setAnimation_SuperRainbow()
@@ -173,8 +163,7 @@ void setAnimation_SuperRainbow()
       }
   
 
-      Serial.print("Editing panel ");
-      Serial.println(i);
+      
     }
 }
 void setAnimation_ADHDRainbow()
@@ -190,8 +179,7 @@ void setAnimation_ADHDRainbow()
         trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_SPECIAL_RAINBOW, COLOUR_RED, offset, 100, true});
         offset++;
       }
-      Serial.print("Editing panel ");
-      Serial.println(i);
+      
     }
 
     for (int i = 0; i < 500; i++)
@@ -215,8 +203,7 @@ void setAnimation_BurningRainbow()
       }
   
 
-      Serial.print("Editing panel ");
-      Serial.println(i);
+      
     }
 }
 void setAnimation_LowFPSRainbow()
@@ -235,8 +222,7 @@ void setAnimation_LowFPSRainbow()
       }
   
 
-      Serial.print("Editing panel ");
-      Serial.println(i);
+      
     }
 }
 void setAnimation_HeartbeatTower()
@@ -255,8 +241,7 @@ void setAnimation_HeartbeatTower()
       }
   
 
-      Serial.print("Editing panel ");
-      Serial.println(i);
+      
     }
 }
 void setAnimation_Stoplight()
@@ -275,8 +260,7 @@ void setAnimation_Stoplight()
       }
   
 
-      Serial.print("Editing panel ");
-      Serial.println(i);
+      
     }
 }
 void setAnimation_PowerRise()
@@ -295,8 +279,7 @@ void setAnimation_PowerRise()
       }
   
 
-      Serial.print("Editing panel ");
-      Serial.println(i);
+      
     }
 }
 void setAnimation_Fishbowl()
@@ -315,8 +298,7 @@ void setAnimation_Fishbowl()
       }
   
 
-      Serial.print("Editing panel ");
-      Serial.println(i);
+      
     }
 
 

@@ -124,7 +124,7 @@ void Trinity::tick()
   {
     prevFrameMillis = currentMillis;
 
-    Serial.print(".");
+    
     ledManager->tick();
     ledManager->print();
   }
@@ -311,10 +311,12 @@ void Trinity::setBrightness(uint8_t brightness)
 }
 void Trinity::manualTick()  //Manually tell trinity to tick the ledmanager
 {
+  if(DEBUGLEVEL >=DEBUG_DAYISRUINED) Serial.print(F("T"));
   ledManager->tick();
 }
 void Trinity::manualPrint() //Manually tell trinity to print the ledmanager
 {
+  if(DEBUGLEVEL >=DEBUG_DAYISRUINED) Serial.print(("P"));
   ledManager->print();
 }
 void Trinity::setPanelVfx(uint8_t panelNumber, VFXData vfxData)

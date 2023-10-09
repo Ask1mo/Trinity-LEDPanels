@@ -50,7 +50,16 @@ void Panel::tick()
     }
   }
 }
-void Panel::setDataFx(uint8_t brightness, uint8_t effect, uint8_t colour, uint16_t offset, uint8_t speed, bool repeat, bool detailed)
+
+void Panel::setBrightness(uint8_t brightness)
+{
+  
+  this->brightness = brightness;
+  Serial.print("Panel Bright change ");
+  Serial.println(this->brightness);
+}
+
+void Panel::setDataFx(uint8_t effect, uint8_t colour, uint16_t offset, uint8_t speed, bool repeat, bool detailed)
 {
   //Serial.println("Setting Panel Data Fx (In panel)");
   this->brightness  = brightness;
@@ -98,6 +107,16 @@ void Panel::setDiodeDataCustom(uint16_t diodeNumber, uint8_t customRGBAmount, Co
 
 CRGB Panel::getPanelRGB()
 {
+  if(brightness <= 1)
+  {
+    Serial.print("X");
+    return CRGB(0, 0, 0);
+  }
+
+  Serial.print("B");
+  Serial.println(brightness);
+
+
   uint8_t redValue    = (this->r * this->brightness)/255;
   uint8_t greenValue  = (this->g * this->brightness)/255;
   uint8_t blueValue   = (this->b * this->brightness)/255;
@@ -110,6 +129,13 @@ CRGB Panel::getDiodeRGB(byte number, uint8_t brightness)
   {
     Serial.println(F("Too high diode number requested"));
     return CRGB(0);
+  }
+
+  
+
+  if(this->brightness <= 1)
+  {
+    return CRGB(0, 0, 0);
   }
 
   return diodes[number]->getRGB(brightness);

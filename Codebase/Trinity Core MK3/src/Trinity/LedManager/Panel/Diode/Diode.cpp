@@ -36,7 +36,7 @@ Diode::Diode(uint16_t number)
 //Standard
 void Diode::tick()
 {
-  //printDebug();
+  if(DEBUGLEVEL >= DEBUG_DAYISRUINED)printDebug();
   
   if (offsetTimer < offset)
   {
@@ -119,12 +119,23 @@ void Diode::setBrightness(uint8_t brightness)
 }
 void Diode::setVfx(VFXData vfxData)
 {
-  //Serial.println("Setting diode data (In Diode)");
+  if(DEBUGLEVEL >= DEBUG_OPERATIONS)
+  {
+    Serial.print(F("Diode.setVFX(); Diode: "));
+    Serial.println(number);
+  }
+  
   *this->effect     = vfxData.effect;
   *this->colour     = vfxData.colour;
   this->offset      = vfxData.offset;
   this->speed       = vfxData.speed;
   this->repeat      = vfxData.repeat;
+
+  if(DEBUGLEVEL >= DEBUG_DAYISRUINED)
+  {
+    Serial.println(F("Is now:"));
+    printDebug();
+  }
 }
 void Diode::setDataCustom(uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
 {
