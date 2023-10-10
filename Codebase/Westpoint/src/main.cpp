@@ -643,9 +643,9 @@ void setupPanels()
   panels[28] = new Panel(28, CLOCK_CLOCKWISE,   COMPASS_NORTH,      12);
 
 
-  panels[29] = new Panel(29, CLOCK_CLOCKWISE,   COMPASS_NORTH,      38);
+  panels[29] = new Panel(29, CLOCK_CLOCKWISE,   COMPASS_NORTH,      37);
   panels[30] = new Panel(30, CLOCK_CLOCKWISE,   COMPASS_NORTH,      37);
-  panels[31] = new Panel(31, CLOCK_CLOCKWISE,   COMPASS_NORTH,      38);
+  panels[31] = new Panel(31, CLOCK_CLOCKWISE,   COMPASS_NORTH,      37);
   panels[32] = new Panel(32, CLOCK_CLOCKWISE,   COMPASS_NORTH,      37);
 
 
@@ -707,8 +707,33 @@ void setup()
   
   
     
+  int col = COLOUR_RED;
+  for (uint16_t i = 0; i < PANELAMOUNT; i++)
+  {
+    panels[i]->setDataFx(EFFECT_STOCK_STATIC, col, 0, 1, true, false);
 
+    col+=2;
+    if (col >= COLOUR_WHITE)
+    {
+      col = COLOUR_RED;
+    }
+    
+
+    for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+    {
+      panels[i]->setDiodeDataFx(j, BRIGHTNESS_3_MAX, EFFECT_STOCK_STATIC, col, 0, 1, false);
+    }
+  }
+
+  while (true)
+  {
+    ledManager->tick();
+    ledManager->print();
+  }
   
+
+
+
 
   Serial.println(F("---===SETUP COMPLETED===---"));
 }
@@ -1078,25 +1103,25 @@ void loop()
       Serial.println(i);
     }
     setDronePercentage(0);
-    setRingAnimations(1);
+    setRingAnimations(4);
     break;
 
     case CODE_WESTPOINT_PERCENTAGE25:
     Serial.println("Action: Showing 25/ animation");
     ledManager->setBrightness(255);
     setDronePercentage(1);
-    playDroneResetAnimation(1);
-    setAnimation_ColourBlink();
-    setRingAnimations(2);
+    playDroneResetAnimation(4);
+    setAnimation_Matrix();
+    setRingAnimations(3);
     break;
 
     case CODE_WESTPOINT_PERCENTAGE50:
     Serial.println("Action: Showing 50/ animation");
     ledManager->setBrightness(255);
     setDronePercentage(2);
-    playDroneResetAnimation(2);
+    playDroneResetAnimation(3);
     setAnimation_Stoplight();
-    setRingAnimations(3);
+    setRingAnimations(2);
     break;
     
 
@@ -1104,9 +1129,9 @@ void loop()
     Serial.println("Action: Showing 75/ animation");
     ledManager->setBrightness(255);
     setDronePercentage(3);
-    playDroneResetAnimation(3);
+    playDroneResetAnimation(2);
     setAnimation_HeartbeatTower();
-    setRingAnimations(4);
+    setRingAnimations(1);
     
     break;
 
@@ -1116,7 +1141,7 @@ void loop()
     Serial.println("Action: Showing race finished animation");
     //ledManager->setBrightness(100);
     setDronePercentage(4);
-    playDroneResetAnimation(4);
+    playDroneResetAnimation(1);
     ledManager->setBrightness(255);
     setAnimation_BurningRainbow();
     celebrate = true;
