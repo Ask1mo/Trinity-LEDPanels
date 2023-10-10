@@ -705,35 +705,6 @@ void setup()
   if (STARTCYCLING) setAnimation_AppearThing4();
   else setAnimation_Default();
   
-  
-    
-  int col = COLOUR_RED;
-  for (uint16_t i = 0; i < PANELAMOUNT; i++)
-  {
-    panels[i]->setDataFx(EFFECT_STOCK_STATIC, col, 0, 1, true, false);
-
-    col+=2;
-    if (col >= COLOUR_WHITE)
-    {
-      col = COLOUR_RED;
-    }
-    
-
-    for (uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
-    {
-      panels[i]->setDiodeDataFx(j, BRIGHTNESS_3_MAX, EFFECT_STOCK_STATIC, col, 0, 1, false);
-    }
-  }
-
-  while (true)
-  {
-    ledManager->tick();
-    ledManager->print();
-  }
-  
-
-
-
 
   Serial.println(F("---===SETUP COMPLETED===---"));
 }
