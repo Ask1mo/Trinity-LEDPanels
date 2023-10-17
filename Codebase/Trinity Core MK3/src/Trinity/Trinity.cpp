@@ -30,7 +30,7 @@ Trinity::Trinity(uint8_t ledPin, uint8_t buttonPin, uint8_t ldrPin, uint8_t maxF
 
   Serial.println(F("...Trinity Started"));
   
-
+  /*
   //Basic effect
   for (uint8_t i = 0; i < PANELAMOUNT; i++)
   {
@@ -39,6 +39,7 @@ Trinity::Trinity(uint8_t ledPin, uint8_t buttonPin, uint8_t ldrPin, uint8_t maxF
       panels[i]->setDiodeVfx(j, VFXData{EFFECT_STOCK_PLANE, COLOUR_RED, 0, 1, true});
     }
   }
+  */
 
   Serial.println(F("...Trinity Setup complete"));
 }
@@ -300,6 +301,26 @@ void Trinity::tick()
     break;
   }
 }
+void Trinity::forceTick(uint16_t ticks, bool keepPrinting, uint16_t delayTime)
+{
+  for (uint16_t i = 0; i < ticks; i++)
+  {
+    if(DEBUGLEVEL >=DEBUG_DAYISRUINED) Serial.print(F("T"));
+    ledManager->tick();
+
+    if (keepPrinting)
+    {
+      if(DEBUGLEVEL >=DEBUG_DAYISRUINED) Serial.print(("P"));
+      ledManager->print();
+
+      if(delayTime > 0 )
+      {
+        delay(delayTime);
+      }
+    }
+  }
+}
+
 
 void Trinity::setSpeed(uint8_t speed)
 {
@@ -308,16 +329,6 @@ void Trinity::setSpeed(uint8_t speed)
 void Trinity::setBrightness(uint8_t brightness)
 {
   ledManager->setBrightness(brightness);
-}
-void Trinity::manualTick()  //Manually tell trinity to tick the ledmanager
-{
-  if(DEBUGLEVEL >=DEBUG_DAYISRUINED) Serial.print(F("T"));
-  ledManager->tick();
-}
-void Trinity::manualPrint() //Manually tell trinity to print the ledmanager
-{
-  if(DEBUGLEVEL >=DEBUG_DAYISRUINED) Serial.print(("P"));
-  ledManager->print();
 }
 void Trinity::setPanelVfx(uint8_t panelNumber, VFXData vfxData)
 {
@@ -329,6 +340,14 @@ uint16_t Trinity::getPanelDiodeAmount(uint8_t panelNumber)
 }
 void Trinity::setPanelDiodeVfx(uint8_t panelNumber, uint16_t diodeNumber, VFXData vfxData)
 {
+  if (panelNumber >= sizeof(panels))
+  {
+    Serial.print(F("Trinity::setPanelDiodeVfx() Too high panel number requested: "));
+    Serial.print(panelNumber);
+    Serial.print(F(". Max: "));
+    Serial.println(panelNumber);
+  }
+  
   panels[panelNumber]->setDiodeVfx(diodeNumber, vfxData);
 }
 

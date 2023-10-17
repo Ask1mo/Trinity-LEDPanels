@@ -35,21 +35,24 @@ LedManager::LedManager                              (Panel **panelsArg)
 //Standard
 void    LedManager::tick                            () 
 {
-  if(DEBUGLEVEL >=DEBUG_OPERATIONS) Serial.print(F("t"));
-
-  for (uint8_t i = 0; i < panelsAmount; i++)
+  for (uint8_t i = 0; i < speed; i++)
   {
-    panels[i]->tick();
+    if(DEBUGLEVEL >=DEBUG_OPERATIONS) Serial.print(F("t"));
 
-    for(uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+    for (uint8_t i = 0; i < panelsAmount; i++)
     {
-      leds[panels[i]->getDiodeStart()+j] = panels[i]->getDiodeRGB(j, brightness);
+      panels[i]->tick();
+
+      for(uint16_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+      {
+        leds[panels[i]->getDiodeStart()+j] = panels[i]->getDiodeRGB(j, brightness);
+      }
     }
   }
 } 
 void    LedManager::print                           () 
 {
-  if(DEBUGLEVEL >=DEBUG_DAYISRUINED) Serial.print(F("p"));
+  if(DEBUGLEVEL >= DEBUG_OPERATIONS) Serial.print(F("p"));
   FastLED.show(); 
 }
 //Effects

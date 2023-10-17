@@ -8,7 +8,7 @@ Panel::Panel                                (uint8_t number, uint8_t x, uint8_t 
   diodes = (Diode**)malloc(sizeof(Diode*) * diodeAmount);
   for (uint8_t i = 0; i < diodeAmount; i++)
   {
-    diodes[i] = new Diode(i);
+    diodes[i] = new Diode(i, &this->effect);
   }
 
   this->number        = number;
@@ -22,21 +22,17 @@ Panel::Panel                                (uint8_t number, uint8_t x, uint8_t 
   this->diodeStart    = 0;  // The coordinate of the first LED
 
   this->brightness   = 255;
-  this->effect       = 0;
-  this->colour       = 0;
+  this->effect       = EFFECT_DEV_UNBOUND;
+  this->colour       = COLOUR_BLACK;
   this->offset       = 0;
   this->speed        = 1;
+
+  
   this->rCustom      = 255;
   this->gCustom      = 255;
   this->bCustom      = 255;
   
-  this->r                   = 0;
-  this->g                   = 0;
-  this->b                   = 0;
-  this->d                   = 0;
-  this->fxProgression       = 0;      // In effect cycling
-  this->fxCycleProgression  = 0; // Cycles of the whole effect (But with different colourss)
-  this->offsetTimer         = 0;
+  resetFXProcessingVars();
 }
 
 //Public
@@ -66,7 +62,7 @@ void      Panel::setVfx                     (VFXData vfxData)
 {
   if(DEBUGLEVEL >= DEBUG_OPERATIONS)
   {
-    Serial.print(F("Panel.setVFX(); Panel: "));
+    Serial.print(F("Panel.setVFX(); P"));
     Serial.println(number);
   }
   
@@ -76,6 +72,7 @@ void      Panel::setVfx                     (VFXData vfxData)
   this->speed       = vfxData.speed;
   this->repeat      = vfxData.repeat;
   this->detailed    = false;
+  resetFXProcessingVars();
 
   if(DEBUGLEVEL >= DEBUG_DAYISRUINED)
   {
@@ -99,7 +96,24 @@ void      Panel::setDiodeBrightness         (uint16_t diodeNumber, uint8_t brigh
 }
 void      Panel::setDiodeVfx                (uint16_t diodeNumber, VFXData vfxData)
 {
+  if(DEBUGLEVEL >= DEBUG_OPERATIONS)
+  {
+    Serial.print(F("Panel.setDiodeVfx(); P"));
+    Serial.print(number);
+  }
+
+  if (effect != vfxData.effect)
+  {
+    effect = vfxData.effect;
+    if(DEBUGLEVEL >= DEBUG_OPERATIONS)
+  {
+    Serial.print(F(" (Panel copied effect intended for diode)"));
+  }
+  }
   diodes[diodeNumber]->setVfx(vfxData);
+
+
+  resetFXProcessingVars();
 }
 void      Panel::setDiodeDataCustom         (uint16_t diodeNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
 {
@@ -159,6 +173,16 @@ void      Panel::setDiodeStart              (uint16_t ledStart)
 {
   this->diodeStart = ledStart;
 }
+void      Panel::resetFXProcessingVars      ()
+{
+  this->effectVariables.r                   = 0;
+  this->effectVariables.g                   = 0;
+  this->effectVariables.b                   = 0;
+  this->effectVariables.d                   = 0;
+  this->effectVariables.c                   = 0; //Current colour (Can cycle because of COLOUR_COLOURCYCLE)
+  this->effectVariables.fxProgression       = 0; // In effect cycling
+  this->offsetTimer                         = 0;
+}
 //Transmissions
 String    Panel::convertToTransmission      ()
 {
@@ -177,9 +201,9 @@ String    Panel::convertToTransmission      ()
   data += (char)repeat;
   data += (char)detailed;
 
-  data += (char)r;
-  data += (char)g;
-  data += (char)b;
+  data += (char)effectVariables.r;
+  data += (char)effectVariables.g;
+  data += (char)effectVariables.b;
 
   return data;
 }
@@ -221,17 +245,17 @@ void      Panel::printDebug                 ()
   Serial.println(bCustom);
 
   Serial.print(F("r "));
-  Serial.print(r);
+  Serial.print(effectVariables.r);
   Serial.print(F(" | g "));
-  Serial.print(g);
+  Serial.print(effectVariables.g);
   Serial.print(F(" | b "));
-  Serial.print(b);
+  Serial.print(effectVariables.b);
   Serial.print(F(" | d "));
-  Serial.print(d);
+  Serial.print(effectVariables.d);
   Serial.print(F(" | fxProgression "));
-  Serial.print(fxProgression);
-  Serial.print(F(" | fxCycleProgression "));
-  Serial.print(fxCycleProgression);
+  Serial.print(effectVariables.fxProgression);
+  Serial.print(F(" | c "));
+  Serial.print(effectVariables.c);
   Serial.print(F(" | offsetTimer "));
   Serial.println(offsetTimer);
   

@@ -1,15 +1,13 @@
 #include "Diode.h"
 
 //Constructor
-Diode::Diode(uint16_t number)
+Diode::Diode(uint16_t number, uint8_t *panelEffect)
 {
   this->number = number;
 
   this->brightness  = 255;
-  this->effect      = new uint8_t();
-  this->colour      = new uint8_t();
-  *this->effect      = EFFECT_CUSTOM_STATIC;
-  *this->colour      = COLOUR_CYCLE;
+  this->effect      = panelEffect;
+  this->colour      = COLOUR_BLACK;
   this->offset      = 0;
   this->speed       = 1;
 
@@ -22,19 +20,19 @@ Diode::Diode(uint16_t number)
     //These are some preset empty colours for the custom RGB values.
   }
 
-  this->rgb.r           = 0;
-  this->rgb.g           = 0;
-  this->rgb.b           = 0;
-  this->d               = 0;
-  this->c               = 0;
-  this->fxProgression   = 0;          //In effect cycling
+  this->effectVariables.r           = 0;
+  this->effectVariables.g           = 0;
+  this->effectVariables.b           = 0;
+  this->effectVariables.d               = 0;
+  this->effectVariables.c               = 0;
+  this->effectVariables.fxProgression   = 0;          //In effect cycling
   this->offsetTimer     = 0;
 
 }
 
 //Public
 //Standard
-void Diode::tick()
+void      Diode::tick()
 {
   if(DEBUGLEVEL >= DEBUG_DAYISRUINED)printDebug();
   
@@ -46,90 +44,40 @@ void Diode::tick()
   {
     for (byte i = 0; i < speed; i++)
     {
-      if (*colour != COLOUR_CYCLE)
+      if (colour != COLOUR_CYCLE)
       {
-        c = *colour;
+        effectVariables.c = colour;
       }
       
 
-      bool effectFinished = false;
-      switch (*effect)
+      bool effectFinished = processEffect(*effect, &effectVariables);
+
+      if(colour == COLOUR_CYCLE && effectFinished)
       {
-        case EFFECT_STOCK_STATIC:
-        effectFinished = stock_static(&rgb, &d, &fxProgression, c);
-        break;
-
-        case EFFECT_STOCK_BLINK:
-        effectFinished = stock_blink(&rgb, &d, &fxProgression, c);
-        break;
-
-        case EFFECT_STOCK_PLANE:
-        effectFinished = stock_plane(&rgb, &d, &fxProgression, c);
-        break;
-
-        case EFFECT_STOCK_BREATHING:
-        effectFinished = stock_breathing(&rgb, &d, &fxProgression, c);
-        break;
-
-        case EFFECT_STOCK_PAUSEDBREATHING:
-        effectFinished = stock_pausedbreathing(&rgb, &d, &fxProgression, c);
-        break;
-
-        case EFFECT_STOCK_FLASH:
-        effectFinished = stock_flash(&rgb, &d, &fxProgression, c);
-        break;
-
-        case EFFECT_STOCK_PAUSEDFLASH:
-        effectFinished = stock_pausedFlash(&rgb, &d, &fxProgression, c);
-        break;
-
-        case EFFECT_STOCK_HEARTBEAT:
-        effectFinished = stock_heartbeat(&rgb, &d, &fxProgression, c);
-        break;
-
-        case EFFECT_STOCK_APPEAR:
-        effectFinished = stock_appear(&rgb, &d, &fxProgression, c);
-        break;
-
-        case EFFECT_SPECIAL_RAINBOW:
-        effectFinished = special_rainbow(&rgb, &d, &fxProgression);
-        break;
-
-        case EFFECT_SPECIAL_FIRE:
-        //effectFinished = special_fire();
-        break;
-
-        case EFFECT_SPECIAL_SOUND:
-        //effectFinished = progressFX_sound();
-        break;
-      }
-
-      if(*colour == COLOUR_CYCLE && effectFinished)
-      {
-        c++;
-        if(c == AMOUNTOFCOLOURS) c = (COLOUR_BLACK + 1);
+        effectVariables.c++;
+        if(effectVariables.c == AMOUNTOFCOLOURS) effectVariables.c = (COLOUR_BLACK + 1);
       }
     }
   }
 }
 //Effects
-void Diode::setBrightness(uint8_t brightness)
+void      Diode::setBrightness(uint8_t brightness)
 {
   this->brightness  = brightness;
 }
-void Diode::setVfx(VFXData vfxData)
+void      Diode::setVfx(VFXData vfxData)
 {
   if(DEBUGLEVEL >= DEBUG_OPERATIONS)
   {
-    Serial.print(F("Diode.setVFX(); Diode: "));
+    Serial.print(F(" Diode.setVFX(); D"));
     Serial.println(number);
   }
   
-  *this->effect     = vfxData.effect;
-  *this->colour     = vfxData.colour;
+  this->colour      = vfxData.colour;
   this->offset      = vfxData.offset;
   this->speed       = vfxData.speed;
   this->repeat      = vfxData.repeat;
+  resetFXProcessingVars();
 
   if(DEBUGLEVEL >= DEBUG_DAYISRUINED)
   {
@@ -137,7 +85,7 @@ void Diode::setVfx(VFXData vfxData)
     printDebug();
   }
 }
-void Diode::setDataCustom(uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
+void      Diode::setDataCustom(uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
 {
   this->customRGBAmount = customRGBAmount;
   for (uint8_t i = 0; i < AMOUNTOFCOLOURS; i++)
@@ -146,15 +94,26 @@ void Diode::setDataCustom(uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOF
   }
 }
 //Technical
-CRGB Diode::getRGB(uint8_t sysBrightness)
+CRGB      Diode::getRGB(uint8_t sysBrightness)
 {
-  uint8_t r = (((this->rgb.r * this->brightness) / 255) * sysBrightness) / 255;
-  uint8_t g = (((this->rgb.g * this->brightness) / 255) * sysBrightness) / 255;
-  uint8_t b = (((this->rgb.b * this->brightness) / 255) * sysBrightness) / 255;
+  uint8_t r = (((this->effectVariables.r * this->brightness) / 255) * sysBrightness) / 255;
+  uint8_t g = (((this->effectVariables.g * this->brightness) / 255) * sysBrightness) / 255;
+  uint8_t b = (((this->effectVariables.b * this->brightness) / 255) * sysBrightness) / 255;
   return CRGB(r, g, b);
 }
+void      Diode::resetFXProcessingVars      ()
+{
+  this->effectVariables.r                   = 0;
+  this->effectVariables.g                   = 0;
+  this->effectVariables.b                   = 0;
+  this->effectVariables.d                       = 0;
+  this->effectVariables.fxProgression           = 0;      // In effect cycling
+  this->effectVariables.c                       = 0; // Cycles of the whole effect (But with different colourss)
+  this->offsetTimer             = 0;
+}
+
 //Transmissions
-String Diode::convertToTransmission()
+String    Diode::convertToTransmission()
 {
   String data = "";
   
@@ -162,19 +121,19 @@ String Diode::convertToTransmission()
 
   data += brightness;
   data += *effect;
-  data += *colour;
+  data += colour;
   data += offset;
   data += speed;
   data += repeat;
 
-  data += rgb.r;
-  data += rgb.g;
-  data += rgb.b;
+  data += effectVariables.r;
+  data += effectVariables.g;
+  data += effectVariables.b;
 
   return data;
 }
 //Debug
-void Diode::printDebug()
+void      Diode::printDebug()
 {
   Serial.print(F("Diode "));
   Serial.println(number);
@@ -184,24 +143,24 @@ void Diode::printDebug()
   Serial.print(F(" | effect "));
   Serial.print(*effect);
   Serial.print(F(" | colour "));
-  Serial.print(*colour);
+  Serial.print(colour);
   Serial.print(F(" | offset "));
   Serial.print(offset);
   Serial.print(F(" | speed "));
   Serial.print(speed);
 
   Serial.print(F(" === r "));
-  Serial.print(rgb.r);
+  Serial.print(effectVariables.r);
   Serial.print(F(" | g "));
-  Serial.print(rgb.g);
+  Serial.print(effectVariables.g);
   Serial.print(F(" | b "));
-  Serial.print(rgb.b);
+  Serial.print(effectVariables.b);
   Serial.print(F(" | d "));
-  Serial.print(d);
+  Serial.print(effectVariables.d);
   Serial.print(F(" | c "));
-  Serial.print(c);
+  Serial.print(effectVariables.c);
   Serial.print(F(" | fxProgression "));
-  Serial.print(fxProgression);
+  Serial.print(effectVariables.fxProgression);
   Serial.print(F(" | offsetTimer "));
   Serial.println(offsetTimer);
 }

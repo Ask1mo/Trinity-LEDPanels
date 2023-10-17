@@ -13,10 +13,11 @@
 //LEDTYPE_STANDARD
 //LEDTYPE_CHRISTMASSTRING
 
-#define DEBUG_DISABLED      0
-#define DEBUG_ERRORS        1
-#define DEBUG_OPERATIONS    2
-#define DEBUG_DAYISRUINED   3
+#define DEBUG_DISABLED              0
+#define DEBUG_ERRORS                1
+#define DEBUG_OPERATIONS            2
+#define DEBUG_OPERATIONS_DETAILED   3
+#define DEBUG_DAYISRUINED           4
 /*---=== Setting examples ===---*/
 
 

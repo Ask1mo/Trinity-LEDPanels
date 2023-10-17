@@ -2,14 +2,14 @@
 #define LEDMANAGER_H
 
 #include "Panel/Panel.h"
-#include "../src/setup.h"
+#include "../src/Trinity/setup.h"
 
 class LedManager
 {
 private:
   uint8_t                                 panelsAmount;
   uint8_t                                 brightness;
-  bool                                    speed;
+  uint8_t                                 speed;
   bool                                    enabled;
   Panel                                   **panels;
   CRGB                                    leds[LEDAMOUNT];

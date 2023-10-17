@@ -5,7 +5,7 @@
 #include <FastLED.h>
 #include "Trinity/ledManager/effectProcessor/effectProcessor.h"
 #include "Trinity/DataTypes.h"
-#include "setup.h"
+#include "Trinity/setup.h"
 
 
 
@@ -24,8 +24,8 @@ private:
   uint16_t                                  number;
 
   uint8_t                                   brightness;
-  uint8_t                                   *effect;
-  uint8_t                                   *colour;
+  uint8_t                                   *effect; //Points to the effect of the panel. I don't want to have panels running differing effects on it's diodes
+  uint8_t                                   colour;
   uint16_t                                  offset;
   uint8_t                                   speed;
   bool                                      repeat;
@@ -34,14 +34,11 @@ private:
   ColourRGB                                 *customRGB[AMOUNTOFCOLOURS];
   
 
-  ColourRGB                                 rgb;
-  uint8_t                                   d; //Dummy
-  uint8_t                                   c; //Current colour (Can cycle because of COLOUR_COLOURCYCLE)
-  uint8_t                                   fxProgression; //Current part of the effect
+  EffectVariables                           effectVariables;
   uint16_t                                  offsetTimer;
 
 public:
-  Diode                                     (uint16_t number);
+  Diode                                     (uint16_t number, uint8_t *panelEffect);
   //Standard
   void      tick                            ();
   //Effects
@@ -50,6 +47,7 @@ public:
   void      setDataCustom                   (uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);
   //Technical
   CRGB      getRGB                          (uint8_t sysBrightness);
+  void      resetFXProcessingVars           ();
   //Transmisisons
   String    convertToTransmission           ();
   //Debug

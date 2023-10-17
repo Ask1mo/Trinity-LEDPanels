@@ -25,11 +25,10 @@ private:
 public:
     Trinity(uint8_t ledPin, uint8_t buttonPin, uint8_t ldrPin, uint8_t maxFramerate);
     void tick();
-
+    void forceTick(uint16_t ticks, bool keepPrinting, uint16_t delayTime);  //Manually force the ledmanager to tick without running any other Trinity code.
     void setSpeed(uint8_t speed);
     void setBrightness(uint8_t brightness);
-    void manualTick();  //Manually tell trinity to tick the ledmanager
-    void manualPrint(); //Manually tell trinity to print the ledmanager
+    
     void setPanelVfx(uint8_t panelNumber, VFXData vfxData);
     uint16_t getPanelDiodeAmount(uint8_t panelNumber);
     void setPanelDiodeVfx(uint8_t panelNumber, uint16_t diodeNumber, VFXData vfxData);

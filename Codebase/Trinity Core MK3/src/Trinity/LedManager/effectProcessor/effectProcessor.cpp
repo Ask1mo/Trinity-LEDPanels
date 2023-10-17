@@ -1,6 +1,57 @@
 #include "effectProcessor.h"
 
-bool getColourClearance(byte colourToClear, byte colourChannel)
+
+bool processEffect(uint8_t effect, EffectVariables *effectVariables)
+{
+  bool effectFinished = false;
+
+  switch (effect)
+  {
+    case EFFECT_STOCK_STATIC:
+    effectFinished = stock_static(effectVariables);
+    break;
+    case EFFECT_STOCK_BLINK:
+    effectFinished = stock_blink(effectVariables);
+    break;
+    case EFFECT_STOCK_PLANE:
+    effectFinished = stock_plane(effectVariables);
+    break;
+    case EFFECT_STOCK_BREATHING:
+    effectFinished = stock_breathing(effectVariables);
+    break;
+    case EFFECT_STOCK_PAUSEDBREATHING:
+    effectFinished = stock_pausedbreathing(effectVariables);
+    break;
+    case EFFECT_STOCK_FLASH:
+    effectFinished = stock_flash(effectVariables);
+    break;
+    case EFFECT_STOCK_PAUSEDFLASH:
+    effectFinished = stock_pausedFlash(effectVariables);
+    break;
+    case EFFECT_STOCK_HEARTBEAT:
+    effectFinished = stock_heartbeat(effectVariables);
+    break;
+    case EFFECT_STOCK_DECODE:
+    effectFinished = stock_decode(effectVariables);
+    break;
+    
+    case EFFECT_SPECIAL_RAINBOW:
+    effectFinished = special_rainbow(effectVariables);
+    break;
+
+    case EFFECT_DEV_UNBOUND:
+    effectFinished = dev_unbound(effectVariables);
+    break;
+      
+    default:
+    Serial.print(F("ERROR! effectProcessor.processEffect() - Selected Effect not programmed"));
+    break;
+  }
+
+  return effectFinished;
+}
+
+bool getColourClearance(uint8_t colourToClear, uint8_t colourChannel)
 {
   switch (colourChannel)
   {
@@ -31,32 +82,34 @@ bool getColourClearance(byte colourToClear, byte colourChannel)
   return false;
 }
 
-bool stock_static           (ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
+bool stock_static           (EffectVariables *effectVariables)
 {
-  bool allowR = getColourClearance(colour, COLOUR_RED);
-  bool allowG = getColourClearance(colour, COLOUR_GREEN);
-  bool allowB = getColourClearance(colour, COLOUR_BLUE);
+  bool allowR = getColourClearance(effectVariables->c, COLOUR_RED);
+  bool allowG = getColourClearance(effectVariables->c, COLOUR_GREEN);
+  bool allowB = getColourClearance(effectVariables->c, COLOUR_BLUE);
 
-  switch (*progFx)
+  switch (effectVariables->fxProgression)
   {
     case 0:
-      if(allowR)rgb->r = 255;
-      else rgb->r = 0;
-      if(allowG)rgb->g = 255;
-      else rgb->g = 0;
-      if(allowB)rgb->b = 255;
-      else rgb->b = 0;
-      *d = 0;
+      if(allowR)effectVariables->r = 255;
+      else effectVariables->r = 0;
+      if(allowG)effectVariables->g = 255;
+      else effectVariables->g = 0;
+      if(allowB)effectVariables->b = 255;
+      else effectVariables->b = 0;
+      effectVariables->d = 0;
 
-      (*progFx)++;
+      
+
+      (effectVariables->fxProgression)++;
     break;
 
     case 1:
-      (*d)++;
+      (effectVariables->d)++;
 
-      if (*d == 255)
+      if (effectVariables->d == 255)
       {
-        (*progFx) = 0;
+        (effectVariables->fxProgression) = 0;
         return true;
       }
     break;
@@ -64,405 +117,405 @@ bool stock_static           (ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_
 
   return false;
 }
-bool stock_blink            (ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
+bool stock_blink            (EffectVariables *effectVariables)
 {
-  bool allowR = getColourClearance(colour, COLOUR_RED);
-  bool allowG = getColourClearance(colour, COLOUR_GREEN);
-  bool allowB = getColourClearance(colour, COLOUR_BLUE);
+  bool allowR = getColourClearance(effectVariables->c, COLOUR_RED);
+  bool allowG = getColourClearance(effectVariables->c, COLOUR_GREEN);
+  bool allowB = getColourClearance(effectVariables->c, COLOUR_BLUE);
 
-  switch (*progFx)
+  switch (effectVariables->fxProgression)
   {
     case 0:
-      if(allowR)rgb->r = 255;
-      else rgb->r = 0;
-      if(allowG)rgb->g = 255;
-      else rgb->g = 0;
-      if(allowB)rgb->b = 255;
-      else rgb->b = 0;
-      *d = 0;
+      if(allowR)effectVariables->r = 255;
+      else effectVariables->r = 0;
+      if(allowG)effectVariables->g = 255;
+      else effectVariables->g = 0;
+      if(allowB)effectVariables->b = 255;
+      else effectVariables->b = 0;
+      effectVariables->d = 0;
 
-      (*progFx)++;
+      (effectVariables->fxProgression)++;
     break;
 
     case 1:
-      (*d)++;
+      (effectVariables->d)++;
 
-      if (*d == 20) (*progFx)++;
+      if (effectVariables->d == 20) (effectVariables->fxProgression)++;
     break;
 
     case 2:
-      rgb->r = 0;
-      rgb->g = 0;
-      rgb->b = 0;
+      effectVariables->r = 0;
+      effectVariables->g = 0;
+      effectVariables->b = 0;
 
-      (*progFx)++;
+      (effectVariables->fxProgression)++;
     break;
 
     case 3:
-      (*d)++;
+      (effectVariables->d)++;
 
-      if (*d == 255)
+      if (effectVariables->d == 255)
       {
-        *progFx = 0;
+        effectVariables->fxProgression = 0;
         return true;
       }
     break;
   }
   return false;
 }
-bool stock_plane            (ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
+bool stock_plane            (EffectVariables *effectVariables)
 {
-  bool allowR = getColourClearance(colour, COLOUR_RED);
-  bool allowG = getColourClearance(colour, COLOUR_GREEN);
-  bool allowB = getColourClearance(colour, COLOUR_BLUE);
+  bool allowR = getColourClearance(effectVariables->c, COLOUR_RED);
+  bool allowG = getColourClearance(effectVariables->c, COLOUR_GREEN);
+  bool allowB = getColourClearance(effectVariables->c, COLOUR_BLUE);
 
-  switch (*progFx)
+  switch (effectVariables->fxProgression)
   {
     case 0:
-      if (allowR)rgb->r = 255;
-      else rgb->r = 0;
-      if (allowG)rgb->g = 255;
-      else rgb->g = 0;
-      if (allowB)rgb->b = 255;
-      else rgb->b = 0;
-      d = 0;
+      if (allowR)effectVariables->r = 255;
+      else effectVariables->r = 0;
+      if (allowG)effectVariables->g = 255;
+      else effectVariables->g = 0;
+      if (allowB)effectVariables->b = 255;
+      else effectVariables->b = 0;
+      effectVariables->d = 0;
 
-      (*progFx)++;
+      (effectVariables->fxProgression)++;
     break;
 
     case 1:
-      (*d)++;
+      (effectVariables->d)++;
 
-      if(*d == 20) (*progFx)++;
+      if(effectVariables->d == 20) (effectVariables->fxProgression)++;
     break;
 
     case 2:
-      rgb->r = 0;
-      rgb->g = 0;
-      rgb->b = 0;
+      effectVariables->r = 0;
+      effectVariables->g = 0;
+      effectVariables->b = 0;
 
-      (*progFx)++;
+      (effectVariables->fxProgression)++;
     break;
 
     case 3:
-      (*d)++;
+      (effectVariables->d)++;
 
-      if(*d == 40) (*progFx)++;
+      if(effectVariables->d == 40) (effectVariables->fxProgression)++;
     break;
 
     case 4:
-      if(allowR) rgb->r = 255;
-      if(allowG) rgb->g = 255;
-      if(allowB) rgb->b = 255;
+      if(allowR) effectVariables->r = 255;
+      if(allowG) effectVariables->g = 255;
+      if(allowB) effectVariables->b = 255;
 
-      (*progFx)++;
+      (effectVariables->fxProgression)++;
     break;
 
     case 5:
-      (*d)++;
+      (effectVariables->d)++;
 
-      if(*d == 60) (*progFx)++;
+      if(effectVariables->d == 60) (effectVariables->fxProgression)++;
     break;
 
     case 6:
-      rgb->r = 0;
-      rgb->g = 0;
-      rgb->b = 0;
+      effectVariables->r = 0;
+      effectVariables->g = 0;
+      effectVariables->b = 0;
 
-      (*progFx)++;
+      (effectVariables->fxProgression)++;
     break;
 
     case 7:
-      (*d)++;
+      (effectVariables->d)++;
 
-      if(*d == 255) 
+      if(effectVariables->d == 255) 
       {
-        *progFx = 0;
+        effectVariables->fxProgression = 0;
         return true;
       }
     break;
   }
   return false;
 }
-bool stock_breathing        (ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
+bool stock_breathing        (EffectVariables *effectVariables)
 {
-  bool allowR = getColourClearance(colour, COLOUR_RED);
-  bool allowG = getColourClearance(colour, COLOUR_GREEN);
-  bool allowB = getColourClearance(colour, COLOUR_BLUE);
+  bool allowR = getColourClearance(effectVariables->c, COLOUR_RED);
+  bool allowG = getColourClearance(effectVariables->c, COLOUR_GREEN);
+  bool allowB = getColourClearance(effectVariables->c, COLOUR_BLUE);
 
-  switch (*progFx)
+  switch (effectVariables->fxProgression)
   {
     case 0:
-      rgb->r = 0;
-      rgb->g = 0;
-      rgb->b = 0;
-      *d = 0;
+      effectVariables->r = 0;
+      effectVariables->g = 0;
+      effectVariables->b = 0;
+      effectVariables->d = 0;
 
-      (*progFx)++;
+      (effectVariables->fxProgression)++;
     break;
 
     case 1:
-      if (allowR)rgb->r++;
-      if (allowG)rgb->g++;
-      if (allowB)rgb->b++;
-      (*d)++;
+      if (allowR)effectVariables->r++;
+      if (allowG)effectVariables->g++;
+      if (allowB)effectVariables->b++;
+      (effectVariables->d)++;
 
-      if (*d == 255)(*progFx)++;
+      if (effectVariables->d == 255)(effectVariables->fxProgression)++;
     break;
 
     case 2:
-      if (allowR)rgb->r--;
-      if (allowG)rgb->g--;
-      if (allowB)rgb->b--;
-      (*d)--;
+      if (allowR)effectVariables->r--;
+      if (allowG)effectVariables->g--;
+      if (allowB)effectVariables->b--;
+      (effectVariables->d)--;
 
-      if (*d == 0)
+      if (effectVariables->d == 0)
       {
-        *progFx = 0;
+        effectVariables->fxProgression = 0;
         return true;
       }
     break;
   }
   return false;
 }
-bool stock_pausedbreathing  (ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
+bool stock_pausedbreathing  (EffectVariables *effectVariables)
 {
-  bool allowR = getColourClearance(colour, COLOUR_RED);
-  bool allowG = getColourClearance(colour, COLOUR_GREEN);
-  bool allowB = getColourClearance(colour, COLOUR_BLUE);
+  bool allowR = getColourClearance(effectVariables->c, COLOUR_RED);
+  bool allowG = getColourClearance(effectVariables->c, COLOUR_GREEN);
+  bool allowB = getColourClearance(effectVariables->c, COLOUR_BLUE);
 
-  switch (*progFx)
+  switch (effectVariables->fxProgression)
   {
     case 0:
-      rgb->r = 0;
-      rgb->g = 0;
-      rgb->b = 0;
-      *d = 0;
+      effectVariables->r = 0;
+      effectVariables->g = 0;
+      effectVariables->b = 0;
+      effectVariables->d = 0;
 
-      (*progFx)++;
+      (effectVariables->fxProgression)++;
     break;
 
     case 1:
-      if (allowR)rgb->r++;
-      if (allowG)rgb->g++;
-      if (allowB)rgb->b++;
-      (*d)++;
+      if (allowR)effectVariables->r++;
+      if (allowG)effectVariables->g++;
+      if (allowB)effectVariables->b++;
+      (effectVariables->d)++;
 
-      if (*d == 255)(*progFx)++;
+      if (effectVariables->d == 255)(effectVariables->fxProgression)++;
     break;
 
     case 2:
-      if (allowR)rgb->r--;
-      if (allowG)rgb->g--;
-      if (allowB)rgb->b--;
-      (*d)--;
+      if (allowR)effectVariables->r--;
+      if (allowG)effectVariables->g--;
+      if (allowB)effectVariables->b--;
+      (effectVariables->d)--;
 
-      if (*d == 0)(*progFx)++;
+      if (effectVariables->d == 0)(effectVariables->fxProgression)++;
     break;
 
     case 3:
-      (*d)++;
+      (effectVariables->d)++;
 
-      if (*d == 255)(*progFx)++;
+      if (effectVariables->d == 255)(effectVariables->fxProgression)++;
     break;
 
     case 4:
-      (*d)--;
+      (effectVariables->d)--;
 
-      if (*d == 0)
+      if (effectVariables->d == 0)
       {
-        *progFx = 0;
+        effectVariables->fxProgression = 0;
         return true;
       }
     break;
   }
   return false;
 }
-bool stock_flash            (ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
+bool stock_flash            (EffectVariables *effectVariables)
 {
-  bool allowR = getColourClearance(colour, COLOUR_RED);
-  bool allowG = getColourClearance(colour, COLOUR_GREEN);
-  bool allowB = getColourClearance(colour, COLOUR_BLUE);
+  bool allowR = getColourClearance(effectVariables->c, COLOUR_RED);
+  bool allowG = getColourClearance(effectVariables->c, COLOUR_GREEN);
+  bool allowB = getColourClearance(effectVariables->c, COLOUR_BLUE);
 
-  switch (*progFx)
+  switch (effectVariables->fxProgression)
   {
     case 0:
-      if(allowR)rgb->r = 255;
-      else rgb->r = 0;
-      if(allowG) rgb->g = 255;
-      else rgb->g = 0;
-      if(allowB) rgb->b = 255;
-      else rgb->b = 0;
-      *d = 255;
+      if(allowR)effectVariables->r = 255;
+      else effectVariables->r = 0;
+      if(allowG) effectVariables->g = 255;
+      else effectVariables->g = 0;
+      if(allowB) effectVariables->b = 255;
+      else effectVariables->b = 0;
+      effectVariables->d = 255;
 
-      (*progFx)++;
+      (effectVariables->fxProgression)++;
     break;
 
     case 1:
-      if(allowR)rgb->r--;
-      if(allowG)rgb->g--;
-      if(allowB)rgb->b--;
-      (*d)--;
+      if(allowR)effectVariables->r--;
+      if(allowG)effectVariables->g--;
+      if(allowB)effectVariables->b--;
+      (effectVariables->d)--;
 
-      if (*d == 0)
+      if (effectVariables->d == 0)
       {
-        *progFx = 0;
+        effectVariables->fxProgression = 0;
         return true;
       }
     break;
   }
   return false;
 }
-bool stock_pausedFlash      (ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
+bool stock_pausedFlash      (EffectVariables *effectVariables)
 {
-  bool allowR = getColourClearance(colour, COLOUR_RED);
-  bool allowG = getColourClearance(colour, COLOUR_GREEN);
-  bool allowB = getColourClearance(colour, COLOUR_BLUE);
+  bool allowR = getColourClearance(effectVariables->c, COLOUR_RED);
+  bool allowG = getColourClearance(effectVariables->c, COLOUR_GREEN);
+  bool allowB = getColourClearance(effectVariables->c, COLOUR_BLUE);
 
-  switch (*progFx)
+  switch (effectVariables->fxProgression)
   {
     case 0:
-      if(allowR)rgb->r = 255;
-      else rgb->r = 0;
-      if(allowG) rgb->g = 255;
-      else rgb->g = 0;
-      if(allowB) rgb->b = 255;
-      else rgb->b = 0;
-      *d = 255;
+      if(allowR)effectVariables->r = 255;
+      else effectVariables->r = 0;
+      if(allowG) effectVariables->g = 255;
+      else effectVariables->g = 0;
+      if(allowB) effectVariables->b = 255;
+      else effectVariables->b = 0;
+      effectVariables->d = 255;
 
-      (*progFx)++;
+      (effectVariables->fxProgression)++;
     break;
 
     case 1:
-      if(allowR)rgb->r--;
-      if(allowG)rgb->g--;
-      if(allowB)rgb->b--;
-      (*d)--;
+      if(allowR)effectVariables->r--;
+      if(allowG)effectVariables->g--;
+      if(allowB)effectVariables->b--;
+      (effectVariables->d)--;
 
-      if (*d == 0)(*progFx)++;
+      if (effectVariables->d == 0)(effectVariables->fxProgression)++;
     break;
 
     case 2:
-      (*d)++;
-      if (*d == 255)
+      (effectVariables->d)++;
+      if (effectVariables->d == 255)
       {
-        *progFx = 0;
+        effectVariables->fxProgression = 0;
         return true;
       }
     break;
   }
   return false;
 }
-bool stock_heartbeat        (ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
+bool stock_heartbeat        (EffectVariables *effectVariables)
 {
-  bool allowR = getColourClearance(colour, COLOUR_RED);
-  bool allowG = getColourClearance(colour, COLOUR_GREEN);
-  bool allowB = getColourClearance(colour, COLOUR_BLUE);
+  bool allowR = getColourClearance(effectVariables->c, COLOUR_RED);
+  bool allowG = getColourClearance(effectVariables->c, COLOUR_GREEN);
+  bool allowB = getColourClearance(effectVariables->c, COLOUR_BLUE);
 
-  switch (*progFx)
+  switch (effectVariables->fxProgression)
   {
     case 0:
-      if(allowR)rgb->r = 255;
-      else rgb->r = 0;
-      if(allowG)rgb->g = 255;
-      else rgb->g = 0;
-      if(allowB)rgb->b = 255;
-      else rgb->b = 0;
-      *d = 255;
+      if(allowR)effectVariables->r = 255;
+      else effectVariables->r = 0;
+      if(allowG)effectVariables->g = 255;
+      else effectVariables->g = 0;
+      if(allowB)effectVariables->b = 255;
+      else effectVariables->b = 0;
+      effectVariables->d = 255;
 
-      (*progFx)++;
+      (effectVariables->fxProgression)++;
     break;
 
     case 1:
-      if(allowR)rgb->r--;
-      if(allowG)rgb->g--;
-      if(allowB)rgb->b--;
-      (*d)--;
+      if(allowR)effectVariables->r--;
+      if(allowG)effectVariables->g--;
+      if(allowB)effectVariables->b--;
+      (effectVariables->d)--;
 
-      if(*d == 100) (*progFx)++;
+      if(effectVariables->d == 100) (effectVariables->fxProgression)++;
     break;
 
     case 2:
-      if(allowR) rgb->r = 255;
-      if(allowG) rgb->g = 255;
-      if(allowB) rgb->b = 255;
-      *d = 255;
+      if(allowR) effectVariables->r = 255;
+      if(allowG) effectVariables->g = 255;
+      if(allowB) effectVariables->b = 255;
+      effectVariables->d = 255;
 
-      (*progFx)++;
+      (effectVariables->fxProgression)++;
     break;
 
     case 3:
-      if(allowR)rgb->r--;
-      if(allowG)rgb->g--;
-      if(allowB)rgb->b--;
-      (*d)--;
+      if(allowR)effectVariables->r--;
+      if(allowG)effectVariables->g--;
+      if(allowB)effectVariables->b--;
+      (effectVariables->d)--;
 
-      if (*d == 0)
+      if (effectVariables->d == 0)
       {
-        *progFx = 0;
+        effectVariables->fxProgression = 0;
         return true;
       }
     break;
   }
   return false;
 }
-bool stock_appear           (ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour)
+bool stock_decode           (EffectVariables *effectVariables)
 {
-  bool allowR = getColourClearance(colour, COLOUR_RED);
-  bool allowG = getColourClearance(colour, COLOUR_GREEN);
-  bool allowB = getColourClearance(colour, COLOUR_BLUE);
+  bool allowR = getColourClearance(effectVariables->c, COLOUR_RED);
+  bool allowG = getColourClearance(effectVariables->c, COLOUR_GREEN);
+  bool allowB = getColourClearance(effectVariables->c, COLOUR_BLUE);
 
-  switch (*progFx)
+  switch (effectVariables->fxProgression)
   {
     case 0:
-      if(allowR)rgb->r = 255;
-      else rgb->r = 0;
-      if(allowG)rgb->g = 255;
-      else rgb->g = 0;
-      if(allowB)rgb->b = 255;
-      else rgb->b = 0;
-      *d = 255;
+      if(allowR)effectVariables->r = 255;
+      else effectVariables->r = 0;
+      if(allowG)effectVariables->g = 255;
+      else effectVariables->g = 0;
+      if(allowB)effectVariables->b = 255;
+      else effectVariables->b = 0;
+      effectVariables->d = 255;
 
-      (*progFx)++;
+      (effectVariables->fxProgression)++;
     break;
 
     case 1:
-      if(allowR)rgb->r--;
-      if(allowG)rgb->g--;
-      if(allowB)rgb->b--;
-      (*d)--;
+      if(allowR)effectVariables->r--;
+      if(allowG)effectVariables->g--;
+      if(allowB)effectVariables->b--;
+      (effectVariables->d)--;
 
-      if(*d == 100) (*progFx)++;
+      if(effectVariables->d == 100) (effectVariables->fxProgression)++;
     break;
 
     case 2:
-      (*d)++;
-      if(*d == 255) (*progFx)++;
+      (effectVariables->d)++;
+      if(effectVariables->d == 255) (effectVariables->fxProgression)++;
     break;
 
     case 3:
-      if(allowR)rgb->r = 255;
-      if(allowG)rgb->g = 255;
-      if(allowB)rgb->b = 255;
-      *d = 255;
+      if(allowR)effectVariables->r = 255;
+      if(allowG)effectVariables->g = 255;
+      if(allowB)effectVariables->b = 255;
+      effectVariables->d = 255;
 
-      (*progFx)++;
+      (effectVariables->fxProgression)++;
     break;
 
     case 4:
-      if(allowR)rgb->r--;
-      if(allowG)rgb->g--;
-      if(allowB)rgb->b--;
-      (*d)--;
+      if(allowR)effectVariables->r--;
+      if(allowG)effectVariables->g--;
+      if(allowB)effectVariables->b--;
+      (effectVariables->d)--;
 
-      if (*d == 0) (*progFx)++;
+      if (effectVariables->d == 0) (effectVariables->fxProgression)++;
     break;
 
     case 5:
-      (*d)++;
-      if (*d == 223) 
+      (effectVariables->d)++;
+      if (effectVariables->d == 223) 
       {
-        *progFx = 0;
+        effectVariables->fxProgression = 0;
         return true;
       }
     break;
@@ -470,134 +523,203 @@ bool stock_appear           (ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_
   return false;
 }
 
-bool custom_static          (ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour)
+bool special_rainbow        (EffectVariables *effectVariables)
 {
-  /*
-  if (colour != COLOUR_CYCLE) c = colour;
-
-  switch ((*progFx))
-  {
-  case 0:
-  {
-    rgb->r = customRGB[c]->r;
-    rgb->g = customRGB[c]->g;
-    rgb->b = customRGB[c]->b;
-
-    d = 0;
-
-    (*progFx)++;
-  }
-  break;
-
-  case 1:
-  {
-    d++;
-
-    if (d == 255) (*progFx)++;
-  }
-  break;
-
-  default:
-  {
-    (*progFx) = 0;
-    if(colour == COLOUR_CYCLE)
-    {
-      c++;
-      if(c == AMOUNTOFCOLOURS) c = 0;
-    }
-  }
-  break;
-  }
-  */
- return false;
-}
-
-bool special_rainbow        (ColourRGB *rgb, uint8_t *d, uint8_t *progFx)
-{
-  switch (*progFx)
+  switch (effectVariables->fxProgression)
   {
     case 0:
-      rgb->r = 0;
-      rgb->g = 0;
-      rgb->b = 255;
+      effectVariables->r = 0;
+      effectVariables->g = 0;
+      effectVariables->b = 255;
 
-      (*progFx)++;
+      (effectVariables->fxProgression)++;
     break;
 
     case 1:
-      (rgb->r)++;
-      if (rgb->r == 255) (*progFx)++;
+      (effectVariables->r)++;
+      if (effectVariables->r == 255) (effectVariables->fxProgression)++;
     break;
 
     case 2:
-      rgb->b--;
-      if (rgb->b == 0) (*progFx)++;
+      effectVariables->b--;
+      if (effectVariables->b == 0) (effectVariables->fxProgression)++;
     break;
 
     case 3:
-      rgb->g++;
-      if (rgb->g == 255) (*progFx)++;
+      effectVariables->g++;
+      if (effectVariables->g == 255) (effectVariables->fxProgression)++;
     break;
 
     case 4:
-      rgb->r--;
-      if (rgb->r == 0) (*progFx)++;
+      effectVariables->r--;
+      if (effectVariables->r == 0) (effectVariables->fxProgression)++;
     break;
 
     case 5:
-      rgb->b++;
-      if (rgb->b == 255) (*progFx)++;
+      effectVariables->b++;
+      if (effectVariables->b == 255) (effectVariables->fxProgression)++;
     break;
 
     case 6:
-      rgb->g--;
-      if (rgb->g == 0)
+      effectVariables->g--;
+      if (effectVariables->g == 0)
       {
-        *progFx = 0;
+        effectVariables->fxProgression = 0;
         return true;
       }
     break;
 
     default:
-      *progFx = 0;
+      effectVariables->fxProgression = 0;
     break;
   }
   return false;
 }
-bool special_fire           (ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour)
+bool special_synthbow       (EffectVariables *effectVariables)
 {
-  /*
-  if ((*progFx) == 0)
+  switch (effectVariables->fxProgression)
   {
-    rgb->r = 255;
-    rgb->g = random(0, 200);
-    rgb->b = 0;
-  }
-  else if (rgb->g < 90)
-  {
-    rgb->g++;
-  }
-  (*progFx)++;
+    case 0:
+      effectVariables->r = 0;
+      effectVariables->g = 0;
+      effectVariables->b = 255;
 
-  if (rgb->g > 25 && random(0, offset) == 0)
-  {
-    rgb->g = rgb->g - 5;
-  }
+      (effectVariables->fxProgression)++;
+    break;
 
-  if (g < 150 && offset > 5)
-  {
-    if (random(10, offset) > 10)
-    {
-      rgb->g = rgb->g + 6;
-    }
+    case 1:
+      (effectVariables->r)++;
+      if (effectVariables->r == 255) (effectVariables->fxProgression)++;
+    break;
+
+    case 2:
+      effectVariables->b--;
+      if (effectVariables->b == 0) (effectVariables->fxProgression)++;
+    break;
+
+    case 3:
+      effectVariables->r--;
+      if (effectVariables->r == 0) (effectVariables->fxProgression)++;
+    break;
+
+    case 4:
+      effectVariables->b++;
+      if (effectVariables->b == 255)
+      {
+        effectVariables->fxProgression = 0;
+        return true;
+      }
+    break;
+
+    default:
+      effectVariables->fxProgression = 0;
+    break;
   }
-  */
- return false;
+  return false;
 }
 
+bool dev_unbound            (EffectVariables *effectVariables)
+{
+  bool allowR = getColourClearance(effectVariables->c, COLOUR_RED);
+  bool allowG = getColourClearance(effectVariables->c, COLOUR_GREEN);
+  bool allowB = getColourClearance(effectVariables->c, COLOUR_BLUE);
+
+  switch (effectVariables->fxProgression)
+  {
+    //First Flash
+    case 0:
+      effectVariables->r = 255;
+      effectVariables->g = FXSET_DEVUNBOUND_YLWVAL;
+      effectVariables->b = 0;
+      effectVariables->d = 0;
+      (effectVariables->fxProgression)++;
+    break;
+
+    case 1:
+      (effectVariables->d)++;
+      if(effectVariables->d == FXSET_DEVUNBOUND_DELTIM) (effectVariables->fxProgression)++;
+    break;
+
+
+    case 2:
+      effectVariables->r = 0;
+      effectVariables->g = 0;
+      effectVariables->d = 0;
+      (effectVariables->fxProgression)++;
+    break;
+
+    case 3:
+      (effectVariables->d)++;
+      if(effectVariables->d == FXSET_DEVUNBOUND_DELTIM) (effectVariables->fxProgression)++;
+    break;
 
 
 
+
+    //Second Flash
+    case 4:
+      effectVariables->r = 255;
+      effectVariables->g = FXSET_DEVUNBOUND_YLWVAL;
+      effectVariables->d = 0;
+      (effectVariables->fxProgression)++;
+    break;
+
+    case 5:
+      (effectVariables->d)++;
+      if(effectVariables->d == FXSET_DEVUNBOUND_DELTIM) (effectVariables->fxProgression)++;
+    break;
+
+
+
+    case 6:
+      effectVariables->r = 0;
+      effectVariables->g = 0;
+      effectVariables->d = 0;
+      (effectVariables->fxProgression)++;
+    break;
+
+    case 7:
+      (effectVariables->d)++;
+       if(effectVariables->d == FXSET_DEVUNBOUND_DELTIM) (effectVariables->fxProgression)++;
+    break;
+
+
+
+
+    //Third Flash (Long)
+    case 8:
+      effectVariables->r = 255;
+      effectVariables->g = FXSET_DEVUNBOUND_YLWVAL;
+      effectVariables->d = 0;
+      (effectVariables->fxProgression)++;
+    break;
+
+    case 9:
+      (effectVariables->d)++;
+      if(effectVariables->d == FXSET_DEVUNBOUND_DELTIM*3) (effectVariables->fxProgression)++;
+    break;
+
+
+
+    case 10:
+      effectVariables->r = 0;
+      effectVariables->g = 0;
+      effectVariables->d = 0;
+      (effectVariables->fxProgression)++;
+    break;
+
+    case 11:
+      (effectVariables->d)++;
+
+      if(effectVariables->d == FXSET_DEVUNBOUND_DELTIM*3) 
+      {
+        effectVariables->fxProgression = 0;
+        return true;
+      }
+    break;
+  }
+  return false;
+}
 
 
 

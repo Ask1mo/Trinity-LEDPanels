@@ -7,7 +7,7 @@
 #include "LedManager/ledManager.h"
 #include "ControlPanel/AskButton/AskButton.h"
 #include "ControlPanel/LightSensor/LightSensor.h"
-#include "ControlPanel/SleepTimer/SleepTimer.h"
+//#include "ControlPanel/SleepTimer/SleepTimer.h"
 #include "ControlPanel/Comms/Comms.h"
 
 #define BRIGHTNESS_0_OFF 1
@@ -29,7 +29,6 @@ Panel         **panels;
 LedManager    *ledManager;
 AskButton     *button;
 LightSensor   *lightSensor;
-SleepTimer    *sleepTimer;
 Comms         *comms;
 
 uint64_t prevMillis;

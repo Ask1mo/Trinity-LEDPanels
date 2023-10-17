@@ -23,7 +23,8 @@
 #define EFFECT_STOCK_FLASH            5
 #define EFFECT_STOCK_PAUSEDFLASH      6
 #define EFFECT_STOCK_HEARTBEAT        7
-#define EFFECT_STOCK_APPEAR           8
+#define EFFECT_STOCK_DECODE           8
+
 #define EFFECT_CUSTOM_STATIC          9
 #define EFFECT_CUSTOM_BLINK           10
 #define EFFECT_CUSTOM_PLANE           11
@@ -32,49 +33,52 @@
 #define EFFECT_CUSTOM_FLASH           14
 #define EFFECT_CUSTOM_PAUSEDFLASH     15
 #define EFFECT_CUSTOM_HEARTBEAT       16
-#define EFFECT_SPECIAL_RAINBOW        17
-#define EFFECT_SPECIAL_FIRE           18
-#define EFFECT_SPECIAL_SOUND          19
+#define EFFECT_CUSTOM_DECODE          17
+
+#define EFFECT_SPECIAL_RAINBOW        18
+#define EFFECT_SPECIAL_SYNTH          19
+#define EFFECT_SPECIAL_FIRE           20
+#define EFFECT_SPECIAL_SOUND          21
+#define EFFECT_DEV_UNBOUND            255
+
+
+
+#define FXSET_DEVUNBOUND_DELTIM 20
+#define FXSET_DEVUNBOUND_YLWVAL 100
 
 struct ColourRGB
 {
-    uint8_t r;
-    uint8_t g;
-    uint8_t b;
+  uint8_t r;
+  uint8_t g;
+  uint8_t b;
 };
 
+struct EffectVariables
+{
+  uint8_t                                   r;
+  uint8_t                                   g;
+  uint8_t                                   b;
+  uint8_t                                   d; //Dummy
+  uint8_t                                   c; //Current colour (Can cycle because of COLOUR_COLOURCYCLE)
+  uint8_t                                   fxProgression; //Current part of the effect
+};
 
+bool processEffect(uint8_t effect, EffectVariables *effectVariables);
+bool getColourClearance(uint8_t colourToClear, uint8_t colourChannel);
 
-  bool getColourClearance(byte colourToClear, byte colourChannel);
+bool stock_static           (EffectVariables *effectVariables);
+bool stock_blink            (EffectVariables *effectVariables);
+bool stock_plane            (EffectVariables *effectVariables);
+bool stock_breathing        (EffectVariables *effectVariables);
+bool stock_pausedbreathing  (EffectVariables *effectVariables);
+bool stock_flash            (EffectVariables *effectVariables);
+bool stock_pausedFlash      (EffectVariables *effectVariables);
+bool stock_heartbeat        (EffectVariables *effectVariables);
+bool stock_decode           (EffectVariables *effectVariables);
 
+bool special_rainbow        (EffectVariables *effectVariables);
+bool special_synth          (EffectVariables *effectVariables);
 
-  bool stock_static(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour);
-  bool stock_blink(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour);
-  bool stock_plane(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour);
-  bool stock_breathing(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour);
-  bool stock_pausedbreathing(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour);
-  bool stock_flash(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour);
-  bool stock_pausedFlash(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour);
-  bool stock_heartbeat(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour);
-  bool stock_appear(ColourRGB *rgb, uint8_t *d, uint8_t *progFx, uint8_t colour);
-
-  bool custom_static(ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour);
-  bool custom_blink(ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour);
-  bool custom_plane(ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour);
-  bool custom_breathing(ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour);
-  bool custom_pausedbreathing(ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour);
-  bool custom_flash(ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour);
-  bool custom_pausedFlash(ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour);
-  bool custom_heartbeat(ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour);
-  bool custom_appear(ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour);
-  
-  bool special_rainbow(ColourRGB *rgb, uint8_t *d, uint8_t *progFx);
-  bool special_fire(ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour);
-  bool special_sound(ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour);
-
-  bool special_fade(ColourRGB rgb, uint8_t d, uint8_t c, uint8_t colour);
-
-
-
+bool dev_unbound            (EffectVariables *effectVariables);
 
 #endif
