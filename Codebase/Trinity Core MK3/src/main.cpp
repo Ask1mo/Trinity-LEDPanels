@@ -4,7 +4,7 @@
 #ifdef ANIMATIONSET_WESTPOINT
 void playAnimation_Reset()
 {
-  Serial.print(F("playAnimation_Reset"));
+  Serial.println(F("playAnimation_Reset"));
   trinity->setSpeed(1);
 
   int diodeNumbers = 0;
@@ -24,7 +24,7 @@ void playAnimation_Reset()
 
 void setAnimation_Westpoint_FullWhite()
 {
-  Serial.print(F("setAnimation_Westpoint_FullWhite"));
+  Serial.println(F("setAnimation_Westpoint_FullWhite"));
   trinity->setSpeed(1);
 
   uint16_t offset = 0;
@@ -40,7 +40,7 @@ void setAnimation_Westpoint_FullWhite()
 }
 void setAnimation_Westpoint_Default()
 {
-  Serial.print(F("setAnimation_Westpoint_Default"));
+  Serial.println(F("setAnimation_Westpoint_Default"));
   trinity->setSpeed(1);
 
   uint16_t offset = 0;
@@ -56,7 +56,7 @@ void setAnimation_Westpoint_Default()
 }
 void setAnimation_Westpoint_BreathingLines()
 {
-  Serial.print(F("setAnimation_Westpoint_BREATHINGLINES"));
+  Serial.println(F("setAnimation_Westpoint_BREATHINGLINES"));
   trinity->setSpeed(1);
 
   uint16_t offset = 0;
@@ -71,7 +71,7 @@ void setAnimation_Westpoint_BreathingLines()
 }
 void setAnimation_Westpoint_FlashingLines()
 {
-  Serial.print(F("setAnimation_Westpoint_FlashingGLINES"));
+  Serial.println(F("setAnimation_Westpoint_FlashingGLINES"));
   trinity->setSpeed(1);
 
   uint16_t offset = 0;
@@ -86,7 +86,7 @@ void setAnimation_Westpoint_FlashingLines()
 }
 void setAnimation_Westpoint_Rain()
 {
-  Serial.print(F("setAnimation_Westpoint_Rain"));
+  Serial.println(F("setAnimation_Westpoint_Rain"));
   trinity->setSpeed(1);
 
   uint16_t offset = 0;
@@ -101,7 +101,7 @@ void setAnimation_Westpoint_Rain()
 }
 void setAnimation_Westpoint_Matrix()
 {
-  Serial.print(F("setAnimation_Westpoint_Matrix"));
+  Serial.println(F("setAnimation_Westpoint_Matrix"));
   trinity->setSpeed(1);
 
   uint16_t offset = 0;
@@ -116,7 +116,7 @@ void setAnimation_Westpoint_Matrix()
 }
 void setAnimation_Westpoint_SuperRainbow()
 {
-  Serial.print(F("setAnimation_Westpoint_SuperRainbow"));
+  Serial.println(F("setAnimation_Westpoint_SuperRainbow"));
   trinity->setSpeed(3);
 
   uint16_t offset = 0;
@@ -132,7 +132,7 @@ void setAnimation_Westpoint_SuperRainbow()
 }
 void setAnimation_Westpoint_ADHDRainbow()
 {
-  Serial.print(F("setAnimation_Westpoint_ADHDRAINBOW"));
+  Serial.println(F("setAnimation_Westpoint_ADHDRAINBOW"));
   trinity->setSpeed(1);
 
   uint16_t offset = 0;
@@ -148,7 +148,7 @@ void setAnimation_Westpoint_ADHDRainbow()
 }
 void setAnimation_Westpoint_BurningRainbow()
 {
-  Serial.print(F("setAnimation_Westpoint_BurningRainbow"));
+  Serial.println(F("setAnimation_Westpoint_BurningRainbow"));
   trinity->setSpeed(4);
 
   uint16_t offset = 0;
@@ -167,7 +167,7 @@ void setAnimation_Westpoint_BurningRainbow()
 }
 void setAnimation_Westpoint_HeartbeatTower()
 {
-  Serial.print(F("setAnimation_Westpoint_HeartbeatTower"));
+  Serial.println(F("setAnimation_Westpoint_HeartbeatTower"));
   trinity->setSpeed(5);
 
   uint16_t offset = 0;
@@ -186,7 +186,7 @@ void setAnimation_Westpoint_HeartbeatTower()
 }
 void setAnimation_Westpoint_Stoplight()
 {
-  Serial.print(F("setAnimation_Westpoint_Stoplight"));
+  Serial.println(F("setAnimation_Westpoint_Stoplight"));
   trinity->setSpeed(8);
 
   uint16_t offset = 0;
@@ -205,7 +205,7 @@ void setAnimation_Westpoint_Stoplight()
 }
 void setAnimation_Westpoint_PowerRise()
 {
-  Serial.print(F("setAnimation_Westpoint_Powerrize"));
+  Serial.println(F("setAnimation_Westpoint_Powerrize"));
   trinity->setSpeed(15);
 
   uint16_t offset = 0;
@@ -224,7 +224,7 @@ void setAnimation_Westpoint_PowerRise()
 }
 void setAnimation_Westpoint_Fishbowl()
 {
-  Serial.print(F("setAnimation_Westpoint_Fishbowl"));
+  Serial.println(F("setAnimation_Westpoint_Fishbowl"));
   trinity->setSpeed(10);
 
   uint16_t offset = 0;
@@ -258,7 +258,7 @@ void setAnimation_Westpoint_Coils()
 }
 void setAnimation_Westpoint_AppearThing()
 {
-  Serial.print(F("setAnimation_Westpoint_AppearThing"));
+  Serial.println(F("setAnimation_Westpoint_AppearThing"));
   trinity->setSpeed(20);
 
   uint16_t offset = 0;
@@ -276,7 +276,7 @@ void setAnimation_Westpoint_AppearThing()
 }
 void setAnimation_Westpoint_AppearThing2()
 {
-  Serial.print(F("setAnimation_Westpoint_AppearThing2"));
+  Serial.println(F("setAnimation_Westpoint_AppearThing2"));
   trinity->setSpeed(10);
 
   uint16_t offset = 0;
@@ -294,7 +294,7 @@ void setAnimation_Westpoint_AppearThing2()
 }
 void setAnimation_Westpoint_AppearThing3()
 {
-  Serial.print(F("setAnimation_Westpoint_AppearThing3"));
+  Serial.println(F("setAnimation_Westpoint_AppearThing3"));
   trinity->setSpeed(10);
 
   uint16_t offset = 0;
@@ -311,7 +311,7 @@ void setAnimation_Westpoint_AppearThing3()
 }
 void setAnimation_Westpoint_AppearThing4()
 {
-  Serial.print(F("setAnimation_Westpoint_AppearThing4"));
+  Serial.println(F("setAnimation_Westpoint_AppearThing4"));
   trinity->setSpeed(4);
 
   uint16_t offset = 0;
@@ -328,7 +328,7 @@ void setAnimation_Westpoint_AppearThing4()
 }
 void setAnimation_Westpoint_ColourBlink()
 {
-  Serial.print(F("setAnimation_Westpoint_ColourBlink"));
+  Serial.println(F("setAnimation_Westpoint_ColourBlink"));
   trinity->setSpeed(4);
 
   uint16_t offset = 0;
@@ -348,7 +348,7 @@ void setAnimation_Westpoint_ColourBlink()
 
 void setup()
 {
-  Serial.begin(115200);
+  Serial.begin(BAUDRATE);
   
   trinity = new Trinity(PIN_LEDS, PIN_BUTTON, PIN_LIGHTSENSOR, 60);
 
@@ -438,7 +438,7 @@ void loop()
         #endif
 
         default:
-        Serial.println(F("WARNING: NO ANIMATIONSET SELECTED"));
+        if(DEBUGLEVEL >= DEBUG_ERRORS) Serial.println(F("ERROR: NO ANIMATIONSET SELECTED"));
         break;
       }
     }

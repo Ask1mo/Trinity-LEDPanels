@@ -15,9 +15,9 @@
 
 #define DEBUG_DISABLED              0
 #define DEBUG_ERRORS                1
-#define DEBUG_OPERATIONS            2
-#define DEBUG_OPERATIONS_DETAILED   3
-#define DEBUG_DAYISRUINED           4
+#define DEBUG_WARNINGS              2
+#define DEBUG_OPERATIONS            3
+#define DEBUG_DAYISRUINED           5
 /*---=== Setting examples ===---*/
 
 
@@ -25,11 +25,11 @@
 
 
 /*---=== PUT YOUR SETTINGS HERE!!! ===---*/
-#define PANELSETUP_CHRISTMAS
-#define PLATFORM_ESP32_FIREBEETLE2
+#define PANELSETUP_LIAM
+#define PLATFORM_ARDUINO
 #define LEDTYPE_CHRISTMASSTRING
 
-#define DEBUGLEVEL DEBUG_OPERATIONS
+#define DEBUGLEVEL DEBUG_ERRORS
 /*---=== PUT YOUR SETTINGS HERE!!! ===---*/
 
 
@@ -44,14 +44,16 @@
     #define PIN_LIGHTSENSOR A0          //A0
     #define ENABLE_DIODECONTROL false   //Arduino is not powerful enough for per diode control. So it's disabled
     #define ENABLE_WEBCONTROL false     //Arduino has no website capabilities
+    #define BAUDRATE 9600
 #endif
 #ifdef PLATFORM_ESP32_FIREBEETLE2
     #define PIN_BUTTON      27          //On board button
     #define PIN_LEDS        4           //D?
     #define PIN_ERRORLED    2           //No pinout, only internal on board
     #define PIN_LIGHTSENSOR 15          //D?
-    #define ENABLE_DIODECONTROL false   //Individual Diode Fx enabled
+    #define ENABLE_DIODECONTROL true    //Individual Diode Fx enabled
     #define ENABLE_WEBCONTROL true      //Controls via website enabled
+    #define BAUDRATE 115200
 #endif
 #ifdef PLATFORM_ESP32_FIREBEETLE2_DEBUG
     #define PIN_BUTTON      27          //On board button
@@ -60,6 +62,7 @@
     #define PIN_ERRORLED    2           //No pinout, only internal on board
     #define ENABLE_DIODECONTROL true    //Individual Diode Fx enabled
     #define ENABLE_WEBCONTROL true      //Controls via website enabled
+    #define BAUDRATE 115200
 #endif
 #ifdef PLATFORM_ESP32_WROOMDEVKIT
     #define PIN_BUTTON      27          //On board button
@@ -68,6 +71,7 @@
     #define PIN_ERRORLED    2           //NOT BOUND YET
     #define ENABLE_DIODECONTROL true    //Individual Diode Fx enabled
     #define ENABLE_WEBCONTROL true      //Controls via website enabled
+    #define BAUDRATE 115200
 #endif
 /*---=== Pin Mapping ===---*/
 

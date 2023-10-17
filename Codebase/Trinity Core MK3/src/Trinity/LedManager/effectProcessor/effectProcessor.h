@@ -2,6 +2,7 @@
 #define EFFECTPROCESSOR_H
 
 #include <Arduino.h>
+#include "trinity/setup.h"
 
 #define AMOUNTOFCOLOURS 7 //The amount of preset colours in the system, also functions as the amount of slots for custom colours
 

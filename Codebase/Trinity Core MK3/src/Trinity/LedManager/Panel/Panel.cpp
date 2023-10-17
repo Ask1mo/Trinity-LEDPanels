@@ -8,7 +8,7 @@ Panel::Panel                                (uint8_t number, uint8_t x, uint8_t 
   if(DEBUGLEVEL >= DEBUG_OPERATIONS)
   {
     Serial.print(F("Creating Panel at adress "));
-    Serial.println((uint64_t)this);
+    Serial.println((int)this, DEC);
   }
 
   if(ENABLE_DIODECONTROL)
@@ -136,7 +136,7 @@ void      Panel::setDiodeVfx                (uint16_t diodeNumber, VFXData vfxDa
 
   if(!ENABLE_DIODECONTROL)
   {
-    if(DEBUGLEVEL >= DEBUG_ERRORS) Serial.println(F("ERROR: Panel.setDiodeVfx() Diode control disabled in Setup.h, new effect applied to panel instead"));
+    if(DEBUGLEVEL >= DEBUG_WARNINGS) Serial.println(F("Warning: Panel.setDiodeVfx() Diode control disabled in Setup.h, new effect applied to panel instead"));
     setVfx(vfxData);
     return;
   }

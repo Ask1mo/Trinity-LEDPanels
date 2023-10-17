@@ -44,7 +44,7 @@ bool processEffect(uint8_t effect, EffectVariables *effectVariables)
     break;
       
     default:
-    Serial.print(F("ERROR! effectProcessor.processEffect() - Selected Effect not programmed"));
+    if(DEBUGLEVEL >= DEBUG_ERRORS) Serial.print(("P")); Serial.print(F("ERROR: effectProcessor.processEffect() - Selected Effect not programmed"));
     break;
   }
 
