@@ -340,7 +340,7 @@ uint16_t Trinity::getPanelDiodeAmount(uint8_t panelNumber)
 }
 void Trinity::setPanelDiodeVfx(uint8_t panelNumber, uint16_t diodeNumber, VFXData vfxData)
 {
-  if (panelNumber >= sizeof(panels))
+  if (panelNumber > sizeof(panels))
   {
     Serial.print(F("Trinity::setPanelDiodeVfx() Too high panel number requested: "));
     Serial.print(panelNumber);

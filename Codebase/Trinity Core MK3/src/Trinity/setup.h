@@ -50,7 +50,7 @@
     #define PIN_LEDS        4           //D?
     #define PIN_ERRORLED    2           //No pinout, only internal on board
     #define PIN_LIGHTSENSOR 15          //D?
-    #define ENABLE_DIODECONTROL true    //Individual Diode Fx enabled
+    #define ENABLE_DIODECONTROL false   //Individual Diode Fx enabled
     #define ENABLE_WEBCONTROL true      //Controls via website enabled
 #endif
 #ifdef PLATFORM_ESP32_FIREBEETLE2_DEBUG

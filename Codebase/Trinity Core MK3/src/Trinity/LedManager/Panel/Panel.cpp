@@ -5,10 +5,19 @@ Panel::Panel                                (uint8_t number, uint8_t x, uint8_t 
 {
   if(number > 250) Serial.println("Watch out: Panel created with value higher than 250. Remember: This system only supports up to 255 panels.");
 
-  diodes = (Diode**)malloc(sizeof(Diode*) * diodeAmount);
-  for (uint8_t i = 0; i < diodeAmount; i++)
+  if(DEBUGLEVEL >= DEBUG_OPERATIONS)
   {
-    diodes[i] = new Diode(i, &this->effect);
+    Serial.print(F("Creating Panel at adress "));
+    Serial.println((uint64_t)this);
+  }
+
+  if(ENABLE_DIODECONTROL)
+  {
+    diodes = (Diode**)malloc(sizeof(Diode*) * diodeAmount);
+    for (uint8_t i = 0; i < diodeAmount; i++)
+    {
+      diodes[i] = new Diode(i, &this->effect);
+    }
   }
 
   this->number        = number;
@@ -26,8 +35,9 @@ Panel::Panel                                (uint8_t number, uint8_t x, uint8_t 
   this->colour       = COLOUR_BLACK;
   this->offset       = 0;
   this->speed        = 1;
+  this->detailed     = false;
 
-  
+
   this->rCustom      = 255;
   this->gCustom      = 255;
   this->bCustom      = 255;
@@ -47,9 +57,31 @@ void      Panel::tick                       ()
   }
   else
   {
-    for (uint8_t i = 0; i < diodeAmount; i++)
+    for (uint8_t i = 0; i < speed; i++)
     {
-      diodes[i]->tick();
+      if (detailed)
+      {
+        for (uint8_t i = 0; i < diodeAmount; i++)
+        {
+          diodes[i]->tick();
+        }
+        return;
+      }
+
+      
+      if (colour != COLOUR_CYCLE)
+      {
+        effectVariables.c = colour;
+      }
+      
+      bool effectFinished = processEffect(effect, &effectVariables);
+
+      if(colour == COLOUR_CYCLE && effectFinished)
+      {
+        effectVariables.c++;
+        if(effectVariables.c == AMOUNTOFCOLOURS) effectVariables.c = (COLOUR_BLACK + 1);
+      }
+      
     }
   }
 }
@@ -102,13 +134,20 @@ void      Panel::setDiodeVfx                (uint16_t diodeNumber, VFXData vfxDa
     Serial.print(number);
   }
 
+  if(!ENABLE_DIODECONTROL)
+  {
+    if(DEBUGLEVEL >= DEBUG_ERRORS) Serial.println(F("ERROR: Panel.setDiodeVfx() Diode control disabled in Setup.h, new effect applied to panel instead"));
+    setVfx(vfxData);
+    return;
+  }
+
   if (effect != vfxData.effect)
   {
     effect = vfxData.effect;
     if(DEBUGLEVEL >= DEBUG_OPERATIONS)
-  {
-    Serial.print(F(" (Panel copied effect intended for diode)"));
-  }
+    {
+      Serial.print(F(" (Panel copied effect intended for diode)"));
+    }
   }
   diodes[diodeNumber]->setVfx(vfxData);
 
@@ -140,19 +179,24 @@ uint8_t   Panel::getY                       ()
 {
   return y;
 }
-CRGB      Panel::getDiodeRGB                (uint8_t number, uint8_t brightness) //Todo: Send own RGB if !detailed
+CRGB      Panel::getDiodeRGB                (uint8_t number, uint8_t sysBrightness) //Todo: Send own RGB if !detailed
 {
-  
-
-
-  if(number >= diodeAmount)
+  if(number > diodeAmount)
   {
-    Serial.print(F("Too high diode number requested: "));
+    Serial.print(F("Panel.getDiodeRGB() Too high diode number requested: "));
     Serial.println(number);
     return CRGB(0);
   }
 
-  return diodes[number]->getRGB(brightness);
+  if (!detailed) //If not detailed send own LED colours
+  {
+    uint8_t r = (((this->effectVariables.r * this->brightness) / 255) * sysBrightness) / 255;
+    uint8_t g = (((this->effectVariables.g * this->brightness) / 255) * sysBrightness) / 255;
+    uint8_t b = (((this->effectVariables.b * this->brightness) / 255) * sysBrightness) / 255;
+    return CRGB(r, g, b);
+  }
+
+  return diodes[number]->getRGB(sysBrightness);
 
   /*
   uint8_t redValue    = (this->r * this->brightness)/255;

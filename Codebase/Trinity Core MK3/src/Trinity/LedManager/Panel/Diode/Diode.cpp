@@ -42,7 +42,7 @@ void      Diode::tick()
   }
   else
   {
-    for (byte i = 0; i < speed; i++)
+    for (uint8_t i = 0; i < speed; i++)
     {
       if (colour != COLOUR_CYCLE)
       {
