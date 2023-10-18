@@ -4,7 +4,7 @@
 #include "Trinity/Trinity.h"
 
 #define NEXTEFFECTTIME 10000
-#define ENABLECYCLING true
+#define ENABLECYCLING false
 
 //#define ANIMATIONSET_STOCK
 #define ANIMATIONSET_WESTPOINT

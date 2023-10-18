@@ -30,7 +30,12 @@ public:
     void setBrightness(uint8_t brightness);
     
     void setPanelVfx(uint8_t panelNumber, VFXData vfxData);
+    void setPanelCustom(uint8_t panelNumber, uint8_t paletteNumber);
     uint16_t getPanelDiodeAmount(uint8_t panelNumber);
     void setPanelDiodeVfx(uint8_t panelNumber, uint16_t diodeNumber, VFXData vfxData);
+    void setPanelDiodeCustom(uint8_t panelNumber, uint8_t diodeNumber, uint8_t paletteNumber);
+
+    void setCustomPaletteColours(uint8_t slot, uint8_t colourRGBNumber, ColourRGB colourRGB);
+    void setCustomPaletteAvailableColours(uint8_t slot, uint8_t avalaibleColours);
 };
 #endif

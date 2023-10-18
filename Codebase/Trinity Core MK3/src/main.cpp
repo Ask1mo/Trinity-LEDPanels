@@ -355,6 +355,22 @@ void setup()
   currentShowingEffect = 0;
 
   Serial.println(F("---===SETUP COMPLETED===---"));
+
+  trinity->setCustomPaletteColours(0, 0, (ColourRGB){255, 128, 0});
+  trinity->setCustomPaletteColours(0, 1, (ColourRGB){255, 0, 255});
+  trinity->setCustomPaletteColours(0, 2, (ColourRGB){0, 128, 255});
+
+  for (uint16_t i = 0; i < PANELAMOUNT; i++)
+  {
+    trinity->setPanelVfx(i, (VFXData){EFFECT_CUSTOM_STATIC, 0, 0, 1, true});
+    trinity->setPanelCustom(i, 0);
+    /*
+    for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
+    {
+      trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_STATIC, COLOUR_WHITE, 0, 1, true});
+    }
+    */
+  }
 }
 
 void loop()

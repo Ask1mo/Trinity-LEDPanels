@@ -8,16 +8,6 @@
 #include "Trinity/setup.h"
 
 
-
-
-
-
-
-
-
-
-
-
 class Diode
 {
 private:
@@ -30,10 +20,7 @@ private:
   uint8_t                                   speed;
   bool                                      repeat;
   
-  uint8_t                                   customRGBAmount;
-  ColourRGB                                 *customRGB[AMOUNTOFCOLOURS];
-  
-
+  CustomPalette                             *customPalette;
   EffectVariables                           effectVariables;
   uint16_t                                  offsetTimer;
 
@@ -44,7 +31,7 @@ public:
   //Effects
   void      setBrightness                   (uint8_t brightness);
   void      setVfx                          (VFXData vfxData);
-  void      setDataCustom                   (uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);
+  void      setDataCustom                   (CustomPalette *customPalette);
   //Technical
   CRGB      getRGB                          (uint8_t sysBrightness);
   void      resetFXProcessingVars           ();

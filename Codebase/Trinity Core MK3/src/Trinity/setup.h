@@ -29,7 +29,7 @@
 #define PLATFORM_ARDUINO
 #define LEDTYPE_CHRISTMASSTRING
 
-#define DEBUGLEVEL DEBUG_ERRORS
+#define DEBUGLEVEL DEBUG_OPERATIONS
 /*---=== PUT YOUR SETTINGS HERE!!! ===---*/
 
 
@@ -45,6 +45,7 @@
     #define ENABLE_DIODECONTROL false   //Arduino is not powerful enough for per diode control. So it's disabled
     #define ENABLE_WEBCONTROL false     //Arduino has no website capabilities
     #define BAUDRATE 9600
+    #define CUSTOMPALETTEAMOUNT 5
 #endif
 #ifdef PLATFORM_ESP32_FIREBEETLE2
     #define PIN_BUTTON      27          //On board button
@@ -54,6 +55,7 @@
     #define ENABLE_DIODECONTROL true    //Individual Diode Fx enabled
     #define ENABLE_WEBCONTROL true      //Controls via website enabled
     #define BAUDRATE 115200
+    #define CUSTOMPALETTEAMOUNT 5
 #endif
 #ifdef PLATFORM_ESP32_FIREBEETLE2_DEBUG
     #define PIN_BUTTON      27          //On board button
@@ -63,6 +65,7 @@
     #define ENABLE_DIODECONTROL true    //Individual Diode Fx enabled
     #define ENABLE_WEBCONTROL true      //Controls via website enabled
     #define BAUDRATE 115200
+    #define CUSTOMPALETTEAMOUNT 5
 #endif
 #ifdef PLATFORM_ESP32_WROOMDEVKIT
     #define PIN_BUTTON      27          //On board button
@@ -72,6 +75,7 @@
     #define ENABLE_DIODECONTROL true    //Individual Diode Fx enabled
     #define ENABLE_WEBCONTROL true      //Controls via website enabled
     #define BAUDRATE 115200
+    #define CUSTOMPALETTEAMOUNT 5
 #endif
 /*---=== Pin Mapping ===---*/
 

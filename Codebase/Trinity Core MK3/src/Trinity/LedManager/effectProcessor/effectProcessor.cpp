@@ -1,7 +1,7 @@
 #include "effectProcessor.h"
 
 
-bool processEffect(uint8_t effect, EffectVariables *effectVariables)
+bool processEffect(uint8_t effect, EffectVariables *effectVariables, CustomPalette *customPalette)
 {
   bool effectFinished = false;
 
@@ -35,6 +35,10 @@ bool processEffect(uint8_t effect, EffectVariables *effectVariables)
     effectFinished = stock_decode(effectVariables);
     break;
     
+    case EFFECT_CUSTOM_STATIC:
+    effectFinished = custom_static(effectVariables, customPalette);
+    break;
+
     case EFFECT_SPECIAL_RAINBOW:
     effectFinished = special_rainbow(effectVariables);
     break;
@@ -44,7 +48,7 @@ bool processEffect(uint8_t effect, EffectVariables *effectVariables)
     break;
       
     default:
-    if(DEBUGLEVEL >= DEBUG_ERRORS) Serial.print(("P")); Serial.print(F("ERROR: effectProcessor.processEffect() - Selected Effect not programmed"));
+    if(DEBUGLEVEL >= DEBUG_ERRORS) Serial.println(F("ERROR: effectProcessor.processEffect() - Selected Effect not programmed"));
     break;
   }
 
@@ -520,6 +524,33 @@ bool stock_decode           (EffectVariables *effectVariables)
       }
     break;
   }
+  return false;
+}
+
+bool custom_static          (EffectVariables *effectVariables, CustomPalette *customPalette)
+{
+  switch (effectVariables->fxProgression)
+  {
+    case 0:
+      effectVariables->r = customPalette->customRGB[0].r;
+      effectVariables->g = customPalette->customRGB[0].g;
+      effectVariables->b = customPalette->customRGB[0].b;
+      effectVariables->d = 0;
+
+      (effectVariables->fxProgression)++;
+    break;
+
+    case 1:
+      (effectVariables->d)++;
+
+      if (effectVariables->d == 255)
+      {
+        (effectVariables->fxProgression) = 0;
+        return true;
+      }
+    break;
+  }
+
   return false;
 }
 

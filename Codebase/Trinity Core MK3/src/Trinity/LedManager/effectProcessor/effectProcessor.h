@@ -64,7 +64,13 @@ struct EffectVariables
   uint8_t                                   fxProgression; //Current part of the effect
 };
 
-bool processEffect(uint8_t effect, EffectVariables *effectVariables);
+struct CustomPalette 
+{
+    uint8_t                                   customRGBSlots; //Actually used amount of slots.
+  ColourRGB                                 customRGB[AMOUNTOFCOLOURS];
+};
+
+bool processEffect(uint8_t effect, EffectVariables *effectVariables, CustomPalette *customPalette);
 bool getColourClearance(uint8_t colourToClear, uint8_t colourChannel);
 
 bool stock_static           (EffectVariables *effectVariables);
@@ -76,6 +82,8 @@ bool stock_flash            (EffectVariables *effectVariables);
 bool stock_pausedFlash      (EffectVariables *effectVariables);
 bool stock_heartbeat        (EffectVariables *effectVariables);
 bool stock_decode           (EffectVariables *effectVariables);
+
+bool custom_static          (EffectVariables *effectVariables, CustomPalette *customPalette);
 
 bool special_rainbow        (EffectVariables *effectVariables);
 bool special_synth          (EffectVariables *effectVariables);

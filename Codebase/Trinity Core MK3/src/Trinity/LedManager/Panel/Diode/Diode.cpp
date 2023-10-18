@@ -11,23 +11,11 @@ Diode::Diode(uint16_t number, uint8_t *panelEffect)
   this->offset      = 0;
   this->speed       = 1;
 
-  for (uint8_t i = 0; i < AMOUNTOFCOLOURS; i++)
-  {
-    this->customRGB[i] = new struct ColourRGB;
-    this->customRGB[i]->r = 255;
-    this->customRGB[i]->g = 63;
-    this->customRGB[i]->b = 127;
-    //These are some preset empty colours for the custom RGB values.
-  }
+    this->effectVariables.r                   = 0;
+  this->effectVariables.g                   = 0;
+  this->effectVariables.b                   = 0;
 
-  this->effectVariables.r           = 0;
-  this->effectVariables.g           = 0;
-  this->effectVariables.b           = 0;
-  this->effectVariables.d               = 0;
-  this->effectVariables.c               = 0;
-  this->effectVariables.fxProgression   = 0;          //In effect cycling
-  this->offsetTimer     = 0;
-
+  resetFXProcessingVars();
 }
 
 //Public
@@ -50,7 +38,7 @@ void      Diode::tick()
       }
       
 
-      bool effectFinished = processEffect(*effect, &effectVariables);
+      bool effectFinished = processEffect(*effect, &effectVariables, customPalette);
 
       if(colour == COLOUR_CYCLE && effectFinished)
       {
@@ -85,13 +73,9 @@ void      Diode::setVfx(VFXData vfxData)
     printDebug();
   }
 }
-void      Diode::setDataCustom(uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
+void      Diode::setDataCustom(CustomPalette *customPalette)
 {
-  this->customRGBAmount = customRGBAmount;
-  for (uint8_t i = 0; i < AMOUNTOFCOLOURS; i++)
-  {
-    this->customRGB[i]->r = customRGB[i]->r;
-  }
+  this->customPalette = customPalette;
 }
 //Technical
 CRGB      Diode::getRGB(uint8_t sysBrightness)
@@ -103,13 +87,10 @@ CRGB      Diode::getRGB(uint8_t sysBrightness)
 }
 void      Diode::resetFXProcessingVars      ()
 {
-  this->effectVariables.r                   = 0;
-  this->effectVariables.g                   = 0;
-  this->effectVariables.b                   = 0;
   this->effectVariables.d                       = 0;
   this->effectVariables.fxProgression           = 0;      // In effect cycling
   this->effectVariables.c                       = 0; // Cycles of the whole effect (But with different colourss)
-  this->offsetTimer             = 0;
+  this->offsetTimer                     = 0;
 }
 
 //Transmissions

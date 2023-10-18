@@ -333,6 +333,10 @@ void Trinity::setPanelVfx(uint8_t panelNumber, VFXData vfxData)
 {
   panels[panelNumber]->setVfx(vfxData);
 }
+void Trinity::setPanelCustom(uint8_t panelNumber, uint8_t paletteNumber)
+{
+  ledManager->setPanelCustomData(panelNumber, paletteNumber);
+}
 uint16_t Trinity::getPanelDiodeAmount(uint8_t panelNumber)
 {
   return panels[panelNumber]->getDiodeAmount();
@@ -349,4 +353,16 @@ void Trinity::setPanelDiodeVfx(uint8_t panelNumber, uint16_t diodeNumber, VFXDat
   
   panels[panelNumber]->setDiodeVfx(diodeNumber, vfxData);
 }
+void Trinity::setPanelDiodeCustom(uint8_t panelNumber, uint8_t diodeNumber, uint8_t paletteNumber)
+{
+  ledManager->setPanelDiodeCustomData(panelNumber, diodeNumber, paletteNumber);
+}
 
+void Trinity::setCustomPaletteColours(uint8_t slot, uint8_t colourRGBNumber, ColourRGB colourRGB)
+{
+  ledManager->setCustomPaletteColours(slot, colourRGBNumber, colourRGB);
+}
+void Trinity::setCustomPaletteAvailableColours(uint8_t slot, uint8_t avalaibleColours)
+{
+  ledManager->setCustomPaletteAvailableColours(slot, avalaibleColours);
+}

@@ -38,9 +38,9 @@ Panel::Panel                                (uint8_t number, uint8_t x, uint8_t 
   this->detailed     = false;
 
 
-  this->rCustom      = 255;
-  this->gCustom      = 255;
-  this->bCustom      = 255;
+    this->effectVariables.r                   = 0;
+  this->effectVariables.g                   = 0;
+  this->effectVariables.b                   = 0;
   
   resetFXProcessingVars();
 }
@@ -74,7 +74,7 @@ void      Panel::tick                       ()
         effectVariables.c = colour;
       }
       
-      bool effectFinished = processEffect(effect, &effectVariables);
+      bool effectFinished = processEffect(effect, &effectVariables, customPalette);
 
       if(colour == COLOUR_CYCLE && effectFinished)
       {
@@ -111,14 +111,22 @@ void      Panel::setVfx                     (VFXData vfxData)
     Serial.println(F("Is now:"));
     printDebug();
   }
-
-  //Serial.println("Done in panel");
 }
-void      Panel::setDataCustom              (uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
+void      Panel::setDataCustom              (CustomPalette *customPaletteArg)
 {
-  for (uint8_t i = 0; i < diodeAmount; i++)
+  if(DEBUGLEVEL >= DEBUG_OPERATIONS)
   {
-    diodes[i]->setDataCustom(customRGBAmount, customRGB);
+    Serial.print(F("Panel.setDataCustom(); P"));
+    Serial.println(number);
+  }
+  
+  customPalette = customPaletteArg; 
+  resetFXProcessingVars();
+
+  if(DEBUGLEVEL >= DEBUG_DAYISRUINED)
+  {
+    Serial.println(F("Is now:"));
+    printDebug();
   }
 }
 //Diode Effects
@@ -154,12 +162,25 @@ void      Panel::setDiodeVfx                (uint16_t diodeNumber, VFXData vfxDa
 
   resetFXProcessingVars();
 }
-void      Panel::setDiodeDataCustom         (uint16_t diodeNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
+void      Panel::setDiodeDataCustom         (uint16_t diodeNumber, CustomPalette *customPalette)
 {
-  for (uint8_t i = 0; i < diodeAmount; i++)
+  if(DEBUGLEVEL >= DEBUG_OPERATIONS)
   {
-    diodes[i]->setDataCustom(customRGBAmount, customRGB);
+    Serial.print(F("Panel.setDiodeDataCustom(); P"));
+    Serial.print(number);
   }
+
+  if(!ENABLE_DIODECONTROL)
+  {
+    if(DEBUGLEVEL >= DEBUG_WARNINGS) Serial.println(F("Warning: Panel.setDiodeVfx() Diode control disabled in Setup.h, new effect applied to panel instead"));
+    setDataCustom(customPalette);
+    return;
+  }
+
+  diodes[diodeNumber]->setDataCustom(customPalette);
+
+
+  resetFXProcessingVars();
 }
 //Mask Effects
 void      Panel::setMaskPercentage          (uint8_t percentage)
@@ -219,9 +240,7 @@ void      Panel::setDiodeStart              (uint16_t ledStart)
 }
 void      Panel::resetFXProcessingVars      ()
 {
-  this->effectVariables.r                   = 0;
-  this->effectVariables.g                   = 0;
-  this->effectVariables.b                   = 0;
+
   this->effectVariables.d                   = 0;
   this->effectVariables.c                   = 0; //Current colour (Can cycle because of COLOUR_COLOURCYCLE)
   this->effectVariables.fxProgression       = 0; // In effect cycling
@@ -281,12 +300,6 @@ void      Panel::printDebug                 ()
   Serial.print(offset);
   Serial.print(F(" | speed "));
   Serial.print(speed);
-  Serial.print(F(" | rCustom "));
-  Serial.print(rCustom);
-  Serial.print(F(" | gCustom "));
-  Serial.print(gCustom);
-  Serial.print(F(" | bCustom "));
-  Serial.println(bCustom);
 
   Serial.print(F("r "));
   Serial.print(effectVariables.r);

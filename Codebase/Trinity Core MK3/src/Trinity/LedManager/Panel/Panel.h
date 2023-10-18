@@ -33,18 +33,16 @@ private:
 
   uint16_t                                  diodeAmount; // Amount of leds in this panel
   uint16_t                                  diodeStart;  // The coordinate of the first LED
+  
   uint8_t                                   brightness;
-
   uint8_t                                   effect;
   uint8_t                                   colour;
   uint16_t                                  offset;
   uint8_t                                   speed;
   bool                                      repeat;
-  
   bool                                      detailed;
-  uint8_t                                   rCustom;
-  uint8_t                                   gCustom;
-  uint8_t                                   bCustom;
+
+  CustomPalette                             *customPalette;
   EffectVariables                           effectVariables;
   uint16_t                                  offsetTimer;
 
@@ -55,11 +53,11 @@ public:
   //Effects
   void      setBrightness                   (uint8_t brightness);
   void      setVfx                          (VFXData vfxData);
-  void      setDataCustom                   (uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);
+  void      setDataCustom                   (CustomPalette *customPaletteArg);
   //Diode Effects
   void      setDiodeBrightness              (uint16_t diodeNumber, uint8_t brightness);
   void      setDiodeVfx                     (uint16_t diodeNumber, VFXData vfxData);
-  void      setDiodeDataCustom              (uint16_t diodeNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS]);
+  void      setDiodeDataCustom              (uint16_t diodeNumber, CustomPalette *customPalette);
   //Mask Effects
   void      setMaskPercentage               (uint8_t percentage);
   //Technical

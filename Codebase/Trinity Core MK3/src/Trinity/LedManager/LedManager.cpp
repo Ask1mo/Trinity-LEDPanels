@@ -18,6 +18,13 @@ LedManager::LedManager                              (Panel **panelsArg)
     ledAmount += panels[i]->getDiodeAmount();
   }
 
+  for (uint8_t i = 0; i < CUSTOMPALETTEAMOUNT; i++)
+  {
+    customPalette[i] = new struct CustomPalette;
+    
+  }
+  
+
   #ifdef PLATFORM_ARDUINO
   FastLED.addLeds<WS2812, PIN_LEDS, LEDCOLORDER>(leds, LEDAMOUNT);
   #endif
@@ -79,12 +86,12 @@ void    LedManager::setPanelVfx                     (uint8_t panelNumber, VFXDat
   //Serial.println("Setting panel data (In ledmanager)");
   panels[panelNumber]->setVfx(vfxData);
 }
-void    LedManager::setPanelCustomData              (uint8_t panelNumber, uint8_t customRGBAmount, ColourRGB *customRGB[AMOUNTOFCOLOURS])
+void    LedManager::setPanelCustomData              (uint8_t panelNumber, uint8_t paletteNumber)
 {
-  panels[panelNumber]->setDataCustom(customRGBAmount, customRGB);
+  panels[panelNumber]->setDataCustom(customPalette[paletteNumber]);
 }
 //Diode Effects
-void    setPanelBrightness                          (uint8_t panelNumber, uint16_t diodeNumber, uint8_t brightness)
+void    LedManager::setPanelBrightness              (uint8_t panelNumber, uint16_t diodeNumber, uint8_t brightness)
 {
   
 }
@@ -92,6 +99,10 @@ void    LedManager::setPanelDiodeVfx                (uint8_t panelNumber, uint16
 {
   //Serial.println("Setting diode data (In ledmanager)");
   panels[panelNumber]->setDiodeVfx(diodeNumber, vfxData);
+}
+void    LedManager::setPanelDiodeCustomData         (uint8_t panelNumber, uint16_t diodeNumber, uint8_t paletteNumber)
+{
+  panels[panelNumber]->setDiodeDataCustom(diodeNumber, customPalette[paletteNumber]);
 }
 //Technical
 void    LedManager::setEnabled                      (bool enabled)
@@ -102,7 +113,7 @@ uint8_t LedManager::getPanelAmount                  ()
 {
   return panelsAmount;
 }
-uint16_t LedManager::getPanelDiodeAmount             (uint8_t panelNumber)
+uint16_t LedManager::getPanelDiodeAmount            (uint8_t panelNumber)
 {
   return panels[panelNumber]->getDiodeAmount();
 }
@@ -124,4 +135,39 @@ String  LedManager::convertPanelToTransmission      (uint8_t panelNumber)
 String  LedManager::convertPanelDiodeToTransmission (uint8_t panelNumber,uint16_t diodeNumber)
 {
   return panels[panelNumber]->convertDiodeToTransmission(diodeNumber);
+}
+
+void LedManager::setCustomPaletteColours(uint8_t slot, uint8_t colourRGBNumber, ColourRGB colourRGB)
+{
+  if (slot >= CUSTOMPALETTEAMOUNT)
+  {
+    if (DEBUGLEVEL >=  DEBUG_ERRORS)
+    {
+      Serial.print(F("ERROR: LedManager.setCustomPaletteColours() Slot selected too high: "));
+      Serial.print(slot);
+      Serial.print(F(" Max:"));
+      Serial.println(CUSTOMPALETTEAMOUNT);
+      return;
+    }
+  }
+
+  if (colourRGBNumber >= AMOUNTOFCOLOURS)
+  {
+    if (DEBUGLEVEL >=  DEBUG_ERRORS)
+    {
+      Serial.print(F("ERROR: LedManager.setCustomPaletteColours() Colour number selected too high: "));
+      Serial.print(slot);
+      Serial.print(F(" Max:"));
+      Serial.println(AMOUNTOFCOLOURS);
+      return;
+    }
+  }
+
+  
+  customPalette[slot]->customRGB[colourRGBNumber].r = colourRGB.r;
+  customPalette[slot]->customRGB[colourRGBNumber].g = colourRGB.g;
+  customPalette[slot]->customRGB[colourRGBNumber].b = colourRGB.b;
+}
+void LedManager::setCustomPaletteAvailableColours(uint8_t slot, uint8_t avalaibleColours)
+{
 }
