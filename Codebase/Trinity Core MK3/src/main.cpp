@@ -59,7 +59,6 @@ void setAnimation_Westpoint_BreathingLines()
   Serial.println(F("setAnimation_Westpoint_BREATHINGLINES"));
   trinity->setSpeed(1);
 
-  uint16_t offset = 0;
   for (uint16_t i = 0; i < PANELAMOUNT; i++)
   {
     trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, (uint16_t)random(0, 10)*15, 1, true});
@@ -74,7 +73,6 @@ void setAnimation_Westpoint_FlashingLines()
   Serial.println(F("setAnimation_Westpoint_FlashingGLINES"));
   trinity->setSpeed(1);
 
-  uint16_t offset = 0;
   for (uint16_t i = 0; i < PANELAMOUNT; i++)
   {
     trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, (uint16_t)random(0, 10)*15, 1, true});
@@ -89,7 +87,6 @@ void setAnimation_Westpoint_Rain()
   Serial.println(F("setAnimation_Westpoint_Rain"));
   trinity->setSpeed(1);
 
-  uint16_t offset = 0;
   for (uint16_t i = 0; i < PANELAMOUNT; i++)
   {
     trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, (uint16_t)random(0, 10)*15, 1, true});
@@ -104,7 +101,6 @@ void setAnimation_Westpoint_Matrix()
   Serial.println(F("setAnimation_Westpoint_Matrix"));
   trinity->setSpeed(1);
 
-  uint16_t offset = 0;
   for (uint16_t i = 0; i < PANELAMOUNT; i++)
   {
     trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, (uint16_t)random(0, 10)*15, 1, true});
@@ -363,7 +359,7 @@ void setup()
 
   for (uint16_t i = 0; i < PANELAMOUNT; i++)
   {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_CUSTOM_STATIC, 3, 0, 1, true});
+    trinity->setPanelVfx(i, (VFXData){EFFECT_CUSTOM_STATIC, 0, 0, 1, true});
     trinity->setPanelCustom(i, 0);
     /*
     for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)

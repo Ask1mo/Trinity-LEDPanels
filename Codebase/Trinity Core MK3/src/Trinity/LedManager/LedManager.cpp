@@ -21,7 +21,12 @@ LedManager::LedManager                              (Panel **panelsArg)
   for (uint8_t i = 0; i < CUSTOMPALETTEAMOUNT; i++)
   {
     customPalette[i] = new struct CustomPalette;
-    
+    for (uint8_t j = 0; j < AMOUNTOFCOLOURS; j++)
+    {
+      customPalette[i]->customRGB[j].r = 0;
+      customPalette[i]->customRGB[j].g = 0;
+      customPalette[i]->customRGB[j].b = 0;
+    }
   }
   
 
@@ -170,4 +175,5 @@ void LedManager::setCustomPaletteColours(uint8_t slot, uint8_t colourRGBNumber, 
 }
 void LedManager::setCustomPaletteAvailableColours(uint8_t slot, uint8_t avalaibleColours)
 {
+  customPalette[slot]->customRGBSlots = avalaibleColours;
 }

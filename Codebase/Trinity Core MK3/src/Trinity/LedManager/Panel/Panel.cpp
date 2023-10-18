@@ -78,7 +78,7 @@ void      Panel::tick                       ()
           Serial.print(effectVariables.c);
           Serial.print(" to ");
           effectVariables.c++;
-          if(effectVariables.c == colour || effectVariables.c == customPalette->customRGBSlots) effectVariables.c = 0;
+          if(effectVariables.c == customPalette->customRGBSlots) effectVariables.c = 0;
           Serial.println(effectVariables.c);
         }
       }
