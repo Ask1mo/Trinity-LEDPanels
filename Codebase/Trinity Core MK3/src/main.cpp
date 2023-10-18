@@ -359,10 +359,11 @@ void setup()
   trinity->setCustomPaletteColours(0, 0, (ColourRGB){255, 128, 0});
   trinity->setCustomPaletteColours(0, 1, (ColourRGB){255, 0, 255});
   trinity->setCustomPaletteColours(0, 2, (ColourRGB){0, 128, 255});
+  trinity->setCustomPaletteAvailableColours(0, 3);
 
   for (uint16_t i = 0; i < PANELAMOUNT; i++)
   {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_CUSTOM_STATIC, 0, 0, 1, true});
+    trinity->setPanelVfx(i, (VFXData){EFFECT_CUSTOM_STATIC, 3, 0, 1, true});
     trinity->setPanelCustom(i, 0);
     /*
     for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)

@@ -532,9 +532,9 @@ bool custom_static          (EffectVariables *effectVariables, CustomPalette *cu
   switch (effectVariables->fxProgression)
   {
     case 0:
-      effectVariables->r = customPalette->customRGB[0].r;
-      effectVariables->g = customPalette->customRGB[0].g;
-      effectVariables->b = customPalette->customRGB[0].b;
+      effectVariables->r = customPalette->customRGB[effectVariables->c].r;
+      effectVariables->g = customPalette->customRGB[effectVariables->c].g;
+      effectVariables->b = customPalette->customRGB[effectVariables->c].b;
       effectVariables->d = 0;
 
       (effectVariables->fxProgression)++;

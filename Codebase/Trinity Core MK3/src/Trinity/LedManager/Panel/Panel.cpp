@@ -68,19 +68,37 @@ void      Panel::tick                       ()
         return;
       }
 
-      
-      if (colour != COLOUR_CYCLE)
+      if (CUSTOMEFFECTNUMBER_FIRST <= effect && effect <= CUSTOMEFFECTNUMBER_LAST) //If it's a custom colour effect
       {
-        effectVariables.c = colour;
-      }
-      
-      bool effectFinished = processEffect(effect, &effectVariables, customPalette);
+        bool effectFinished = processEffect(effect, &effectVariables, customPalette);
 
-      if(colour == COLOUR_CYCLE && effectFinished)
-      {
-        effectVariables.c++;
-        if(effectVariables.c == AMOUNTOFCOLOURS) effectVariables.c = (COLOUR_BLACK + 1);
+        if(effectFinished)
+        {
+          Serial.print("Effect finished, going from c ");
+          Serial.print(effectVariables.c);
+          Serial.print(" to ");
+          effectVariables.c++;
+          if(effectVariables.c == colour || effectVariables.c == customPalette->customRGBSlots) effectVariables.c = 0;
+          Serial.println(effectVariables.c);
+        }
       }
+      else //If it's a standard effect
+      {
+        if (colour != COLOUR_CYCLE)
+        {
+          effectVariables.c = colour;
+        }
+        
+        bool effectFinished = processEffect(effect, &effectVariables, customPalette);
+
+        if(colour == COLOUR_CYCLE && effectFinished)
+        {
+          effectVariables.c++;
+          if(effectVariables.c == AMOUNTOFCOLOURS) effectVariables.c = (COLOUR_BLACK + 1);
+        }
+      }
+      
+      
       
     }
   }

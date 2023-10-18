@@ -26,6 +26,7 @@
 #define EFFECT_STOCK_HEARTBEAT        7
 #define EFFECT_STOCK_DECODE           8
 
+#define CUSTOMEFFECTNUMBER_FIRST      9
 #define EFFECT_CUSTOM_STATIC          9
 #define EFFECT_CUSTOM_BLINK           10
 #define EFFECT_CUSTOM_PLANE           11
@@ -35,6 +36,7 @@
 #define EFFECT_CUSTOM_PAUSEDFLASH     15
 #define EFFECT_CUSTOM_HEARTBEAT       16
 #define EFFECT_CUSTOM_DECODE          17
+#define CUSTOMEFFECTNUMBER_LAST       17
 
 #define EFFECT_SPECIAL_RAINBOW        18
 #define EFFECT_SPECIAL_SYNTH          19
