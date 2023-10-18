@@ -359,7 +359,7 @@ void setup()
 
   for (uint16_t i = 0; i < PANELAMOUNT; i++)
   {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_CUSTOM_STATIC, 0, 0, 1, true});
+    trinity->setPanelVfx(i, (VFXData){EFFECT_CUSTOM_BREATHING, 0, 0, 1, true});
     trinity->setPanelCustom(i, 0);
     /*
     for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)

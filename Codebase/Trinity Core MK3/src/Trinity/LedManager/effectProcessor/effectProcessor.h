@@ -86,6 +86,9 @@ bool stock_heartbeat        (EffectVariables *effectVariables);
 bool stock_decode           (EffectVariables *effectVariables);
 
 bool custom_static          (EffectVariables *effectVariables, CustomPalette *customPalette);
+bool custom_blink           (EffectVariables *effectVariables, CustomPalette *customPalette);
+bool custom_plane           (EffectVariables *effectVariables, CustomPalette *customPalette);
+bool custom_breathing       (EffectVariables *effectVariables, CustomPalette *customPalette);
 
 bool special_rainbow        (EffectVariables *effectVariables);
 bool special_synth          (EffectVariables *effectVariables);

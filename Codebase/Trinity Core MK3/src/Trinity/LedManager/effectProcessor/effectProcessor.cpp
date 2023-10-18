@@ -38,6 +38,15 @@ bool processEffect(uint8_t effect, EffectVariables *effectVariables, CustomPalet
     case EFFECT_CUSTOM_STATIC:
     effectFinished = custom_static(effectVariables, customPalette);
     break;
+    case EFFECT_CUSTOM_BLINK:
+    effectFinished = custom_blink(effectVariables, customPalette);
+    break;
+    case EFFECT_CUSTOM_PLANE:
+    effectFinished = custom_plane(effectVariables, customPalette);
+    break;
+    case EFFECT_CUSTOM_BREATHING:
+    effectFinished = custom_breathing(effectVariables, customPalette);
+    break;
 
     case EFFECT_SPECIAL_RAINBOW:
     effectFinished = special_rainbow(effectVariables);
@@ -553,6 +562,150 @@ bool custom_static          (EffectVariables *effectVariables, CustomPalette *cu
 
   return false;
 }
+bool custom_blink           (EffectVariables *effectVariables, CustomPalette *customPalette)
+{
+  switch (effectVariables->fxProgression)
+  {
+    case 0:
+      effectVariables->r = customPalette->customRGB[effectVariables->c].r;
+      effectVariables->g = customPalette->customRGB[effectVariables->c].g;
+      effectVariables->b = customPalette->customRGB[effectVariables->c].b;
+      effectVariables->d = 0;
+
+      (effectVariables->fxProgression)++;
+    break;
+
+    case 1:
+      (effectVariables->d)++;
+
+      if (effectVariables->d == 20) (effectVariables->fxProgression)++;
+    break;
+
+    case 2:
+      effectVariables->r = 0;
+      effectVariables->g = 0;
+      effectVariables->b = 0;
+
+      (effectVariables->fxProgression)++;
+    break;
+
+    case 3:
+      (effectVariables->d)++;
+
+      if (effectVariables->d == 255)
+      {
+        effectVariables->fxProgression = 0;
+        return true;
+      }
+    break;
+  }
+  return false;
+}
+bool custom_plane           (EffectVariables *effectVariables, CustomPalette *customPalette)
+{
+  switch (effectVariables->fxProgression)
+  {
+    case 0:
+      effectVariables->r = customPalette->customRGB[effectVariables->c].r;
+      effectVariables->g = customPalette->customRGB[effectVariables->c].g;
+      effectVariables->b = customPalette->customRGB[effectVariables->c].b;
+      effectVariables->d = 0;
+
+      (effectVariables->fxProgression)++;
+    break;
+
+    case 1:
+      (effectVariables->d)++;
+
+      if(effectVariables->d == 20) (effectVariables->fxProgression)++;
+    break;
+
+    case 2:
+      effectVariables->r = 0;
+      effectVariables->g = 0;
+      effectVariables->b = 0;
+
+      (effectVariables->fxProgression)++;
+    break;
+
+    case 3:
+      (effectVariables->d)++;
+
+      if(effectVariables->d == 40) (effectVariables->fxProgression)++;
+    break;
+
+    case 4:
+      effectVariables->r = customPalette->customRGB[effectVariables->c].r;
+      effectVariables->g = customPalette->customRGB[effectVariables->c].g;
+      effectVariables->b = customPalette->customRGB[effectVariables->c].b;
+
+      (effectVariables->fxProgression)++;
+    break;
+
+    case 5:
+      (effectVariables->d)++;
+
+      if(effectVariables->d == 60) (effectVariables->fxProgression)++;
+    break;
+
+    case 6:
+      effectVariables->r = 0;
+      effectVariables->g = 0;
+      effectVariables->b = 0;
+
+      (effectVariables->fxProgression)++;
+    break;
+
+    case 7:
+      (effectVariables->d)++;
+
+      if(effectVariables->d == 255) 
+      {
+        effectVariables->fxProgression = 0;
+        return true;
+      }
+    break;
+  }
+  return false;
+}
+bool custom_breathing       (EffectVariables *effectVariables, CustomPalette *customPalette)
+{
+  switch (effectVariables->fxProgression)
+  {
+    case 0:
+      effectVariables->r = 0;
+      effectVariables->g = 0;
+      effectVariables->b = 0;
+      effectVariables->d = 0;
+
+      (effectVariables->fxProgression)++;
+    break;
+
+    case 1:
+      if (effectVariables->r < customPalette->customRGB[effectVariables->c].r) effectVariables->r++;
+      if (effectVariables->g < customPalette->customRGB[effectVariables->c].g) effectVariables->g++;
+      if (effectVariables->b < customPalette->customRGB[effectVariables->c].b) effectVariables->b++;   
+      (effectVariables->d)++;
+
+      if (effectVariables->d == 255)(effectVariables->fxProgression)++;
+    break;
+
+    case 2:
+      if (effectVariables->r > 0) effectVariables->r--;
+      if (effectVariables->g > 0) effectVariables->g--;
+      if (effectVariables->b > 0) effectVariables->b--; 
+      (effectVariables->d)--;
+
+      if (effectVariables->d == 0)
+      {
+        effectVariables->fxProgression = 0;
+        return true;
+      }
+    break;
+  }
+  return false;
+}
+
 
 bool special_rainbow        (EffectVariables *effectVariables)
 {
@@ -651,10 +804,6 @@ bool special_synthbow       (EffectVariables *effectVariables)
 
 bool dev_unbound            (EffectVariables *effectVariables)
 {
-  bool allowR = getColourClearance(effectVariables->c, COLOUR_RED);
-  bool allowG = getColourClearance(effectVariables->c, COLOUR_GREEN);
-  bool allowB = getColourClearance(effectVariables->c, COLOUR_BLUE);
-
   switch (effectVariables->fxProgression)
   {
     //First Flash
