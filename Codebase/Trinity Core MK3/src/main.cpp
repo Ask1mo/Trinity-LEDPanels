@@ -352,6 +352,8 @@ void setup()
 
   Serial.println(F("---===SETUP COMPLETED===---"));
 
+  trinity->setSpeed(5);
+
   trinity->setCustomPaletteColours(0, 0, (ColourRGB){255, 128, 0});
   trinity->setCustomPaletteColours(0, 1, (ColourRGB){255, 0, 255});
   trinity->setCustomPaletteColours(0, 2, (ColourRGB){0, 128, 255});
@@ -359,8 +361,7 @@ void setup()
 
   for (uint16_t i = 0; i < PANELAMOUNT; i++)
   {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_CUSTOM_BREATHING, 0, 0, 1, true});
-    trinity->setPanelCustom(i, 0);
+    trinity->setPanelVfx(i, (VFXData){EFFECT_CUSTOM_DECODE, 0, 0, 1, true});
     /*
     for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
     {

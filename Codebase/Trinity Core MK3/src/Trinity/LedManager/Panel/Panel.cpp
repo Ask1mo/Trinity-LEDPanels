@@ -74,12 +74,8 @@ void      Panel::tick                       ()
 
         if(effectFinished)
         {
-          Serial.print("Effect finished, going from c ");
-          Serial.print(effectVariables.c);
-          Serial.print(" to ");
           effectVariables.c++;
           if(effectVariables.c == customPalette->customRGBSlots) effectVariables.c = 0;
-          Serial.println(effectVariables.c);
         }
       }
       else //If it's a standard effect

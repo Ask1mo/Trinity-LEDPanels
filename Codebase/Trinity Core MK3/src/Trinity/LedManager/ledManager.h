@@ -28,11 +28,9 @@ public:
   //Panel Effects
   void    setPanelBrightness              (uint8_t panelNumber, uint8_t brightness);
   void    setPanelVfx                     (uint8_t panelNumber, VFXData vfxData);
-  void    setPanelCustomData              (uint8_t panelNumber, uint8_t paletteNumber);
   //Diode Effects
   void    setPanelBrightness              (uint8_t panelNumber, uint16_t diodeNumber, uint8_t brightness);
   void    setPanelDiodeVfx                (uint8_t panelNumber, uint16_t diodeNumber, VFXData vfxData);
-  void    setPanelDiodeCustomData         (uint8_t panelNumber, uint16_t diodeNumber, uint8_t paletteNumber);
   //Technical
   void    setEnabled                      (bool enabled);
   uint8_t getPanelAmount                  ();

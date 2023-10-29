@@ -30,14 +30,11 @@ LedManager::LedManager                              (Panel **panelsArg)
   }
   
 
-  #ifdef PLATFORM_ARDUINO
-  FastLED.addLeds<WS2812, PIN_LEDS, LEDCOLORDER>(leds, LEDAMOUNT);
-  #endif
-  #ifdef PLATFORM_ESP32_FIREBEETLE2
-  FastLED.addLeds<WS2812, PIN_LEDS, LEDCOLORDER>(leds, LEDAMOUNT);
-  #endif
   #ifdef PLATFORM_ESP32_FIREBEETLE2_DEBUG
   FastLED.addLeds<NEOPIXEL, PIN_LEDS>(leds, LEDAMOUNT);
+  #endif
+  #ifndef PLATFORM_ESP32_FIREBEETLE2_DEBUG
+  FastLED.addLeds<WS2812, PIN_LEDS, LEDCOLORDER>(leds, LEDAMOUNT);
   #endif
 
   Serial.println(F("...LedManager Started"));
@@ -90,10 +87,11 @@ void    LedManager::setPanelVfx                     (uint8_t panelNumber, VFXDat
 {
   //Serial.println("Setting panel data (In ledmanager)");
   panels[panelNumber]->setVfx(vfxData);
-}
-void    LedManager::setPanelCustomData              (uint8_t panelNumber, uint8_t paletteNumber)
-{
-  panels[panelNumber]->setDataCustom(customPalette[paletteNumber]);
+
+  if (CUSTOMEFFECTNUMBER_FIRST <= vfxData.effect && vfxData.effect <= CUSTOMEFFECTNUMBER_LAST) //If it's a custom colour effect: Apply colour palette
+  {
+    panels[panelNumber]->setDataCustom(customPalette[vfxData.colour]);
+  }
 }
 //Diode Effects
 void    LedManager::setPanelBrightness              (uint8_t panelNumber, uint16_t diodeNumber, uint8_t brightness)
@@ -104,10 +102,6 @@ void    LedManager::setPanelDiodeVfx                (uint8_t panelNumber, uint16
 {
   //Serial.println("Setting diode data (In ledmanager)");
   panels[panelNumber]->setDiodeVfx(diodeNumber, vfxData);
-}
-void    LedManager::setPanelDiodeCustomData         (uint8_t panelNumber, uint16_t diodeNumber, uint8_t paletteNumber)
-{
-  panels[panelNumber]->setDiodeDataCustom(diodeNumber, customPalette[paletteNumber]);
 }
 //Technical
 void    LedManager::setEnabled                      (bool enabled)

@@ -47,9 +47,30 @@ bool processEffect(uint8_t effect, EffectVariables *effectVariables, CustomPalet
     case EFFECT_CUSTOM_BREATHING:
     effectFinished = custom_breathing(effectVariables, customPalette);
     break;
+    case EFFECT_CUSTOM_PAUSEDBREATHING:
+    effectFinished = custom_pausedbreathing(effectVariables, customPalette);
+    break;
+    case EFFECT_CUSTOM_FLASH:
+    effectFinished = custom_flash(effectVariables, customPalette);
+    break;
+    case EFFECT_CUSTOM_PAUSEDFLASH:
+    effectFinished = custom_pausedFlash(effectVariables, customPalette);
+    break;
+    case EFFECT_CUSTOM_HEARTBEAT:
+    effectFinished = custom_heartbeat(effectVariables, customPalette);
+    break;
+    case EFFECT_CUSTOM_DECODE:
+    effectFinished = custom_decode(effectVariables, customPalette);
+    break;
+    case EFFECT_CUSTOM_FADE:
+    effectFinished = custom_fade(effectVariables, customPalette);
+    break;
 
     case EFFECT_SPECIAL_RAINBOW:
     effectFinished = special_rainbow(effectVariables);
+    break;
+    case EFFECT_SPECIAL_SYNTH:
+    effectFinished = special_synth(effectVariables);
     break;
 
     case EFFECT_DEV_UNBOUND:
@@ -705,7 +726,249 @@ bool custom_breathing       (EffectVariables *effectVariables, CustomPalette *cu
   }
   return false;
 }
+bool custom_pausedbreathing (EffectVariables *effectVariables, CustomPalette *customPalette)
+{
+  switch (effectVariables->fxProgression)
+  {
+    case 0:
+      effectVariables->r = 0;
+      effectVariables->g = 0;
+      effectVariables->b = 0;
+      effectVariables->d = 0;
 
+      (effectVariables->fxProgression)++;
+    break;
+
+    case 1:
+      if (effectVariables->r < customPalette->customRGB[effectVariables->c].r) effectVariables->r++;
+      if (effectVariables->g < customPalette->customRGB[effectVariables->c].g) effectVariables->g++;
+      if (effectVariables->b < customPalette->customRGB[effectVariables->c].b) effectVariables->b++; 
+      (effectVariables->d)++;
+
+      if (effectVariables->d == 255)(effectVariables->fxProgression)++;
+    break;
+
+    case 2:
+      if (effectVariables->r > 0) effectVariables->r--;
+      if (effectVariables->g > 0) effectVariables->g--;
+      if (effectVariables->b > 0) effectVariables->b--; 
+      (effectVariables->d)--;
+
+      if (effectVariables->d == 0)(effectVariables->fxProgression)++;
+    break;
+
+    case 3:
+      (effectVariables->d)++;
+
+      if (effectVariables->d == 255)(effectVariables->fxProgression)++;
+    break;
+
+    case 4:
+      (effectVariables->d)--;
+
+      if (effectVariables->d == 0)
+      {
+        effectVariables->fxProgression = 0;
+        return true;
+      }
+    break;
+  }
+  return false;
+}
+bool custom_flash           (EffectVariables *effectVariables, CustomPalette *customPalette)
+{
+  switch (effectVariables->fxProgression)
+  {
+    case 0:
+      effectVariables->r = customPalette->customRGB[effectVariables->c].r;
+      effectVariables->g = customPalette->customRGB[effectVariables->c].g;
+      effectVariables->b = customPalette->customRGB[effectVariables->c].b;
+      effectVariables->d = 255;
+
+      (effectVariables->fxProgression)++;
+    break;
+
+    case 1:
+      if (effectVariables->r > 0) effectVariables->r--;
+      if (effectVariables->g > 0) effectVariables->g--;
+      if (effectVariables->b > 0) effectVariables->b--; 
+      (effectVariables->d)--;
+
+      if (effectVariables->d == 0)
+      {
+        effectVariables->fxProgression = 0;
+        return true;
+      }
+    break;
+  }
+  return false;
+}
+bool custom_pausedFlash     (EffectVariables *effectVariables, CustomPalette *customPalette)
+{
+  switch (effectVariables->fxProgression)
+  {
+    case 0:
+      effectVariables->r = customPalette->customRGB[effectVariables->c].r;
+      effectVariables->g = customPalette->customRGB[effectVariables->c].g;
+      effectVariables->b = customPalette->customRGB[effectVariables->c].b;
+      effectVariables->d = 255;
+
+      (effectVariables->fxProgression)++;
+    break;
+
+    case 1:
+      if (effectVariables->r > 0) effectVariables->r--;
+      if (effectVariables->g > 0) effectVariables->g--;
+      if (effectVariables->b > 0) effectVariables->b--; 
+      (effectVariables->d)--;
+
+      if (effectVariables->d == 0)(effectVariables->fxProgression)++;
+    break;
+
+    case 2:
+      (effectVariables->d)++;
+      if (effectVariables->d == 255)
+      {
+        effectVariables->fxProgression = 0;
+        return true;
+      }
+    break;
+  }
+  return false;
+}
+bool custom_heartbeat       (EffectVariables *effectVariables, CustomPalette *customPalette)
+{
+  switch (effectVariables->fxProgression)
+  {
+    case 0:
+      effectVariables->r = customPalette->customRGB[effectVariables->c].r;
+      effectVariables->g = customPalette->customRGB[effectVariables->c].g;
+      effectVariables->b = customPalette->customRGB[effectVariables->c].b;
+      effectVariables->d = 255;
+
+      (effectVariables->fxProgression)++;
+    break;
+
+    case 1:
+      if (effectVariables->r > 0) effectVariables->r--;
+      if (effectVariables->g > 0) effectVariables->g--;
+      if (effectVariables->b > 0) effectVariables->b--; 
+      (effectVariables->d)--;
+
+      if(effectVariables->d == 100) (effectVariables->fxProgression)++;
+    break;
+
+    case 2:
+      effectVariables->r = customPalette->customRGB[effectVariables->c].r;
+      effectVariables->g = customPalette->customRGB[effectVariables->c].g;
+      effectVariables->b = customPalette->customRGB[effectVariables->c].b;
+      effectVariables->d = 255;
+
+      (effectVariables->fxProgression)++;
+    break;
+
+    case 3:
+      if (effectVariables->r > 0) effectVariables->r--;
+      if (effectVariables->g > 0) effectVariables->g--;
+      if (effectVariables->b > 0) effectVariables->b--; 
+      (effectVariables->d)--;
+
+      if (effectVariables->d == 0)
+      {
+        effectVariables->fxProgression = 0;
+        return true;
+      }
+    break;
+  }
+  return false;
+}
+bool custom_decode          (EffectVariables *effectVariables, CustomPalette *customPalette)
+{
+  switch (effectVariables->fxProgression)
+  {
+    case 0:
+      effectVariables->r = customPalette->customRGB[effectVariables->c].r;
+      effectVariables->g = customPalette->customRGB[effectVariables->c].g;
+      effectVariables->b = customPalette->customRGB[effectVariables->c].b;
+      effectVariables->d = 255;
+
+      (effectVariables->fxProgression)++;
+    break;
+
+    case 1:
+      if (effectVariables->r > 0) effectVariables->r--;
+      if (effectVariables->g > 0) effectVariables->g--;
+      if (effectVariables->b > 0) effectVariables->b--; 
+      (effectVariables->d)--;
+
+      if(effectVariables->d == 100) (effectVariables->fxProgression)++;
+    break;
+
+    case 2:
+      (effectVariables->d)++;
+      if(effectVariables->d == 255) (effectVariables->fxProgression)++;
+    break;
+
+    case 3:
+      effectVariables->r = customPalette->customRGB[effectVariables->c].r;
+      effectVariables->g = customPalette->customRGB[effectVariables->c].g;
+      effectVariables->b = customPalette->customRGB[effectVariables->c].b;
+      effectVariables->d = 255;
+
+      (effectVariables->fxProgression)++;
+    break;
+
+    case 4:
+      if (effectVariables->r > 0) effectVariables->r--;
+      if (effectVariables->g > 0) effectVariables->g--;
+      if (effectVariables->b > 0) effectVariables->b--; 
+      (effectVariables->d)--;
+
+      if (effectVariables->d == 0) (effectVariables->fxProgression)++;
+    break;
+
+    case 5:
+      (effectVariables->d)++;
+      if (effectVariables->d == 223) 
+      {
+        effectVariables->fxProgression = 0;
+        return true;
+      }
+    break;
+  }
+  return false;
+}
+bool custom_fade              (EffectVariables *effectVariables, CustomPalette *customPalette)
+{
+  switch (effectVariables->fxProgression)
+  {
+    case 0:
+      effectVariables->d = 0;
+
+      effectVariables->fxProgression++;
+    break;
+
+    case 1:
+      if (effectVariables->r < customPalette->customRGB[effectVariables->c].r) effectVariables->r++;
+      if (effectVariables->r > customPalette->customRGB[effectVariables->c].r) effectVariables->r--;
+
+      if (effectVariables->g < customPalette->customRGB[effectVariables->c].g) effectVariables->g++;
+      if (effectVariables->g > customPalette->customRGB[effectVariables->c].g) effectVariables->g--;
+
+      if (effectVariables->b < customPalette->customRGB[effectVariables->c].b) effectVariables->b++;
+      if (effectVariables->b > customPalette->customRGB[effectVariables->c].b) effectVariables->b--;
+
+      effectVariables->d++;
+
+      if (effectVariables->d == 255)return true;
+    break;
+
+    default:
+      effectVariables->fxProgression = 0;
+    break;
+  }
+  return false;
+}
 
 bool special_rainbow        (EffectVariables *effectVariables)
 {
@@ -759,7 +1022,7 @@ bool special_rainbow        (EffectVariables *effectVariables)
   }
   return false;
 }
-bool special_synthbow       (EffectVariables *effectVariables)
+bool special_synth          (EffectVariables *effectVariables)
 {
   switch (effectVariables->fxProgression)
   {

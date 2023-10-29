@@ -36,12 +36,13 @@
 #define EFFECT_CUSTOM_PAUSEDFLASH     15
 #define EFFECT_CUSTOM_HEARTBEAT       16
 #define EFFECT_CUSTOM_DECODE          17
-#define CUSTOMEFFECTNUMBER_LAST       17
+#define EFFECT_CUSTOM_FADE            18
+#define CUSTOMEFFECTNUMBER_LAST       18
 
-#define EFFECT_SPECIAL_RAINBOW        18
-#define EFFECT_SPECIAL_SYNTH          19
-#define EFFECT_SPECIAL_FIRE           20
-#define EFFECT_SPECIAL_SOUND          21
+#define EFFECT_SPECIAL_RAINBOW        19
+#define EFFECT_SPECIAL_SYNTH          20
+#define EFFECT_SPECIAL_FIRE           21
+#define EFFECT_SPECIAL_SOUND          22
 #define EFFECT_DEV_UNBOUND            255
 
 
@@ -89,6 +90,12 @@ bool custom_static          (EffectVariables *effectVariables, CustomPalette *cu
 bool custom_blink           (EffectVariables *effectVariables, CustomPalette *customPalette);
 bool custom_plane           (EffectVariables *effectVariables, CustomPalette *customPalette);
 bool custom_breathing       (EffectVariables *effectVariables, CustomPalette *customPalette);
+bool custom_pausedbreathing (EffectVariables *effectVariables, CustomPalette *customPalette);
+bool custom_flash           (EffectVariables *effectVariables, CustomPalette *customPalette);
+bool custom_pausedFlash     (EffectVariables *effectVariables, CustomPalette *customPalette);
+bool custom_heartbeat       (EffectVariables *effectVariables, CustomPalette *customPalette);
+bool custom_decode          (EffectVariables *effectVariables, CustomPalette *customPalette);
+bool custom_fade            (EffectVariables *effectVariables, CustomPalette *customPalette);
 
 bool special_rainbow        (EffectVariables *effectVariables);
 bool special_synth          (EffectVariables *effectVariables);
