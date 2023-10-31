@@ -3,7 +3,11 @@
 //Constructor
 LedManager::LedManager                              (Panel **panelsArg)
 {
-  Serial.println(F("LedManager Starting..."));
+  if(DEBUGLEVEL >= DEBUG_OPERATIONS)
+    {
+        Serial.print(F("Creating LedManager at adress "));
+        Serial.println((int)this, DEC);
+    }
 
   panelsAmount  = PANELAMOUNT;
   brightness    = 255;
@@ -18,6 +22,7 @@ LedManager::LedManager                              (Panel **panelsArg)
     ledAmount += panels[i]->getDiodeAmount();
   }
 
+
   for (uint8_t i = 0; i < CUSTOMPALETTEAMOUNT; i++)
   {
     customPalette[i] = new struct CustomPalette;
@@ -28,6 +33,7 @@ LedManager::LedManager                              (Panel **panelsArg)
       customPalette[i]->customRGB[j].b = 0;
     }
   }
+
   
 
   #ifdef PLATFORM_ESP32_FIREBEETLE2_DEBUG

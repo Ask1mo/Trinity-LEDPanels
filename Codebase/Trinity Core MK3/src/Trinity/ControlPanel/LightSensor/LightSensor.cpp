@@ -2,7 +2,12 @@
 
 LightSensor::LightSensor(uint8_t pin)
 {
-  Serial.println(F("LightSensor Starting..."));
+  if(DEBUGLEVEL >= DEBUG_OPERATIONS)
+    {
+        Serial.print(F("Creating LightSensor at adress "));
+        Serial.println((int)this, DEC);
+    }
+  
 
   this->pin = pin;
   pinMode(pin, INPUT_PULLUP);

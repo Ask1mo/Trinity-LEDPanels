@@ -3,7 +3,11 @@
 
 SleepTimer::SleepTimer()
 {
-    Serial.println(F("SleepTimer Starting..."));
+    if(DEBUGLEVEL >= DEBUG_OPERATIONS)
+    {
+        Serial.print(F("Creating SleepTimer at adress "));
+        Serial.println((int)this, DEC);
+    }
 
     turn            = TURN_NEUTRAL;
     turnOnEnabled   = false;

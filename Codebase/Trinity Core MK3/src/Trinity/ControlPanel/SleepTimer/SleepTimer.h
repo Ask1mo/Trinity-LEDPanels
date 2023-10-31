@@ -3,6 +3,7 @@
 #define SLEEPTIMER_H
 
 #include <Arduino.h>
+#include "Trinity/setup.h"
 
 #define TURN_OFF        0
 #define TURN_ON         1

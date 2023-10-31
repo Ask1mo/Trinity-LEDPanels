@@ -345,6 +345,7 @@ void setAnimation_Westpoint_ColourBlink()
 void setup()
 {
   Serial.begin(BAUDRATE);
+  Serial.println(F("Goodmorning"));
   
   trinity = new Trinity(PIN_LEDS, PIN_BUTTON, PIN_LIGHTSENSOR, 60);
 
@@ -352,6 +353,23 @@ void setup()
 
   Serial.println(F("---===SETUP COMPLETED===---"));
 
+
+
+  Serial.println(F("setAnimation_Westpoint_Default"));
+  trinity->setSpeed(1);
+
+  //uint16_t offset = 0;
+  for (uint16_t i = 0; i < PANELAMOUNT; i++)
+  {
+    trinity->setPanelVfx(i, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_RED, (uint16_t)random(0, 10)*15, 1, true});
+    for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
+    {
+      //trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_RED, 0, 5, true});
+      //offset++;
+    }
+  }
+  
+  /*
   trinity->setSpeed(5);
 
   trinity->setCustomPaletteColours(0, 0, (ColourRGB){255, 128, 0});
@@ -362,13 +380,15 @@ void setup()
   for (uint16_t i = 0; i < PANELAMOUNT; i++)
   {
     trinity->setPanelVfx(i, (VFXData){EFFECT_CUSTOM_DECODE, 0, 0, 1, true});
-    /*
+    //
     for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
     {
       trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_STATIC, COLOUR_WHITE, 0, 1, true});
     }
-    */
+    //
   }
+  */
+
 }
 
 void loop()

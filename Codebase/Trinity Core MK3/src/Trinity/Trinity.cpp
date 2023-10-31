@@ -7,6 +7,12 @@ Trinity::Trinity(uint8_t ledPin, uint8_t buttonPin, uint8_t ldrPin, uint8_t maxF
 {
   Serial.println(F("Trinity MK3 - Ask Blommaert"));
 
+  if(DEBUGLEVEL >= DEBUG_OPERATIONS)
+    {
+        Serial.print(F("Creating Trinity at adress "));
+        Serial.println((int)this, DEC);
+    }
+
   setupPanels();
   ledManager      = new LedManager(panels); //Todo: Made LedManager accept const ints
   button          = new AskButton(buttonPin, 100);
@@ -50,6 +56,14 @@ void Trinity::setupPanels()
   panels = (Panel**)malloc(sizeof(Panel*) * PANELAMOUNT);
   Serial.println(F("Array allocated..."));
 
+  #ifdef PANELSETUP_PROTO
+  panels[0] = new Panel(0, 0, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, LEDSAMOUNT_TRIANGLE);
+  panels[1] = new Panel(1, 1, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, LEDSAMOUNT_TRIANGLE);
+  panels[2] = new Panel(2, 2, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, LEDSAMOUNT_TRIANGLE);
+  panels[3] = new Panel(3, 3, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, LEDSAMOUNT_TRIANGLE);
+  panels[4] = new Panel(4, 4, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, LEDSAMOUNT_TRIANGLE);
+  panels[5] = new Panel(5, 5, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, LEDSAMOUNT_TRIANGLE);
+  #endif
   #ifdef PANELSETUP_ATOS
   panels[0] = new Panel(0, CLOCK_COUNTERWISE, COMPASS_WEST, LEDAMOUNT);
   #endif
@@ -89,14 +103,6 @@ void Trinity::setupPanels()
   panels[14] = new Panel(14, 0, 2, CLOCK_CLOCKWISE,   COMPASS_NORTH,      LEDSAMOUNT_TRIANGLE);
   panels[15] = new Panel(15, 0, 2, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, LEDSAMOUNT_TRIANGLE);
   #endif
-  #ifdef PANELSETUP_TEST
-  panels[0] = new Panel(0, CLOCK_COUNTERWISE, COMPASS_SOUTH_EAST, 3);
-  panels[1] = new Panel(1, CLOCK_COUNTERWISE, COMPASS_SOUTH,      3);
-  panels[2] = new Panel(2, CLOCK_COUNTERWISE, COMPASS_SOUTH_WEST, 3);
-  panels[3] = new Panel(3, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, 3);
-  panels[4] = new Panel(4, CLOCK_CLOCKWISE,   COMPASS_NORTH,      3);
-  panels[5] = new Panel(5, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, 3);
-  #endif
   #ifdef PANELSETUP_CHRISTMAS
   panels[0] = new Panel(0, 0, 0, CLOCK_CLOCKWISE,   COMPASS_SOUTH_EAST, 5);
   panels[1] = new Panel(1, 0, 0, CLOCK_CLOCKWISE,   COMPASS_SOUTH,      5);
@@ -108,7 +114,58 @@ void Trinity::setupPanels()
   panels[7] = new Panel(7, 0, 0, CLOCK_CLOCKWISE,   COMPASS_SOUTH,      5);
   panels[8] = new Panel(8, 0, 0, CLOCK_CLOCKWISE,   COMPASS_SOUTH_WEST, 5);
   panels[9] = new Panel(9, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, 5);
-
+  #endif
+  #ifdef PANELSETUP_WESTPOINT
+  //Tower Base
+  panels[ 0] = new Panel( 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10);
+  panels[ 1] = new Panel( 1, CLOCK_CLOCKWISE,   COMPASS_NORTH,      11);
+  panels[ 2] = new Panel( 2, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10);
+  panels[ 3] = new Panel( 3, CLOCK_CLOCKWISE,   COMPASS_NORTH,      11);
+  panels[ 4] = new Panel( 4, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10);
+  panels[ 5] = new Panel( 5, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10);
+  panels[ 6] = new Panel( 6, CLOCK_CLOCKWISE,   COMPASS_NORTH,      11);
+  panels[ 7] = new Panel( 7, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10);
+  panels[ 8] = new Panel( 8, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10);
+  panels[ 9] = new Panel( 9, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10);
+  panels[10] = new Panel(10, CLOCK_CLOCKWISE,   COMPASS_NORTH,      11);
+  panels[11] = new Panel(11, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10);
+  panels[12] = new Panel(12, CLOCK_CLOCKWISE,   COMPASS_NORTH,      11);
+  panels[13] = new Panel(13, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10);
+  panels[14] = new Panel(14, CLOCK_CLOCKWISE,   COMPASS_NORTH,      9);
+  //Tower Top
+  panels[15] = new Panel(15, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10);
+  panels[16] = new Panel(16, CLOCK_CLOCKWISE,   COMPASS_NORTH,      11);
+  panels[17] = new Panel(17, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10);
+  panels[18] = new Panel(18, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10);
+  panels[19] = new Panel(19, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10);
+  panels[20] = new Panel(20, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10);
+  panels[21] = new Panel(21, CLOCK_CLOCKWISE,   COMPASS_NORTH,      11);
+  panels[22] = new Panel(22, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10);
+  panels[23] = new Panel(23, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10);
+  panels[24] = new Panel(24, CLOCK_CLOCKWISE,   COMPASS_NORTH,      11);
+  panels[25] = new Panel(25, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10);
+  panels[26] = new Panel(26, CLOCK_CLOCKWISE,   COMPASS_NORTH,      11);
+  panels[27] = new Panel(27, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10);
+  panels[28] = new Panel(28, CLOCK_CLOCKWISE,   COMPASS_NORTH,      12);
+  //Rigns
+  panels[29] = new Panel(29, CLOCK_CLOCKWISE,   COMPASS_NORTH,      37);
+  panels[30] = new Panel(30, CLOCK_CLOCKWISE,   COMPASS_NORTH,      37);
+  panels[31] = new Panel(31, CLOCK_CLOCKWISE,   COMPASS_NORTH,      37);
+  panels[32] = new Panel(32, CLOCK_CLOCKWISE,   COMPASS_NORTH,      37);
+  #ifdef PANELSETUP_MINITOWER
+  panels[ 0] = new Panel( 0, 0, 0, CLOCK_COUNTERWISE, COMPASS_SOUTH_EAST, 10);
+  panels[ 1] = new Panel( 1, 0, 0, CLOCK_COUNTERWISE, COMPASS_SOUTH,      10);
+  panels[ 2] = new Panel( 2, 0, 0, CLOCK_COUNTERWISE, COMPASS_SOUTH_WEST, 10);
+  panels[ 3] = new Panel( 3, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, 10);
+  panels[ 4] = new Panel( 4, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      6);
+  #endif
+  #ifdef PANELSETUP_TEST
+  panels[0] = new Panel(0, CLOCK_COUNTERWISE, COMPASS_SOUTH_EAST, 3);
+  panels[1] = new Panel(1, CLOCK_COUNTERWISE, COMPASS_SOUTH,      3);
+  panels[2] = new Panel(2, CLOCK_COUNTERWISE, COMPASS_SOUTH_WEST, 3);
+  panels[3] = new Panel(3, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, 3);
+  panels[4] = new Panel(4, CLOCK_CLOCKWISE,   COMPASS_NORTH,      3);
+  panels[5] = new Panel(5, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, 3);
   #endif
 
   Serial.println(F("Allocating complete"));

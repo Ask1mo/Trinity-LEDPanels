@@ -3,7 +3,7 @@
 
 #include "Trinity/Trinity.h"
 
-#define NEXTEFFECTTIME 10000
+#define NEXTEFFECTTIME 20000
 #define ENABLECYCLING false
 
 //#define ANIMATIONSET_STOCK
