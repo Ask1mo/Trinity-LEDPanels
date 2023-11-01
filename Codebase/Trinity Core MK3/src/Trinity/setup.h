@@ -32,12 +32,12 @@
 
 
 /*---=== PUT YOUR SETTINGS HERE!!! ===---*/
-#define PANELSETUP_PROTO
+#define PANELSETUP_LIAM
 #define PLATFORM_ARDUINO
 #define LEDTYPE_STANDARD
 #define LINKPROGRAM_MK2
 
-#define DEBUGLEVEL DEBUG_DISABLED
+#define DEBUGLEVEL DEBUG_WARNINGS
 /*---=== PUT YOUR SETTINGS HERE!!! ===---*/
 
 
@@ -89,47 +89,38 @@
 
 /* ---=== LED Setup ===---*/
 #ifdef PANELSETUP_PROTO
-    //#define PANELAMOUNT     6
     #define CANVASWIDTH     6
     #define CANVASHEIGHT    2
 #endif
 #ifdef PANELSETUP_ATOS
-    #define PANELAMOUNT     1
     #define CANVASWIDTH     0
     #define CANVASHEIGHT    0
 #endif
 #ifdef PANELSETUP_EVA
-    #define PANELAMOUNT     4
     #define CANVASWIDTH     3
     #define CANVASHEIGHT    3
 #endif
 #ifdef PANELSETUP_LIAM
-    #define PANELAMOUNT     10
     #define CANVASWIDTH     5
     #define CANVASHEIGHT    4
 #endif
 #ifdef PANELSETUP_PRIME
-    #define PANELAMOUNT     16
     #define CANVASWIDTH     7
     #define CANVASHEIGHT    7
 #endif
 #ifdef PANELSETUP_CHRISTMAS
-    #define PANELAMOUNT     10
     #define CANVASWIDTH     0
     #define CANVASHEIGHT    0
 #endif
 #ifdef PANELSETUP_WESTPOINT
-    #define PANELAMOUNT     33
     #define CANVASWIDTH     4
     #define CANVASHEIGHT    0
 #endif
 #ifdef PANELSETUP_MINITOWER
-    #define PANELAMOUNT     5
     #define CANVASWIDTH     0
     #define CANVASHEIGHT    0
 #endif
 #ifdef PANELSETUP_TEST
-    #define PANELAMOUNT     6
     #define CANVASWIDTH     3
     #define CANVASHEIGHT    2
 #endif
