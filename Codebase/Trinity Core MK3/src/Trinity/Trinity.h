@@ -11,7 +11,6 @@
 class Trinity
 {
 private:
-    Panel           **panels;
     LedManager      *ledManager;
     AskButton       *button;
     LightSensor     *lightSensor;

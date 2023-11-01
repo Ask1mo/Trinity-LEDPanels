@@ -13,8 +13,7 @@ Trinity::Trinity(uint8_t ledPin, uint8_t buttonPin, uint8_t ldrPin, uint8_t maxF
     Serial.println((int)this, DEC);
   }
 
-  setupPanels();
-  ledManager      = new LedManager(panels); //Todo: Made LedManager accept const ints
+  ledManager      = new LedManager(); //Todo: Made LedManager accept const ints
   button          = new AskButton(buttonPin, 100);
   lightSensor     = new LightSensor(ldrPin);
   sleepTimer      = new SleepTimer();
@@ -35,16 +34,16 @@ Trinity::Trinity(uint8_t ledPin, uint8_t buttonPin, uint8_t ldrPin, uint8_t maxF
   sleepTimer->setTurnOffTime(9,59);
   */
 
+ setupPanels();
+
   Serial.println(F("...Trinity Started"));
 }
 
 //Private
 void Trinity::setupPanels()
 {
-  Serial.println(F("Allocatig..."));
-  panels = (Panel**)malloc(sizeof(Panel*) * PANELAMOUNT);
-  Serial.println(F("Array allocated..."));
-
+  
+  /*
   #ifdef PANELSETUP_PROTO
   panels[0] = new Panel(0, 0, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, LEDSAMOUNT_TRIANGLE);
   panels[1] = new Panel(1, 1, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, LEDSAMOUNT_TRIANGLE);
@@ -52,6 +51,15 @@ void Trinity::setupPanels()
   panels[3] = new Panel(3, 3, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, LEDSAMOUNT_TRIANGLE);
   panels[4] = new Panel(4, 4, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, LEDSAMOUNT_TRIANGLE);
   panels[5] = new Panel(5, 5, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, LEDSAMOUNT_TRIANGLE);
+  #endif
+  */
+  #ifdef PANELSETUP_PROTO
+  ledManager->addPanel(new Panel(0, 0, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, LEDSAMOUNT_TRIANGLE));
+  ledManager->addPanel(new Panel(1, 1, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, LEDSAMOUNT_TRIANGLE));
+  ledManager->addPanel(new Panel(2, 2, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, LEDSAMOUNT_TRIANGLE));
+  ledManager->addPanel(new Panel(3, 3, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, LEDSAMOUNT_TRIANGLE));
+  ledManager->addPanel(new Panel(4, 4, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, LEDSAMOUNT_TRIANGLE));
+  ledManager->addPanel(new Panel(5, 5, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, LEDSAMOUNT_TRIANGLE));
   #endif
   #ifdef PANELSETUP_ATOS
   panels[0] = new Panel(0, CLOCK_COUNTERWISE, COMPASS_WEST, LEDAMOUNT);
@@ -374,11 +382,11 @@ void Trinity::setBrightness(uint8_t brightness)
 }
 void Trinity::setPanelVfx(uint8_t panelNumber, VFXData vfxData)
 {
-  panels[panelNumber]->setVfx(vfxData);
+  ledManager->setPanelVfx(panelNumber, vfxData);
 }
 uint16_t Trinity::getPanelDiodeAmount(uint8_t panelNumber)
 {
-  return panels[panelNumber]->getDiodeAmount();
+  return ledManager->getPanelDiodeAmount(panelNumber);
 }
 void Trinity::setPanelDiodeVfx(uint8_t panelNumber, uint16_t diodeNumber, VFXData vfxData)
 {
@@ -390,7 +398,7 @@ void Trinity::setPanelDiodeVfx(uint8_t panelNumber, uint16_t diodeNumber, VFXDat
     Serial.println(ledManager->getPanelAmount());
   }
   
-  panels[panelNumber]->setDiodeVfx(diodeNumber, vfxData);
+  ledManager->setPanelDiodeVfx(panelNumber, diodeNumber, vfxData);
 }
 
 void Trinity::setCustomPaletteColours(uint8_t slot, uint8_t colourRGBNumber, ColourRGB colourRGB)

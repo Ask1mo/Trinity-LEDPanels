@@ -17,7 +17,8 @@ private:
   
 
 public:
-  LedManager                              (Panel **panelsArg);
+  LedManager                              ();
+  void    addPanel                        (Panel *panel);
   //Standard
   void    tick                            ();
   void    print                           ();

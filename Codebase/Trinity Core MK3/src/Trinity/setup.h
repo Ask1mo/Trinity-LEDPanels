@@ -37,7 +37,7 @@
 #define LEDTYPE_STANDARD
 #define LINKPROGRAM_MK2
 
-#define DEBUGLEVEL DEBUG_OPERATIONS
+#define DEBUGLEVEL DEBUG_DISABLED
 /*---=== PUT YOUR SETTINGS HERE!!! ===---*/
 
 
@@ -89,7 +89,7 @@
 
 /* ---=== LED Setup ===---*/
 #ifdef PANELSETUP_PROTO
-    #define PANELAMOUNT     6
+    //#define PANELAMOUNT     6
     #define CANVASWIDTH     6
     #define CANVASHEIGHT    2
 #endif

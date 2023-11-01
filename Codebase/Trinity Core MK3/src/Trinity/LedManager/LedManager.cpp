@@ -1,7 +1,7 @@
 #include "ledManager.h"
 
 //Constructor
-LedManager::LedManager                              (Panel **panelsArg)
+LedManager::LedManager                              ()
 {
   if(DEBUGLEVEL >= DEBUG_OPERATIONS)
   {
@@ -9,11 +9,12 @@ LedManager::LedManager                              (Panel **panelsArg)
     Serial.println((int)this, DEC);
   }
 
-  panelAmount  = PANELAMOUNT;
+  
   brightness    = 255;
   speed         = 1;
   enabled       = true;
-  panels        = panelsArg;
+  panels        = NULL;
+  panelAmount   = 0;
 
   //Count diodes and give them to the panels (tell them where they start)
   int ledAmount = 0;
@@ -61,7 +62,19 @@ LedManager::LedManager                              (Panel **panelsArg)
 
   Serial.println(F("...LedManager Started"));
 }
-
+void    LedManager::addPanel                                    (Panel *panel)
+{
+  panels = (Panel**)realloc(panels, sizeof(Panel*) * (panelAmount + 1));
+  if (panels == NULL)
+  {
+    Serial.println(F("ERROR: Could not allocate memory for new panel"));
+    return;
+  }
+  panels[panelAmount] = panel;
+  panelAmount++;
+  Serial.print(F("New panel added, Amount is now: "));
+  Serial.println(panelAmount);
+}
 //Public
 //Standard
 void    LedManager::tick                            () 
