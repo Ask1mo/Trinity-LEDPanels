@@ -382,12 +382,12 @@ uint16_t Trinity::getPanelDiodeAmount(uint8_t panelNumber)
 }
 void Trinity::setPanelDiodeVfx(uint8_t panelNumber, uint16_t diodeNumber, VFXData vfxData)
 {
-  if (panelNumber > PANELAMOUNT)
+  if (panelNumber > ledManager->getPanelAmount())
   {
     Serial.print(F("Trinity::setPanelDiodeVfx() Too high panel number requested: "));
     Serial.print(panelNumber);
     Serial.print(F(". Max: "));
-    Serial.println(PANELAMOUNT);
+    Serial.println(ledManager->getPanelAmount());
   }
   
   panels[panelNumber]->setDiodeVfx(diodeNumber, vfxData);
@@ -400,4 +400,9 @@ void Trinity::setCustomPaletteColours(uint8_t slot, uint8_t colourRGBNumber, Col
 void Trinity::setCustomPaletteAvailableColours(uint8_t slot, uint8_t avalaibleColours)
 {
   ledManager->setCustomPaletteAvailableColours(slot, avalaibleColours);
+}
+
+uint8_t Trinity::getPanelAmount()
+{
+  return ledManager->getPanelAmount();
 }

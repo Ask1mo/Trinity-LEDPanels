@@ -9,7 +9,7 @@ LedManager::LedManager                              (Panel **panelsArg)
     Serial.println((int)this, DEC);
   }
 
-  panelsAmount  = PANELAMOUNT;
+  panelAmount  = PANELAMOUNT;
   brightness    = 255;
   speed         = 1;
   enabled       = true;
@@ -17,7 +17,7 @@ LedManager::LedManager                              (Panel **panelsArg)
 
   //Count diodes and give them to the panels (tell them where they start)
   int ledAmount = 0;
-  for (uint8_t i = 0; i < PANELAMOUNT; i++)
+  for (uint8_t i = 0; i < panelAmount; i++)
   {
     panels[i]->setDiodeStart(ledAmount);
     ledAmount += panels[i]->getDiodeAmount();
@@ -70,7 +70,7 @@ void    LedManager::tick                            ()
   {
     if(DEBUGLEVEL >=DEBUG_OPERATIONS) Serial.print(F("t"));
 
-    for (uint8_t i = 0; i < panelsAmount; i++)
+    for (uint8_t i = 0; i < panelAmount; i++)
     {
       panels[i]->tick();
 
@@ -132,7 +132,7 @@ void    LedManager::setEnabled                      (bool enabled)
 }
 uint8_t LedManager::getPanelAmount                  ()
 {
-  return panelsAmount;
+  return panelAmount;
 }
 uint16_t LedManager::getPanelDiodeAmount            (uint8_t panelNumber)
 {

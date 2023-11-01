@@ -7,7 +7,7 @@
 class LedManager
 {
 private:
-  uint8_t                                 panelsAmount;
+  uint8_t                                 panelAmount;
   uint8_t                                 brightness;
   uint8_t                                 speed;
   bool                                    enabled;
