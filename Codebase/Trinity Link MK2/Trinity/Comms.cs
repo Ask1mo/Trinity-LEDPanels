@@ -52,16 +52,33 @@ namespace Trinity
         {
             serialPort.Write(text);
         }
-        public void serialRead() //Reads from the serial monitor
+        public bool serialRead() //Reads from the serial monitor
         {
-            byte byteNumber = 0;
-            while (serialPort.BytesToRead != 0 && byteNumber < maxTransmissionLength)
+            while (serialPort.BytesToRead != 0)
             {
-                transmissionData[byteNumber] = (byte)serialPort.ReadByte();
-                Console.Write("Received: ");
-                Console.WriteLine(transmissionData[byteNumber]);
-                byteNumber++;
+                byte newByte = (byte)serialPort.ReadByte();
+
+                for (byte i = 0; i < maxTransmissionLength-1; i++)
+                {
+                    transmissionData[i] = transmissionData[i+1];
+                }
+                transmissionData[maxTransmissionLength-1] = newByte;
+
+                
+
+
+
+                //transmissionData[byteNumber] = (byte)serialPort.ReadByte();
+                //Console.Write("Received: ");
+                //Console.Writeline(transmissionData[byteNumber]);
+                Console.Write((char)transmissionData[0]);
+
+                if (messageCompleteChecker())
+                {
+                    return true;
+                }
             }
+            return false;
         }
 
         /*public void messageCorruptor() //Corrupts a random bit in a random byte from a transmission
@@ -71,6 +88,15 @@ namespace Trinity
         }*/
         public bool messageCompleteChecker()
         {
+            Console.Write("   -BUFFER: ");
+            for (int i = 0; i < maxTransmissionLength; i++)
+            {
+                Console.Write((char)transmissionData[i]);
+            }
+            Console.WriteLine();
+
+
+
             if(
                 transmissionData[0] == '/' &&
                 transmissionData[2] == '/' &&
@@ -78,6 +104,7 @@ namespace Trinity
                 transmissionData[10] == '/'
               )
                 {
+                Console.WriteLine("Successful match");
                 return true;
                 }
             return false;

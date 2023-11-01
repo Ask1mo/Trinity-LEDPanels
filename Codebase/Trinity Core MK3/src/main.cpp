@@ -389,10 +389,28 @@ void setup()
   }
   */
 
+
+
 }
 
 void loop()
 {
+  //Code that takes a new byte from the serial monitor, puts it in first place of transmissionData, puts all other data one point in the array further
+  //and then sends the data to the Trinity class
+  if (Serial.available() > 0)
+  {
+    uint8_t newByte = Serial.read();
+    for (uint8_t i = 0; i < 9; i++)
+    {
+      transmissionData[i+1] = transmissionData[i];
+    }
+    transmissionData[0] = newByte;
+    trinity->receiveData(transmissionData);
+  }
+  //Now this same code except the new data gets added to the back of the array
+
+
+
   trinity->tick();
 
   if(ENABLECYCLING)

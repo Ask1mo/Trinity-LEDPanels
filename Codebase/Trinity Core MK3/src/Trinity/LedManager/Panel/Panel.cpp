@@ -263,8 +263,34 @@ void      Panel::resetFXProcessingVars      ()
 //Transmissions
 String    Panel::convertToTransmission      ()
 {
-  String data = "";
+  #ifdef LINKPROGRAM_MK2
   
+  byte alpha = effect;
+  byte beta = colour;
+  byte charlie = 0;
+
+  charlie = alpha;
+  charlie = charlie << 4;
+  charlie = charlie | beta;
+
+  String data = "";
+  data += "/";
+  data += (char)number;
+  data += "/";
+  data += (char)offset;
+  data += (char)speed;
+  data += (char)charlie;
+  data += "/";
+  data += (char)effectVariables.r;
+  data += (char)effectVariables.g;
+  data += (char)effectVariables.b;
+  data += "/";
+
+  return data;
+  #endif
+  #ifdef LINKPROGRAM_MK3
+  String data = "";
+
   data += (char)number;
   data += (char)compassDir;
   data += (char)clockDir;
@@ -283,6 +309,7 @@ String    Panel::convertToTransmission      ()
   data += (char)effectVariables.b;
 
   return data;
+  #endif
 }
 String    Panel::convertDiodeToTransmission (uint16_t diodeNumber)
 {

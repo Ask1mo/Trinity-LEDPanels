@@ -152,6 +152,7 @@ void Trinity::setupPanels()
   panels[30] = new Panel(30, CLOCK_CLOCKWISE,   COMPASS_NORTH,      37);
   panels[31] = new Panel(31, CLOCK_CLOCKWISE,   COMPASS_NORTH,      37);
   panels[32] = new Panel(32, CLOCK_CLOCKWISE,   COMPASS_NORTH,      37);
+  #endif
   #ifdef PANELSETUP_MINITOWER
   panels[ 0] = new Panel( 0, 0, 0, CLOCK_COUNTERWISE, COMPASS_SOUTH_EAST, 10);
   panels[ 1] = new Panel( 1, 0, 0, CLOCK_COUNTERWISE, COMPASS_SOUTH,      10);
@@ -342,11 +343,13 @@ void Trinity::tick()
       {
         
         comms->transmit(TRANSMISSION_OUT_PANEL, ledManager->convertPanelToTransmission(i));
-        
+
+        #if ENABLE_DIODECONTROL
         for (uint8_t j = 0; j < ledManager->getPanelDiodeAmount(i); j++)
         {
           comms->transmit(TRANSMISSION_OUT_DIODE, ledManager->convertPanelDiodeToTransmission(i,j));
         }
+        #endif
       }
     }
     break;

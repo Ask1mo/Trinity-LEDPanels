@@ -109,6 +109,8 @@ namespace Trinity
         bool presetLoaded = false;
         bool doublePresetApplyPreventor = false;
 
+        bool unprocessedPanelReceived = false;
+
         
         
 
@@ -230,15 +232,27 @@ namespace Trinity
             {
                 if (comms.getBufferSize() != 0) //Check if there's data in the buffer
                 {
-                    comms.serialRead(); //Read data (and put it in a buffer in the comms class)
+                    //Read data (and put it in a buffer in the comms class)
                     //comms.messageCorruptor(); //Corrupt data in the message for testing purposes
 
-                    if (comms.messageCompleteChecker()) //Are all the bytes of the message filled with data?
+                    if (comms.serialRead()) //Are all the bytes of the message filled with data?
                     {
                         Console.WriteLine("Message completeChecker passed");
-                      
+                        unprocessedPanelReceived = true;
+
+
                         administration.interpretPanelTransmission(comms.transmissionDecoder()); //Interpret the transmission and add it to the administration
-                        if (comms.getBufferSize() == 0) updateLists();// update the preview list after all of the transmissions are done.
+
+
+
+                    }
+                }
+                else
+                {
+                    if (unprocessedPanelReceived)
+                    {
+                        unprocessedPanelReceived = false;
+                        updateLists();// update the preview list after all of the transmissions are done.
                     }
                 }
             }
@@ -267,14 +281,14 @@ namespace Trinity
                     if (dialogResult == DialogResult.Yes || !changesMade)
                     {
                         textBox_Receiver.Text = "";
-                        comms.serialWrite("Transmitting...Request");
+                        comms.serialWrite("Transmitting...RequeClear");
                         changesMade = false;
                     }
                 }
                 else
                 {
                     textBox_Receiver.Text = "";
-                    comms.serialWrite("Transmitting...Request");
+                    comms.serialWrite("Transmitting...RequeClear");
                 }
             }
             else MessageBox.Show("Check connection", "Transmission Failure");
