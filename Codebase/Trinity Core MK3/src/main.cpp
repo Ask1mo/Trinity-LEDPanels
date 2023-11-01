@@ -1,484 +1,290 @@
 #include "main.h"
 
-
-#ifdef ANIMATIONSET_WESTPOINT
-void playAnimation_Reset()
+void setupPanels()
 {
-  Serial.println(F("playAnimation_Reset"));
-  trinity->setSpeed(1);
+  Serial.println(F("Allocatig..."));
+  panels = (Panel**)malloc(sizeof(Panel*) * PANELAMOUNT);
+  Serial.println(F("Array allocated..."));
 
-  int diodeNumbers = 0;
-  for (uint16_t i = 0; i < PANELAMOUNT; i++)
-  {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_STATIC, COLOUR_BLACK, 0, 1, true});
-    for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
-    {
-      diodeNumbers++;
-      trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_STATIC, COLOUR_VIOLET, diodeNumbers, 1, false});
-    }
-  }
+  #ifdef PANELSETUP_ATOS
+  panels[0] = new Panel(0, CLOCK_COUNTERWISE, COMPASS_WEST, LEDAMOUNT);
+  #endif
+  #ifdef PANELSETUP_EVA
+  panels[0] = new Panel(0, CLOCK_COUNTERWISE, COMPASS_SOUTH_EAST, LEDSAMOUNT_TRIANGLE);
+  panels[1] = new Panel(1, CLOCK_COUNTERWISE, COMPASS_SOUTH,      LEDSAMOUNT_TRIANGLE);
+  panels[2] = new Panel(2, CLOCK_COUNTERWISE, COMPASS_SOUTH_WEST, LEDSAMOUNT_TRIANGLE);
+  panels[3] = new Panel(3, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, LEDSAMOUNT_TRIANGLE);
+  #endif
+  #ifdef PANELSETUP_LIAM
+  panels[0] = new Panel(0, CLOCK_COUNTERWISE, COMPASS_SOUTH_EAST, LEDSAMOUNT_TRIANGLE);
+  panels[1] = new Panel(1, CLOCK_COUNTERWISE, COMPASS_SOUTH,      LEDSAMOUNT_TRIANGLE);
+  panels[2] = new Panel(2, CLOCK_COUNTERWISE, COMPASS_SOUTH_WEST, LEDSAMOUNT_TRIANGLE);
+  panels[3] = new Panel(3, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, LEDSAMOUNT_TRIANGLE);
+  panels[4] = new Panel(4, CLOCK_CLOCKWISE,   COMPASS_NORTH,      LEDSAMOUNT_TRIANGLE);
+  panels[5] = new Panel(5, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, LEDSAMOUNT_TRIANGLE);
+  panels[6] = new Panel(6, CLOCK_COUNTERWISE, COMPASS_SOUTH_WEST, LEDSAMOUNT_TRIANGLE);
+  panels[7] = new Panel(7, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, LEDSAMOUNT_TRIANGLE);
+  panels[8] = new Panel(8, CLOCK_CLOCKWISE,   COMPASS_NORTH,      LEDSAMOUNT_TRIANGLE);
+  panels[9] = new Panel(9, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, LEDSAMOUNT_TRIANGLE);
+  #endif
+  #ifdef PANELSETUP_PRIME
+  panels[ 0] = new Panel( 0, CLOCK_COUNTERWISE, COMPASS_SOUTH_EAST, LEDSAMOUNT_TRIANGLE);
+  panels[ 1] = new Panel( 1, CLOCK_COUNTERWISE, COMPASS_SOUTH,      LEDSAMOUNT_TRIANGLE);
+  panels[ 2] = new Panel( 2, CLOCK_COUNTERWISE, COMPASS_SOUTH_WEST, LEDSAMOUNT_TRIANGLE);
+  panels[ 3] = new Panel( 3, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, LEDSAMOUNT_TRIANGLE);
+  panels[ 4] = new Panel( 4, CLOCK_CLOCKWISE,   COMPASS_NORTH,      LEDSAMOUNT_TRIANGLE);
+  panels[ 5] = new Panel( 5, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, LEDSAMOUNT_TRIANGLE);
+  panels[ 6] = new Panel( 6, CLOCK_COUNTERWISE, COMPASS_SOUTH_WEST, LEDSAMOUNT_TRIANGLE);
+  panels[ 7] = new Panel( 7, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, LEDSAMOUNT_TRIANGLE);
+  panels[ 8] = new Panel( 8, CLOCK_CLOCKWISE,   COMPASS_NORTH,      LEDSAMOUNT_TRIANGLE);
+  panels[ 9] = new Panel( 9, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, LEDSAMOUNT_TRIANGLE);
+  panels[10] = new Panel(10, CLOCK_CLOCKWISE,   COMPASS_NORTH,      LEDSAMOUNT_TRIANGLE);
+  panels[11] = new Panel(11, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, LEDSAMOUNT_TRIANGLE);
+  panels[12] = new Panel(12, CLOCK_COUNTERWISE, COMPASS_SOUTH_WEST, LEDSAMOUNT_TRIANGLE);
+  panels[13] = new Panel(13, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, LEDSAMOUNT_TRIANGLE);
+  panels[14] = new Panel(14, CLOCK_CLOCKWISE,   COMPASS_NORTH,      LEDSAMOUNT_TRIANGLE);
+  panels[15] = new Panel(15, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, LEDSAMOUNT_TRIANGLE);
+  #endif
+  #ifdef PANELSETUP_TEST
+  panels[0] = new Panel(0, CLOCK_COUNTERWISE, COMPASS_SOUTH_EAST, 3);
+  panels[1] = new Panel(1, CLOCK_COUNTERWISE, COMPASS_SOUTH,      3);
+  panels[2] = new Panel(2, CLOCK_COUNTERWISE, COMPASS_SOUTH_WEST, 3);
+  panels[3] = new Panel(3, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, 3);
+  panels[4] = new Panel(4, CLOCK_CLOCKWISE,   COMPASS_NORTH,      3);
+  panels[5] = new Panel(5, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, 3);
+  #endif
 
-  trinity->forceTick(diodeNumbers, true, 10);
-  delay(1000);
+  Serial.println(F("Allocating complete"));
+  return;
 }
-
-void setAnimation_Westpoint_FullWhite()
-{
-  Serial.println(F("setAnimation_Westpoint_FullWhite"));
-  trinity->setSpeed(1);
-
-  uint16_t offset = 0;
-  for (uint16_t i = 0; i < PANELAMOUNT; i++)
-  {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_STATIC, COLOUR_WHITE, (uint16_t)random(0, 10)*15, 1, true});
-    for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
-    {
-      trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_STATIC, COLOUR_WHITE, 0, 5, true});
-      offset++;
-    }
-  }
-}
-void setAnimation_Westpoint_Default()
-{
-  Serial.println(F("setAnimation_Westpoint_Default"));
-  trinity->setSpeed(1);
-
-  uint16_t offset = 0;
-  for (uint16_t i = 0; i < PANELAMOUNT; i++)
-  {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, (uint16_t)random(0, 10)*15, 1, true});
-    for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
-    {
-      trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_SPECIAL_RAINBOW, COLOUR_RED, 0, 5, true});
-      offset++;
-    }
-  }
-}
-void setAnimation_Westpoint_BreathingLines()
-{
-  Serial.println(F("setAnimation_Westpoint_BREATHINGLINES"));
-  trinity->setSpeed(1);
-
-  for (uint16_t i = 0; i < PANELAMOUNT; i++)
-  {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, (uint16_t)random(0, 10)*15, 1, true});
-    for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
-    {
-      trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_PAUSEDBREATHING, COLOUR_CYCLE, j, 20, true});
-    }
-  }
-}
-void setAnimation_Westpoint_FlashingLines()
-{
-  Serial.println(F("setAnimation_Westpoint_FlashingGLINES"));
-  trinity->setSpeed(1);
-
-  for (uint16_t i = 0; i < PANELAMOUNT; i++)
-  {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, (uint16_t)random(0, 10)*15, 1, true});
-    for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
-    {
-      trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_PAUSEDFLASH, COLOUR_WHITE, j, 10, true});
-    }  
-  }
-}
-void setAnimation_Westpoint_Rain()
-{
-  Serial.println(F("setAnimation_Westpoint_Rain"));
-  trinity->setSpeed(1);
-
-  for (uint16_t i = 0; i < PANELAMOUNT; i++)
-  {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, (uint16_t)random(0, 10)*15, 1, true});
-    for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
-    {
-      trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_PAUSEDFLASH, COLOUR_BLUE, j, (uint16_t)random(0, 10), true});
-    }
-  }
-}
-void setAnimation_Westpoint_Matrix()
-{
-  Serial.println(F("setAnimation_Westpoint_Matrix"));
-  trinity->setSpeed(1);
-
-  for (uint16_t i = 0; i < PANELAMOUNT; i++)
-  {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, (uint16_t)random(0, 10)*15, 1, true});
-    for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
-    {
-      trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_DECODE, COLOUR_GREEN, j, 10, true});
-    }
-  }
-}
-void setAnimation_Westpoint_SuperRainbow()
-{
-  Serial.println(F("setAnimation_Westpoint_SuperRainbow"));
-  trinity->setSpeed(3);
-
-  uint16_t offset = 0;
-  for (uint16_t i = 0; i < PANELAMOUNT; i++)
-  {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, 0, 1, true});
-    for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
-    {
-      trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_SPECIAL_RAINBOW, COLOUR_RED, offset, 10, true});
-      offset++;
-    }
-  }
-}
-void setAnimation_Westpoint_ADHDRainbow()
-{
-  Serial.println(F("setAnimation_Westpoint_ADHDRAINBOW"));
-  trinity->setSpeed(1);
-
-  uint16_t offset = 0;
-  for (uint16_t i = 0; i < PANELAMOUNT; i++)
-  {
-    for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
-    {
-      trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_SPECIAL_RAINBOW, COLOUR_RED, offset, 100, true});
-      offset++;
-    }
-  }
-  trinity->forceTick(500, false, 0);
-}
-void setAnimation_Westpoint_BurningRainbow()
-{
-  Serial.println(F("setAnimation_Westpoint_BurningRainbow"));
-  trinity->setSpeed(4);
-
-  uint16_t offset = 0;
-    for (uint16_t i = 0; i < PANELAMOUNT; i++)
-    {
-      trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, i*5, 10, true});
-      for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
-      {
-        trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_SPECIAL_RAINBOW, COLOUR_RED, j*5, 10, true});
-        offset++;
-      }
-  
-
-      
-    }
-}
-void setAnimation_Westpoint_HeartbeatTower()
-{
-  Serial.println(F("setAnimation_Westpoint_HeartbeatTower"));
-  trinity->setSpeed(5);
-
-  uint16_t offset = 0;
-    for (uint16_t i = 0; i < PANELAMOUNT; i++)
-    {
-      trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, i*4, 1, true});
-      for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
-      {
-        trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_HEARTBEAT, COLOUR_RED, 0, 1, true});
-        offset++;
-      }
-  
-
-      
-    }
-}
-void setAnimation_Westpoint_Stoplight()
-{
-  Serial.println(F("setAnimation_Westpoint_Stoplight"));
-  trinity->setSpeed(8);
-
-  uint16_t offset = 0;
-    for (uint16_t i = 0; i < PANELAMOUNT; i++)
-    {
-      trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, offset, 1, true});
-      for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
-      {
-        trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_PAUSEDFLASH, COLOUR_CYCLE, offset, 1, true});
-        offset+=3;
-      }
-  
-
-      
-    }
-}
-void setAnimation_Westpoint_PowerRise()
-{
-  Serial.println(F("setAnimation_Westpoint_Powerrize"));
-  trinity->setSpeed(15);
-
-  uint16_t offset = 0;
-    for (uint16_t i = 0; i < PANELAMOUNT; i++)
-    {
-      trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, offset, 1, true});
-      for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
-      {
-        trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_PAUSEDFLASH, COLOUR_CYAN, offset, 1, true});
-        offset++;
-      }
-  
-
-      
-    }
-}
-void setAnimation_Westpoint_Fishbowl()
-{
-  Serial.println(F("setAnimation_Westpoint_Fishbowl"));
-  trinity->setSpeed(10);
-
-  uint16_t offset = 0;
-  for (uint16_t i = 0; i < PANELAMOUNT; i++)
-  {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, offset, 1, true});
-    for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
-    {
-      trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_PAUSEDFLASH, COLOUR_CYCLE, offset, 1, true});
-      offset+=10;
-    }
-  }
-  trinity->forceTick(900, false, 0);
-}
-void setAnimation_Westpoint_Coils()
-{
-  Serial.println(F("setAnimation_Westpoint_Coils"));
-  trinity->setSpeed(10);
-
-  uint16_t offset = 0;
-
-  for (uint8_t i = 0; i < PANELAMOUNT; i++)
-  {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, 0, 1, true});
-    for (uint8_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
-    {
-      trinity->setPanelDiodeVfx(i, j, VFXData{ EFFECT_STOCK_DECODE, COLOUR_CYCLE, offset, 1, true});
-      offset++;
-    }
-  }
-}
-void setAnimation_Westpoint_AppearThing()
-{
-  Serial.println(F("setAnimation_Westpoint_AppearThing"));
-  trinity->setSpeed(20);
-
-  uint16_t offset = 0;
-
-  for (uint8_t i = 0; i < PANELAMOUNT; i++)
-  {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, (uint16_t)random(0, 100), 1, true});
-    for (uint8_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
-    {
-      trinity->setPanelDiodeVfx(i, j,VFXData{ EFFECT_STOCK_DECODE, COLOUR_CYCLE, (uint16_t)random(0, 100), 1, true});
-      offset++;
-    }
-  }
-
-}
-void setAnimation_Westpoint_AppearThing2()
-{
-  Serial.println(F("setAnimation_Westpoint_AppearThing2"));
-  trinity->setSpeed(10);
-
-  uint16_t offset = 0;
-
-  for (uint8_t i = 0; i < PANELAMOUNT; i++)
-  {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, (uint16_t)random(0, 100), 1, true});
-    for (uint8_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
-    {
-      trinity->setPanelDiodeVfx(i, j,VFXData{ EFFECT_STOCK_STATIC, COLOUR_CYCLE, (uint16_t)random(0, 100), 1, true});
-      offset++;
-    }
-  }
-
-}
-void setAnimation_Westpoint_AppearThing3()
-{
-  Serial.println(F("setAnimation_Westpoint_AppearThing3"));
-  trinity->setSpeed(10);
-
-  uint16_t offset = 0;
-
-  for (uint8_t i = 0; i < PANELAMOUNT; i++)
-  {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, 0, 1, true});
-    for (uint8_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
-    {
-      trinity->setPanelDiodeVfx(i, j,VFXData{ EFFECT_STOCK_STATIC, COLOUR_CYCLE, (uint16_t)random(0, 1000), 1, true});
-      offset++;
-    }
-  }
-}
-void setAnimation_Westpoint_AppearThing4()
-{
-  Serial.println(F("setAnimation_Westpoint_AppearThing4"));
-  trinity->setSpeed(4);
-
-  uint16_t offset = 0;
-
-  for (uint8_t i = 0; i < PANELAMOUNT; i++)
-  {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, 0, 1, true});
-    for (uint8_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
-    {
-      trinity->setPanelDiodeVfx(i, j,VFXData{ EFFECT_STOCK_PAUSEDFLASH, COLOUR_CYCLE, (uint16_t)random(0, 250), 1, true});
-      offset++;
-    }
-  }
-}
-void setAnimation_Westpoint_ColourBlink()
-{
-  Serial.println(F("setAnimation_Westpoint_ColourBlink"));
-  trinity->setSpeed(4);
-
-  uint16_t offset = 0;
-
-  for (uint8_t i = 0; i < PANELAMOUNT; i++)
-  {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, 0, 1, true});
-    for (uint8_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
-    {
-      trinity->setPanelDiodeVfx(i, j,VFXData{ EFFECT_STOCK_STATIC, COLOUR_CYCLE, i, 1, true});
-      offset++;
-    }
-  }
-  trinity->forceTick(64, false, 0);
-}
-#endif
 
 void setup()
 {
-  Serial.begin(BAUDRATE);
-  
-  trinity = new Trinity(PIN_LEDS, PIN_BUTTON, PIN_LIGHTSENSOR, 60);
+  Serial.begin(115200);
+  Serial.println(F("Trinity MK3 - Ask Blommaert"));
 
-  currentShowingEffect = 0;
+  setupPanels();
+  ledManager      = new LedManager(panels);
+  button          = new AskButton(PIN_BUTTON, 1000);
+  lightSensor     = new LightSensor(PIN_LIGHTSENSOR);
+  sleepTimer      = new SleepTimer();
+  comms           = new Comms();
 
-  Serial.println(F("---===SETUP COMPLETED===---"));
+  Serial.println(F("...Trinity Initialised"));
 
-
-
-  Serial.println(F("setAnimation_Westpoint_Default"));
-  trinity->setSpeed(1);
-
-  //uint16_t offset = 0;
-  for (uint16_t i = 0; i < PANELAMOUNT; i++)
-  {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_RED, (uint16_t)random(0, 10)*15, 1, true});
-    for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
-    {
-      //trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_RED, 0, 5, true});
-      //offset++;
-    }
-  }
-  
   /*
-  trinity->setSpeed(5);
+  ledManager->setBrightness(255);
 
-  trinity->setCustomPaletteColours(0, 0, (ColourRGB){255, 128, 0});
-  trinity->setCustomPaletteColours(0, 1, (ColourRGB){255, 0, 255});
-  trinity->setCustomPaletteColours(0, 2, (ColourRGB){0, 128, 255});
-  trinity->setCustomPaletteAvailableColours(0, 3);
-
-  for (uint16_t i = 0; i < PANELAMOUNT; i++)
-  {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_CUSTOM_DECODE, 0, 0, 1, true});
-    //
-    for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
-    {
-      trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_STATIC, COLOUR_WHITE, 0, 1, true});
-    }
-    //
-  }
+  sleepTimer->setTurnOnEnabled(true);
+  sleepTimer->setTurnOnTime(10,0);
+  sleepTimer->setTurnOffEnabled(true);
+  sleepTimer->setTurnOffTime(9,59);
   */
 
+  Serial.println(F("...Trinity Started"));
 
 
+  /*
+  //TEMP: Do some editing of the panel data 
+  for (uint8_t i = 0; i < PANELAMOUNT; i++)
+  {
+    ledManager->setPanelData(i, DIR_STRIP, 255, EFFECT_RAINBOW, COLOUR_BLACK, i*5, 3, true);
+  }
+  */
+  
+
+  //Temp
+  uint16_t offset = 0;
+
+  for (uint8_t i = 0; i < PANELAMOUNT; i++)
+  {
+    panels[i]->setDataFx(BRIGHTNESS_3_MAX, EFFECT_STOCK_APPEAR, COLOUR_RED, 0, 1, true, true);
+    for (uint8_t j = 0; j < panels[i]->getDiodeAmount(); j++)
+    {
+      panels[i]->setDiodeDataFx(j, BRIGHTNESS_3_MAX, EFFECT_STOCK_APPEAR, COLOUR_RED, offset, 1, true);
+      offset++;
+    }
+  }
+
+  Serial.println(F("---===SETUP COMPLETED===---"));
 }
-
 void loop()
 {
-
-  trinity->tick();
-
-  if(ENABLECYCLING)
+  delay(10);
+  
+  //Button press handling
+  switch(button->getCommand())
   {
-    uint64_t currentMillis = millis();
-    if(currentMillis >= (prevMillis+NEXTEFFECTTIME))
+    case BUTTON_TAPPED: //Brightness cycle
     {
-      prevMillis = currentMillis;
-      currentShowingEffect++;
-      if (currentShowingEffect == 18)
+      switch (ledManager->getBrightness())
       {
-        currentShowingEffect = 0;
-      }
-      
-      #ifdef ANIMATIONSET_WESTPOINT
-      playAnimation_Reset();
-      #endif
+        case BRIGHTNESS_0_OFF:
+        {
+          ledManager->setEnabled(true);
+          ledManager->setBrightness(BRIGHTNESS_1_DIM);
+          lightSensor->setEnabled(false);
+          Serial.println(F("Changing sys brightness to DIM"));
+        }
+        break;
+        case BRIGHTNESS_1_DIM:
+        {
+          ledManager->setEnabled(true);
+          ledManager->setBrightness(BRIGHTNESS_2_NOR);
+          lightSensor->setEnabled(false);
+          Serial.println(F("Changing sys brightness to NORMAL"));
+        }
+        break;
+        case BRIGHTNESS_2_NOR:
+        {
+          ledManager->setEnabled(true);
+          ledManager->setBrightness(BRIGHTNESS_3_MAX);
+          lightSensor->setEnabled(false);
+          Serial.println(F("Changing sys brightness to MAX"));
 
-      switch (currentShowingEffect)
-      {
-        #ifdef ANIMATIONSET_STOCK
-
-        #endif
-
-        #ifdef ANIMATIONSET_WESTPOINT
-        case 0:
-        setAnimation_Westpoint_Default();
+        }
         break;
-        case 1:
-        setAnimation_Westpoint_BreathingLines();
+        case BRIGHTNESS_3_MAX:
+        {
+          ledManager->setEnabled(true);
+          ledManager->setBrightness(BRIGHTNESS_4_AUT);
+          lightSensor->setEnabled(true);
+          Serial.println(F("Changing sys brightness to Automatic"));
+        }
         break;
-        case 2:
-        setAnimation_Westpoint_FlashingLines();
-        break;
-        case 3:
-        setAnimation_Westpoint_Rain();
-        break;
-        case 4:
-        setAnimation_Westpoint_Matrix();
-        break;
-        case 5:
-        setAnimation_Westpoint_SuperRainbow();
-        break;
-        case 6:
-        setAnimation_Westpoint_ADHDRainbow();
-        break;
-        case 7:
-        setAnimation_Westpoint_BurningRainbow();
-        break;
-        case 8:
-        setAnimation_Westpoint_HeartbeatTower();
-        break;
-        case 9:
-        setAnimation_Westpoint_Stoplight();
-        break;
-        case 10:
-        setAnimation_Westpoint_PowerRise();
-        break;
-        case 11:
-        setAnimation_Westpoint_Fishbowl();
-        break;
-        case 12:
-        setAnimation_Westpoint_Coils();
-        break;
-        case 13:
-        setAnimation_Westpoint_AppearThing();
-        break;
-        case 14:
-        setAnimation_Westpoint_AppearThing2();
-        break;
-        case 15:
-        setAnimation_Westpoint_AppearThing3();
-        break;
-        case 16:
-        setAnimation_Westpoint_AppearThing4();
-        break;
-        #endif
-
         default:
-        if(DEBUGLEVEL >= DEBUG_ERRORS) Serial.println(F("ERROR: NO ANIMATIONSET SELECTED"));
+        {
+          ledManager->setEnabled(true);
+          ledManager->setBrightness(BRIGHTNESS_0_OFF);
+          lightSensor->setEnabled(false);
+          Serial.println(F("Changing sys brightness to OFF"));
+        }
         break;
       }
     }
+    break;
+    case BUTTON_HELD: //Preset cycle
+    {
+      Serial.println(F("Preset loading not implemented"));
+    }
   }
+  
+  //Auto brightness handling
+  if (lightSensor->getEnabled())
+  {
+    lightSensor->tick();
+    if(ledManager->getBrightness() != lightSensor->getRecommendedBrightness())
+    ledManager->setBrightness(lightSensor->getRecommendedBrightness());
+  }
+
+  //Waking up / Shutting down system from sleep timer
+  sleepTimer->tick();
+  switch (sleepTimer->getTurn())
+  {
+    case TURN_OFF:
+    {
+      Serial.println(F("SleepTimer Turning system off"));
+      ledManager->setBrightness(BRIGHTNESS_0_OFF);
+    }
+    break;
+
+    case TURN_ON:
+    {
+      Serial.println(F("SleepTimer Turning system on"));
+      if(ledManager->getBrightness() == BRIGHTNESS_0_OFF)ledManager->setBrightness(BRIGHTNESS_2_NOR);
+    }
+    break;
+  }
+
+  //Communications handling
+  comms->tick();
+  switch (comms->getReadyTransmissionType())
+  {
+    case TRANSMISSION_IN_PANELFX:
+    {
+      //Serial.println("Panel transmission retrieved from comms");
+      Transmission_PanelFX data = comms->getTransmission_PanelFX();
+      //Serial.println("Yom");
+      ledManager->setPanelData(data.panelNumber, data.brightness, data.effect, data.colour, data.offset, data.speed, data.repeat, data.detailed);
+      //Serial.println("Done");
+    }
+    break;
+    case TRANSMISSION_IN_PANELCUSTOM:
+    {
+
+    }
+    break;
+    case TRANSMISSION_IN_DIODEFX:
+    {
+      //Serial.println("Panel transmission retrieved from comms");
+      Transmission_DiodeFX data = comms->getTransmission_DiodeFX();
+      //Serial.println("Yom");
+      ledManager->setPanelDiodeData(data.panelNumber, data.diodeNumber, data.brightness, data.effect, data.colour, data.offset, data.speed, data.repeat);
+      //Serial.println("Done");
+    }
+    break;
+    case TRANSMISSION_IN_DIODECUSTOM:
+    {
+
+    }
+    break;
+    case TRANSMISSION_IN_BRIGHTNESS:
+    {
+      ledManager->setBrightness(comms->getTransmission_Brightness());
+    }
+    break;
+    case TRANSMISSION_IN_SLEEPTIMER:
+    {
+      Transmission_SleepTimerData data = comms->getTransmission_SleepTimerData();
+      switch (data.timerID)
+      {
+        case TIMERID_OFFTIMER:
+        {
+          sleepTimer->setTurnOffTime(data.hour, data.minute);
+          sleepTimer->setTurnOffEnabled(data.enabled);
+        }
+        break;
+        case TIMERID_ONTIMER:
+        {
+          sleepTimer->setTurnOnTime(data.hour, data.minute);
+          sleepTimer->setTurnOnEnabled(data.enabled);
+        }
+        break;
+      }
+    }
+    break;
+    case TRANSMISSION_IN_LIGHTSENSOR:
+    {
+      Transmission_LightSensorData data = comms->getTransmission_LightSensorData();
+      lightSensor->setBrightnessOffset(data.offset);
+      lightSensor->setEnabled(data.enabled);
+    }
+    break;
+    case TRANSMISSION_IN_REQUEST:
+    {
+      comms->transmit(TRANSMISSION_OUT_LEDMANAGER, ledManager->convertToTansmission());
+
+      for (uint8_t i = 0; i < ledManager->getPanelAmount(); i++)
+      {
+        
+        comms->transmit(TRANSMISSION_OUT_PANEL, ledManager->convertPanelToTransmission(i));
+        
+        for (uint8_t j = 0; j < ledManager->getPanelDiodeAmount(i); j++)
+        {
+          comms->transmit(TRANSMISSION_OUT_DIODE, ledManager->convertPanelDiodeToTransmission(i,j));
+        }
+      }
+    }
+    break;
+    case TRANSMISSION_IN_IDENT:
+    {
+      comms->transmit(TRANSMISSION_OUT_IDENT, "");
+    }
+    break;
+  }
+
+  ledManager->tick();
+  ledManager->print();
 }
 
 

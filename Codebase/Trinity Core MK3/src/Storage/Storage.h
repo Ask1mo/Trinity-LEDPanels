@@ -2,7 +2,7 @@
 #define STORAGE_H
 
 #include <Arduino.h>
-#include "Trinity/LedManager/ledManager.h"
+#include "LedManager/ledManager.h"
 
 #define STORAGESLOTS 5
 

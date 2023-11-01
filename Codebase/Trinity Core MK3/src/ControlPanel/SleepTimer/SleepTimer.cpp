@@ -3,11 +3,7 @@
 
 SleepTimer::SleepTimer()
 {
-    if(DEBUGLEVEL >= DEBUG_OPERATIONS)
-    {
-        Serial.print(F("Creating SleepTimer at adress "));
-        Serial.println((int)this, DEC);
-    }
+    Serial.println(F("SleepTimer Starting..."));
 
     turn            = TURN_NEUTRAL;
     turnOnEnabled   = false;
@@ -47,26 +43,26 @@ void SleepTimer::setTime(uint16_t year, uint8_t month, uint8_t day,   uint8_t ho
     turnOffTime->tm_mday    = time->tm_mday;
     turnOffTime->tm_sec     = time->tm_sec;
 
-    //struct timeval now = { .tv_sec = mktime(time) };
-    //settimeofday(&now, NULL);
+    struct timeval now = { .tv_sec = mktime(time) };
+    settimeofday(&now, NULL);
 }
 
 void SleepTimer::printTime()
 {
     Serial.print(F("Current Time: "));
-    //Serial.println(time, "%A, %B %d %Y %H:%M:%S");
+    Serial.println(time, "%A, %B %d %Y %H:%M:%S");
 
     
     Serial.print(F("Turn On  Time: "));
-    //Serial.println(turnOnTime, "%B %d %Y %H:%M:%S");
+    Serial.println(turnOnTime, "%B %d %Y %H:%M:%S");
 
     Serial.print(F("Turn Off Time: "));
-    //Serial.println(turnOffTime, "%B %d %Y %H:%M:%S");
+    Serial.println(turnOffTime, "%B %d %Y %H:%M:%S");
 }
 
 void SleepTimer::tick()
 {
-    //getLocalTime(time);
+    getLocalTime(time);
 
     if (turnOnEnabled)
     {
