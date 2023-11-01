@@ -32,12 +32,12 @@
 
 
 /*---=== PUT YOUR SETTINGS HERE!!! ===---*/
-#define PANELSETUP_LIAM
+#define PANELSETUP_PROTO
 #define PLATFORM_ARDUINO
 #define LEDTYPE_STANDARD
 #define LINKPROGRAM_MK2
 
-#define DEBUGLEVEL DEBUG_WARNINGS
+#define DEBUGLEVEL DEBUG_OPERATIONS
 /*---=== PUT YOUR SETTINGS HERE!!! ===---*/
 
 
@@ -90,7 +90,7 @@
 /* ---=== LED Setup ===---*/
 #ifdef PANELSETUP_PROTO
     #define PANELAMOUNT     6
-    #define LEDAMOUNT       68
+    //#define LEDAMOUNT       68
     #define CANVASWIDTH     6
     #define CANVASHEIGHT    2
 #endif

@@ -4,17 +4,18 @@
 LedManager::LedManager                              (Panel **panelsArg)
 {
   if(DEBUGLEVEL >= DEBUG_OPERATIONS)
-    {
-        Serial.print(F("Creating LedManager at adress "));
-        Serial.println((int)this, DEC);
-    }
+  {
+    Serial.print(F("Creating LedManager at adress "));
+    Serial.println((int)this, DEC);
+  }
 
   panelsAmount  = PANELAMOUNT;
   brightness    = 255;
   speed         = 1;
-  enabled       = 1;
+  enabled       = true;
   panels        = panelsArg;
 
+  //Count diodes and give them to the panels (tell them where they start)
   int ledAmount = 0;
   for (uint8_t i = 0; i < PANELAMOUNT; i++)
   {
@@ -22,7 +23,24 @@ LedManager::LedManager                              (Panel **panelsArg)
     ledAmount += panels[i]->getDiodeAmount();
   }
 
+  //create static led array
+  const int dingusLedAmount = ledAmount;
+  leds = new CRGB[dingusLedAmount];
 
+  if(!leds)
+  {
+    Serial.println(F("ERROR: LedManager::LedManager() Could not create led array"));
+  }
+
+  //start FastLED
+  #ifdef PLATFORM_ESP32_FIREBEETLE2_DEBUG
+  FastLED.addLeds<NEOPIXEL, PIN_LEDS>(leds, LEDAMOUNT);
+  #endif
+  #ifndef PLATFORM_ESP32_FIREBEETLE2_DEBUG
+  FastLED.addLeds<WS2812, PIN_LEDS, LEDCOLORDER>(leds, dingusLedAmount);
+  #endif
+
+  //create custom palettes
   for (uint8_t i = 0; i < CUSTOMPALETTEAMOUNT; i++)
   {
     customPalette[i] = new struct CustomPalette;
@@ -33,15 +51,6 @@ LedManager::LedManager                              (Panel **panelsArg)
       customPalette[i]->customRGB[j].b = 0;
     }
   }
-
-  
-
-  #ifdef PLATFORM_ESP32_FIREBEETLE2_DEBUG
-  FastLED.addLeds<NEOPIXEL, PIN_LEDS>(leds, LEDAMOUNT);
-  #endif
-  #ifndef PLATFORM_ESP32_FIREBEETLE2_DEBUG
-  FastLED.addLeds<WS2812, PIN_LEDS, LEDCOLORDER>(leds, LEDAMOUNT);
-  #endif
 
   Serial.println(F("...LedManager Started"));
 }

@@ -12,7 +12,7 @@ private:
   uint8_t                                 speed;
   bool                                    enabled;
   Panel                                   **panels;
-  CRGB                                    leds[LEDAMOUNT];
+  CRGB                                    *leds;
   CustomPalette                           *customPalette[CUSTOMPALETTEAMOUNT];
   
 
