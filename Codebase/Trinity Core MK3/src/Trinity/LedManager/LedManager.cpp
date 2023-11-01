@@ -24,8 +24,15 @@ LedManager::LedManager                              (Panel **panelsArg)
   }
 
   //create static led array
-  const int dingusLedAmount = ledAmount;
-  leds = new CRGB[dingusLedAmount];
+  const int staticLedAmount = ledAmount;
+  leds = new CRGB[staticLedAmount];
+  if(DEBUGLEVEL >= DEBUG_OPERATIONS)
+  {
+    Serial.print(F("Allocated  "));
+    Serial.print(staticLedAmount);
+    Serial.print(F(" LED's at adress "));
+    Serial.println((int)leds, DEC);
+  }
 
   if(!leds)
   {
@@ -37,7 +44,7 @@ LedManager::LedManager                              (Panel **panelsArg)
   FastLED.addLeds<NEOPIXEL, PIN_LEDS>(leds, LEDAMOUNT);
   #endif
   #ifndef PLATFORM_ESP32_FIREBEETLE2_DEBUG
-  FastLED.addLeds<WS2812, PIN_LEDS, LEDCOLORDER>(leds, dingusLedAmount);
+  FastLED.addLeds<WS2812, PIN_LEDS, LEDCOLORDER>(leds, staticLedAmount);
   #endif
 
   //create custom palettes

@@ -8,10 +8,10 @@ Trinity::Trinity(uint8_t ledPin, uint8_t buttonPin, uint8_t ldrPin, uint8_t maxF
   Serial.println(F("Trinity MK3 - Ask Blommaert"));
 
   if(DEBUGLEVEL >= DEBUG_OPERATIONS)
-    {
-        Serial.print(F("Creating Trinity at adress "));
-        Serial.println((int)this, DEC);
-    }
+  {
+    Serial.print(F("Creating Trinity at adress "));
+    Serial.println((int)this, DEC);
+  }
 
   setupPanels();
   ledManager      = new LedManager(panels); //Todo: Made LedManager accept const ints
@@ -23,7 +23,9 @@ Trinity::Trinity(uint8_t ledPin, uint8_t buttonPin, uint8_t ldrPin, uint8_t maxF
   prevFrameMillis = 0;
   frameTime = 1000/maxFramerate;
 
-  Serial.print(F("...Trinity Initialised with frame time of: "));
+  Serial.print(F("...Trinity Initialised with frameRate of "));
+  Serial.print(maxFramerate);
+  Serial.print(F(" and frameTime of "));
   Serial.println(frameTime);
 
   /*
@@ -34,19 +36,6 @@ Trinity::Trinity(uint8_t ledPin, uint8_t buttonPin, uint8_t ldrPin, uint8_t maxF
   */
 
   Serial.println(F("...Trinity Started"));
-  
-  /*
-  //Basic effect
-  for (uint8_t i = 0; i < PANELAMOUNT; i++)
-  {
-    for (uint8_t j = 0; j < panels[i]->getDiodeAmount(); j++)
-    {
-      panels[i]->setDiodeVfx(j, VFXData{EFFECT_STOCK_PLANE, COLOUR_RED, 0, 1, true});
-    }
-  }
-  */
-
-  Serial.println(F("...Trinity Setup complete"));
 }
 
 //Private
