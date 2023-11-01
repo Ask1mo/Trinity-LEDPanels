@@ -189,9 +189,9 @@
             this.label12.Location = new System.Drawing.Point(8, 81);
             this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(145, 41);
+            this.label12.Size = new System.Drawing.Size(130, 51);
             this.label12.TabIndex = 72;
-            this.label12.Text = "Slowness";
+            this.label12.Text = "Speed";
             // 
             // numericUpDown_millisDelay
             // 
