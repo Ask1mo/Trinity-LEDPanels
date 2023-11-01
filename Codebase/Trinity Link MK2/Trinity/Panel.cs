@@ -24,6 +24,7 @@ namespace Trinity
 
         public Panel(byte panelNumber, byte fxOffset, byte fxSpeed, byte fxType, byte fxNumber, byte redValue, byte greenValue, byte blueValue)//Constructor
         {
+            /*
             if(panelNumber > 15) panelNumber = 15;
             if (fxOffset > 255) fxOffset = 255;
             if (fxSpeed > 31) fxSpeed = 31;
@@ -32,6 +33,7 @@ namespace Trinity
             if (redValue > 255) redValue = 255;
             if (greenValue > 255) greenValue = 255;
             if (blueValue > 255) blueValue = 255;
+            */
 
 
 
@@ -64,7 +66,7 @@ namespace Trinity
             }
             return false;
         }
-        public bool changePanel(bool customColoursChecked, byte redValue, byte greenValue, byte blueValue, byte fxBackground, int fxType, int fxColour, byte fxSpeed, byte fxOffset, SetupMap activeSetupMap, byte[,] activeMultiplierMap, bool random, bool buttonBackgroundVisible, bool typeChecked, bool colourChecked, bool speedChecked, bool offsetChecked)//Updates a panel based upon the settings in the paintbrush
+        public bool changePanel(bool customColoursChecked, byte redValue, byte greenValue, byte blueValue, int fxType, int fxColour, byte fxSpeed, byte fxOffset, SetupMap activeSetupMap, byte[,] activeMultiplierMap, bool random, bool typeChecked, bool colourChecked, bool speedChecked, bool offsetChecked)//Updates a panel based upon the settings in the paintbrush
         {
             if (customColoursChecked)
             {
@@ -79,8 +81,6 @@ namespace Trinity
             }
             else
             {
-                byte panelFxBoost = 0;
-                if (fxBackground == 1 && buttonBackgroundVisible) panelFxBoost = 6;
                 int offset = 0;
                 byte speed = (byte)fxSpeed;
 
@@ -100,7 +100,7 @@ namespace Trinity
                     speed = GetSomeRandomNumber(1, speed);
                     offset = GetSomeRandomNumber(0, offset);
                 }
-                if (typeChecked) FxType = (byte)(fxType + panelFxBoost);
+                if (typeChecked) FxType = (byte)(fxType);
                 if (colourChecked) FxNumber = (byte)fxColour;
                 if (speedChecked) FxSpeed = speed;
                 if (offsetChecked) FxOffset = (byte)offset;
@@ -133,26 +133,14 @@ namespace Trinity
         }
         public string ToCommand() //Converts a panel into a serial-transmittable command
         {
-            int charlie;
-
-            charlie = FxType;
-            charlie = charlie << 4;
-            charlie = charlie | FxNumber;
-
-
-            string panelStringToSend = "/"
+            string panelStringToSend = "Panel"
                 + (char)PanelNumber
-                + '/'
+                + (char)FxType
+                + (char)FxNumber
                 + (char)FxOffset
                 + (char)FxSpeed
-                + (char)charlie
-                + '/'
-                + (char)RedValue
-                + (char)GreenValue
-                + (char)BlueValue
-                + '/';
-
-            Console.WriteLine(charlie);
+                + "Clear";
+                
 
             return panelStringToSend;
         }

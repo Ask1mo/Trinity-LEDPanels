@@ -16,7 +16,7 @@ namespace Trinity
     {
         SerialPort serialPort = new SerialPort();
         byte[] transmissionData = new byte[maxTransmissionLength];
-        const byte maxTransmissionLength = 11;
+        const byte maxTransmissionLength = 12;
 
         byte amountOfBrokenBits = 0;
         byte brokenBitX = 0;
@@ -88,23 +88,13 @@ namespace Trinity
         }*/
         public bool messageCompleteChecker()
         {
-            Console.Write("   -BUFFER: ");
-            for (int i = 0; i < maxTransmissionLength; i++)
-            {
-                Console.Write((char)transmissionData[i]);
-            }
-            Console.WriteLine();
-
-
-
             if(
                 transmissionData[0] == '/' &&
                 transmissionData[2] == '/' &&
-                transmissionData[6] == '/' &&
-                transmissionData[10] == '/'
+                transmissionData[7] == '/' &&
+                transmissionData[11] == '/'
               )
                 {
-                Console.WriteLine("Successful match");
                 return true;
                 }
             return false;
@@ -217,24 +207,16 @@ namespace Trinity
 
         public Panel transmissionDecoder()
         {
-            Console.WriteLine("Leaf transmission complete, interpreting data");
-
-
-
             byte panelNumber = transmissionData[1];
 
             byte offset = transmissionData[3];
             byte speed = transmissionData[4];
-
             int fxType = transmissionData[5];
-            fxType = fxType >> 4;
-            fxType = fxType & 0x0F;
-            int fxNumber = transmissionData[5];
-            fxNumber = fxNumber & 0xF0;
+            int fxNumber = transmissionData[6];
 
-            byte redValue = transmissionData[7];
-            byte greenValue = transmissionData[8];
-            byte blueValue = transmissionData[9];
+            byte redValue = transmissionData[8];
+            byte greenValue = transmissionData[9];
+            byte blueValue = transmissionData[10];
 
             Panel panel = new Panel(panelNumber, offset, speed, (byte)fxType, (byte)fxNumber, redValue, greenValue, blueValue);
             return panel;

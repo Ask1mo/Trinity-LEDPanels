@@ -19,65 +19,47 @@ namespace Trinity
     public partial class Form1 : Form
     {
         static string fileDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Trinity\");
-        static string[] effectNumbers = new String[16]
+        static string[] effectNumbers = new String[24]
         {
-            " Custom",              //0
-            "   Static",            //1
-            "    Blink",            //2
-            "    Blink\n   Twice",  //3
-            "Breathing",            //4
-            "  Pause\nBreathing",   //5
-            "   Flash",             //6
-            "Heartbeat",            //7
+            "ST_Static",             //0
+            "ST_Blink",              //1
+            "ST_Plane",              //2
+            "ST_Breathing",          //3
+            "ST_PBreathing",         //4
+            "ST_Flash",              //5
+            "ST_PFlash",             //6
+            "ST_Heartbeat",          //7
+            "ST_Decode",             //8
 
-            "   Sound",             //8
-            "!Range 9",             //9
-            "Breathing",            //10
-            "  Pause\nBreathing",   //11
-            "!Range 12",            //12
-            "!Range 13",            //13
-            "!Range 14",            //14
-            "    RGB",              //15
+            "CU_Static",             //9
+            "CU_Blink",              //10
+            "CU_Plane",              //11
+            "CU_Breathing",          //12
+            "CU_PBreathing",         //13
+            "CU_Flash",              //14
+            "CU_PFlash",             //15
+            "CU_Heartbeat",          //16
+            "CU_Decode",             //17
+            "CU_Fade",               //18
+
+            "SP_Rainbow",           //19
+            "SP_Synth",             //20
+            "SP_Fire",              //21
+            "SP_Sound",             //22
+            "DEV_Unbound",          //255
         };
-        static string[,] effectColours = new String[2, 16]
+        static string[] effectColours = new String[9]
         {
-            {
-                "   White",         //0
-                "    Red",          //1
-                "  Yellow",         //2
-                "   Green",         //3
-                "   Cyan",          //4
-                "    Blue",         //5
-                "   Violet",        //6
-                "  Colour\n  Cycle",//7
-                "!Range 8",         //8
-                "!Range 9",         //9
-                "!Range 10",        //10
-                "!Range 11",        //11
-                "!Range 12",        //12
-                "!Range 13",        //13
-                "!Range 14",        //14
-                "    RGB",          //15
-            },
+                "Black",         //0
+                "Red",          //1
+                "Yellow",         //2
+                "Green",         //3
+                "Cyan",          //4
+                "Blue",         //5
+                "Violet",        //6
+                "White",//7
+                "Cycle",         //8
 
-            {
-                "Off",              //0
-                "Rainbow",          //1
-                "Synthbow",         //2
-                " Strobe",          //3
-                "   Fire",          //4
-                "  Sound",          //5
-                "Not\nBound",       //6
-                "Not\nBound",       //7
-                "!Range 8",         //8
-                "!Range 9",         //9
-                "!Range 10",        //10
-                "!Range 11",        //11
-                "!Range 12",        //12
-                "!Range 13",        //13
-                "!Range 14",        //14
-                "!Range 15\n   RGB",//15
-            }
         };
 
         Administration administration = new Administration(fileDirectory, effectNumbers, effectColours);
@@ -133,7 +115,6 @@ namespace Trinity
         public Form1()
         {
             InitializeComponent();
-            comboBox_FxBackground.SelectedIndex = 0;
             comboBox_SystemViewSelector.SelectedIndex = 0;
 
             groupBox_Setup.Location = new Point(93, 12);
@@ -237,14 +218,8 @@ namespace Trinity
 
                     if (comms.serialRead()) //Are all the bytes of the message filled with data?
                     {
-                        Console.WriteLine("Message completeChecker passed");
                         unprocessedPanelReceived = true;
-
-
                         administration.interpretPanelTransmission(comms.transmissionDecoder()); //Interpret the transmission and add it to the administration
-
-
-
                     }
                 }
                 else
@@ -310,7 +285,7 @@ namespace Trinity
                 byte brightnessBoost = 0;
                 if (numericUpDown_brightness.Value == 1) brightnessBoost++;
 
-                comms.serialWrite("Transmitting...#" + (char)(numericUpDown_brightness.Value / 2 + brightnessBoost) + '#' + (char)numericUpDown_millisDelay.Value + '#');
+                comms.serialWrite("Transmitting...LedMa" + (char)(numericUpDown_brightness.Value) + (char)numericUpDown_millisDelay.Value + "Clear");
             }
             else MessageBox.Show("Check connection", "Transmission Failure");
         }
@@ -500,8 +475,6 @@ namespace Trinity
                     }
                     if (foundPanel != null && comboBox_SystemViewSelector.SelectedIndex != 0)
                     {
-                        int effectColourArraySelector = 0;
-                        if (foundPanel.FxType == 0) effectColourArraySelector = 1;
 
                         if (upsideDown)
                         {
@@ -511,8 +484,8 @@ namespace Trinity
                                     {
                                         try
                                         {
-                                            graphics.DrawString(effectNumbers[foundPanel.FxType], this.Font, Brushes.White, v1.X - trianglesize / 3, v1.Y + trianglesize / 10 * 7);
-                                            graphics.DrawString(effectNumbers[foundPanel.FxType], this.Font, Brushes.Black, v1.X - trianglesize / 3 + 1, v1.Y + trianglesize / 10 * 7 + 1);
+                                            graphics.DrawString(foundPanel.FxType + " " + effectNumbers[foundPanel.FxType], this.Font, Brushes.White, v1.X - trianglesize / 3, v1.Y + trianglesize / 10 * 7);
+                                            graphics.DrawString(foundPanel.FxType + " " + effectNumbers[foundPanel.FxType], this.Font, Brushes.Black, v1.X - trianglesize / 3 + 1, v1.Y + trianglesize / 10 * 7 + 1);
                                         }
                                         catch (System.IndexOutOfRangeException)
                                         {
@@ -526,8 +499,8 @@ namespace Trinity
                                     {
                                         try
                                         {
-                                            graphics.DrawString(effectColours[effectColourArraySelector, foundPanel.FxNumber], this.Font, Brushes.White, v1.X - trianglesize / 3, v1.Y + trianglesize / 10 * 7);
-                                            graphics.DrawString(effectColours[effectColourArraySelector, foundPanel.FxNumber], this.Font, Brushes.Black, v1.X - trianglesize / 3 + 1, v1.Y + trianglesize / 10 * 7 + 1);
+                                            graphics.DrawString(effectColours[foundPanel.FxNumber], this.Font, Brushes.White, v1.X - trianglesize / 3, v1.Y + trianglesize / 10 * 7);
+                                            graphics.DrawString(effectColours[foundPanel.FxNumber], this.Font, Brushes.Black, v1.X - trianglesize / 3 + 1, v1.Y + trianglesize / 10 * 7 + 1);
 
                                         }
                                         catch (System.IndexOutOfRangeException)
@@ -569,8 +542,8 @@ namespace Trinity
                                     {
                                         try
                                         {
-                                            graphics.DrawString(effectNumbers[foundPanel.FxType], this.Font, Brushes.White, v1.X - trianglesize / 3, v1.Y - trianglesize);
-                                            graphics.DrawString(effectNumbers[foundPanel.FxType], this.Font, Brushes.Black, v1.X - trianglesize / 3 + 1, v1.Y - trianglesize + 1);
+                                            graphics.DrawString(foundPanel.FxType + " " + effectNumbers[foundPanel.FxType], this.Font, Brushes.White, v1.X - trianglesize / 3, v1.Y - trianglesize);
+                                            graphics.DrawString(foundPanel.FxType + " " + effectNumbers[foundPanel.FxType], this.Font, Brushes.Black, v1.X - trianglesize / 3 + 1, v1.Y - trianglesize + 1);
                                         }
                                         catch (System.IndexOutOfRangeException)
                                         {
@@ -584,8 +557,8 @@ namespace Trinity
                                     {
                                         try
                                         {
-                                            graphics.DrawString(effectColours[effectColourArraySelector, foundPanel.FxNumber], this.Font, Brushes.White, v1.X - trianglesize / 3, v1.Y - trianglesize);
-                                            graphics.DrawString(effectColours[effectColourArraySelector, foundPanel.FxNumber], this.Font, Brushes.Black, v1.X - trianglesize / 3 + 1, v1.Y - trianglesize + 1);
+                                            graphics.DrawString(effectColours[foundPanel.FxNumber], this.Font, Brushes.White, v1.X - trianglesize / 3, v1.Y - trianglesize);
+                                            graphics.DrawString(effectColours[foundPanel.FxNumber], this.Font, Brushes.Black, v1.X - trianglesize / 3 + 1, v1.Y - trianglesize + 1);
                                         }
                                         catch (System.IndexOutOfRangeException)
                                         {
@@ -643,7 +616,6 @@ namespace Trinity
 
                 button_Type.Visible = false;
                 button_Colour.Visible = false;
-                button_Background.Visible = false;
                 button_Offset.Visible = false;
                 button_Speed.Visible = false;
                 button_Multiplier.Visible = false;
@@ -658,23 +630,9 @@ namespace Trinity
 
                 button_Type.Visible = true;
                 button_Colour.Visible = true;
-                button_Background.Visible = true;
                 button_Offset.Visible = true;
                 button_Speed.Visible = true;
                 button_Multiplier.Visible = true;
-            }
-
-            if ((comboBox_FxType.SelectedIndex == 4 || comboBox_FxType.SelectedIndex == 5))
-            {
-                comboBox_FxBackground.Visible = true;
-                button_Background.Visible = true;
-            }
-            else
-            {
-                //comboBox_FxBackground.Visible = false;
-                button_Background.Visible = false;
-                backgroundChecked = false;
-                comboBox_FxBackground.SelectedIndex = 0;
             }
 
             if (typeChecked) comboBox_FxType.Visible = true;
@@ -682,9 +640,6 @@ namespace Trinity
 
             if (colourChecked) comboBox_FxColour.Visible = true;
             else comboBox_FxColour.Visible = false;
-
-            if (backgroundChecked ) comboBox_FxBackground.Visible = true;
-            else comboBox_FxBackground.Visible = false;
 
             if (offsetChecked) numericUpDown_FxOffset.Visible = true;
             else numericUpDown_FxOffset.Visible = false;
@@ -698,39 +653,7 @@ namespace Trinity
             if (zoneChecked) numericUpDown_MultiplierNumber.Visible = true;
             else numericUpDown_MultiplierNumber.Visible = false;
         }
-        private void comboBoxManager(object sender, EventArgs e) //Changes the text in the fx colour comboboxes
-        {
-            if (comboBox_FxType.SelectedIndex == 0 && button_Colour.Text != "Effect")
-            {
-                comboBox_FxColour.Text = "";
-                comboBox_FxColour.Items.Clear();
-                comboBox_FxColour.Items.Add("Off");
-                comboBox_FxColour.Items.Add("Rainbow");
-                comboBox_FxColour.Items.Add("Synthbow");
-                comboBox_FxColour.Items.Add("Strobe");
-                comboBox_FxColour.Items.Add("Fire");
-                comboBox_FxColour.Items.Add("Sound");
-                comboBox_FxColour.Items.Add("Christmas");
 
-                button_Colour.Text = "Number";
-            }
-            else if (button_Colour.Text != "Colour")
-            {
-                comboBox_FxColour.Text = "";
-                comboBox_FxColour.Items.Clear();
-                comboBox_FxColour.Items.Add("White");
-                comboBox_FxColour.Items.Add("Red");
-                comboBox_FxColour.Items.Add("Orange");
-                comboBox_FxColour.Items.Add("Green");
-                comboBox_FxColour.Items.Add("Cyan");
-                comboBox_FxColour.Items.Add("Blue");
-                comboBox_FxColour.Items.Add("Violet");
-                comboBox_FxColour.Items.Add("Colour Cycle");
-
-                button_Colour.Text = "Colour";
-            }
-            visibilityManager(sender, e);
-        }
         private void comboBox_SystemViewSelector_SelectedIndexChanged(object sender, EventArgs e) //update the panel preview panel when the combobox underneath it changes
         {
             drawSomeTrianglesV2();
@@ -743,7 +666,7 @@ namespace Trinity
         {
             foreach (Panel panel in administration.Panels)
             {
-                bool changesMadeTemp = panel.changePanel(customColoursChecked, (byte)numericUpDown_RedValue.Value, (byte)numericUpDown_GreenValue.Value, (byte)numericUpDown_BlueValue.Value, (byte)comboBox_FxBackground.SelectedIndex, comboBox_FxType.SelectedIndex, comboBox_FxColour.SelectedIndex, (byte)numericUpDown_FxSpeed.Value, (byte)numericUpDown_FxOffset.Value, activeSetupMap, activeMultiplierMap, checkbox_Randomiser.Checked, button_Background.Visible, typeChecked, colourChecked, speedChecked, offsetChecked);
+                bool changesMadeTemp = panel.changePanel(customColoursChecked, (byte)numericUpDown_RedValue.Value, (byte)numericUpDown_GreenValue.Value, (byte)numericUpDown_BlueValue.Value, comboBox_FxType.SelectedIndex, comboBox_FxColour.SelectedIndex, (byte)numericUpDown_FxSpeed.Value, (byte)numericUpDown_FxOffset.Value, activeSetupMap, activeMultiplierMap, checkbox_Randomiser.Checked, typeChecked, colourChecked, speedChecked, offsetChecked);
                 if (changesMadeTemp && !changesMade) changesMade = true;
                 if (presetLoaded && !presetChangesMade && changesMadeTemp) presetChangesMade = true;
             }
@@ -763,7 +686,7 @@ namespace Trinity
             byte panelAdress = activeSetupMap.Map[yTimes, xTimes];
             if (zoneChecked) activeMultiplierMap[yTimes, xTimes] = (byte)numericUpDown_MultiplierNumber.Value;
 
-            bool changesMadeTemp = administration.getPanel(panelAdress).changePanel(customColoursChecked, (byte)numericUpDown_RedValue.Value, (byte)numericUpDown_GreenValue.Value, (byte)numericUpDown_BlueValue.Value, (byte)comboBox_FxBackground.SelectedIndex, comboBox_FxType.SelectedIndex, comboBox_FxColour.SelectedIndex, (byte)numericUpDown_FxSpeed.Value, (byte)numericUpDown_FxOffset.Value, activeSetupMap, activeMultiplierMap, checkbox_Randomiser.Checked, button_Background.Visible, typeChecked, colourChecked, speedChecked, offsetChecked);
+            bool changesMadeTemp = administration.getPanel(panelAdress).changePanel(customColoursChecked, (byte)numericUpDown_RedValue.Value, (byte)numericUpDown_GreenValue.Value, (byte)numericUpDown_BlueValue.Value, comboBox_FxType.SelectedIndex, comboBox_FxColour.SelectedIndex, (byte)numericUpDown_FxSpeed.Value, (byte)numericUpDown_FxOffset.Value, activeSetupMap, activeMultiplierMap, checkbox_Randomiser.Checked, typeChecked, colourChecked, speedChecked, offsetChecked);
             if (changesMadeTemp && !changesMade) changesMade = true;
             if (presetLoaded && !presetChangesMade && changesMadeTemp) presetChangesMade = true;
 
@@ -781,7 +704,7 @@ namespace Trinity
                         byte panelCounterpartNumber = activeMultiplierMap[yPlaces, xPlaces];
                         if (panelCounterpartNumber == numericUpDown_MultiplierSelector.Value)
                         {
-                            bool changesMadeTemp = administration.getPanel(activeSetupMap.Map[yPlaces, xPlaces]).changePanel(customColoursChecked, (byte)numericUpDown_RedValue.Value, (byte)numericUpDown_GreenValue.Value, (byte)numericUpDown_BlueValue.Value, (byte)comboBox_FxBackground.SelectedIndex, comboBox_FxType.SelectedIndex, comboBox_FxColour.SelectedIndex, (byte)numericUpDown_FxSpeed.Value, (byte)numericUpDown_FxOffset.Value, activeSetupMap, activeMultiplierMap, checkbox_Randomiser.Checked, button_Background.Visible, typeChecked, colourChecked, speedChecked, offsetChecked);
+                            bool changesMadeTemp = administration.getPanel(activeSetupMap.Map[yPlaces, xPlaces]).changePanel(customColoursChecked, (byte)numericUpDown_RedValue.Value, (byte)numericUpDown_GreenValue.Value, (byte)numericUpDown_BlueValue.Value, comboBox_FxType.SelectedIndex, comboBox_FxColour.SelectedIndex, (byte)numericUpDown_FxSpeed.Value, (byte)numericUpDown_FxOffset.Value, activeSetupMap, activeMultiplierMap, checkbox_Randomiser.Checked, typeChecked, colourChecked, speedChecked, offsetChecked);
                             if (changesMadeTemp && !changesMade) changesMade = true;
                             if (presetLoaded && !presetChangesMade && changesMadeTemp) presetChangesMade = true;
                         }
@@ -1207,7 +1130,20 @@ namespace Trinity
             }
         }
 
-        
-
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (comms.getConnectionClearance())
+            {
+                bool allowAutoRequesting = true;
+                for (int i = 0; i<administration.Panels.Count; i++)
+                {
+                    if (administration.Panels[i].Changed)
+                    {
+                        allowAutoRequesting = false;
+                    }
+                }
+                if(allowAutoRequesting) sendRequest(sender, e);
+            }
+        }
     }
 }

@@ -6,15 +6,13 @@ Comms::Comms()
 
     readyTransmissionType = TRANSMISSION_IN_NONE;
 
-    buffer_PanelFX          = new struct Transmission_PanelFX;
-    buffer_PanelCustomRGB   = new struct Transmission_CustomRGB;
-    for (uint8_t i = 0; i < AMOUNTOFCOLOURS; i++) buffer_PanelCustomRGB->customRGB[i]= new struct ColourRGB;
-    buffer_DiodeFX          = new struct Transmission_DiodeFX;
-    buffer_DiodeCustomRGB   = new struct Transmission_CustomRGB;
-    for (uint8_t i = 0; i < AMOUNTOFCOLOURS; i++) buffer_DiodeCustomRGB->customRGB[i]= new struct ColourRGB;
-    buffer_Brightness       = 0;
-    buffer_SleepTimerData   = new struct Transmission_SleepTimerData;
-    buffer_LightSensorData  = new struct Transmission_LightSensorData;
+    buffer_LedManager       = new struct Transmission_LedManager;
+    buffer_Panel            = new struct Transmission_Panel;
+    buffer_Diode            = new struct Transmission_Diode;
+    buffer_CustomPalette    = new struct Transmission_CustomPalette;
+    for (uint8_t i = 0; i < AMOUNTOFCOLOURS; i++) buffer_CustomPalette->customRGB[i]= new struct ColourRGB;
+    buffer_SleepTimer       = new struct Transmission_SleepTimer;
+    buffer_LightSensorOffset= 0;
 
     Serial.println(F("Comms: Started"));
 }
@@ -22,86 +20,15 @@ Comms::Comms()
 //Private
 uint8_t Comms::decodeTransmissionType()
 {
-    if
-    (
-        transmissionData[0] == 'P' &&
-        transmissionData[1] == 'a' &&
-        transmissionData[2] == 'n' &&
-        transmissionData[3] == 'F' &&
-        transmissionData[4] == 'x'
-    ) return TRANSMISSION_IN_PANELFX;
-
-    if
-    (
-        transmissionData[0] == 'P' &&
-        transmissionData[1] == 'a' &&
-        transmissionData[2] == 'n' &&
-        transmissionData[3] == 'C' &&
-        transmissionData[4] == 'u'
-    ) return TRANSMISSION_IN_PANELCUSTOM;
-
-    if
-    (
-        transmissionData[0] == 'D' &&
-        transmissionData[1] == 'i' &&
-        transmissionData[2] == 'o' &&
-        transmissionData[3] == 'F' &&
-        transmissionData[4] == 'x'
-    ) return TRANSMISSION_IN_DIODEFX;
-
-    if
-    (
-        transmissionData[0] == 'D' &&
-        transmissionData[1] == 'i' &&
-        transmissionData[2] == 'o' &&
-        transmissionData[3] == 'C' &&
-        transmissionData[4] == 'u'
-    ) return TRANSMISSION_IN_DIODECUSTOM;
-
-    if
-    (
-        transmissionData[0] == 'B' &&
-        transmissionData[1] == 'r' &&
-        transmissionData[2] == 'i' &&
-        transmissionData[3] == 'g' &&
-        transmissionData[4] == 'h'
-    ) return TRANSMISSION_IN_BRIGHTNESS;
-
-    if
-    (
-        transmissionData[0] == 'S' &&
-        transmissionData[1] == 'l' &&
-        transmissionData[2] == 'e' &&
-        transmissionData[3] == 'e' &&
-        transmissionData[4] == 'p'
-    ) return TRANSMISSION_IN_SLEEPTIMER;
-
-    if
-    (
-        transmissionData[0] == 'L' &&
-        transmissionData[1] == 'i' &&
-        transmissionData[2] == 'g' &&
-        transmissionData[3] == 'h' &&
-        transmissionData[4] == 't'
-    ) return TRANSMISSION_IN_LIGHTSENSOR;
-
-    if
-    (
-        transmissionData[0] == 'R' &&
-        transmissionData[1] == 'e' &&
-        transmissionData[2] == 'q' &&
-        transmissionData[3] == 'u' &&
-        transmissionData[4] == 'e'
-    ) return TRANSMISSION_IN_REQUEST;
-
-    if
-    (
-        transmissionData[0] == 'I' &&
-        transmissionData[1] == 'd' &&
-        transmissionData[2] == 'e' &&
-        transmissionData[3] == 'n' &&
-        transmissionData[4] == 't'
-    ) return TRANSMISSION_IN_IDENT;
+    if(!memcmp(transmissionData, "Reque", 5)) return TRANSMISSION_IN_REQUEST;
+    if(!memcmp(transmissionData, "Ident", 5)) return TRANSMISSION_IN_IDENT;
+    if(!memcmp(transmissionData, "LedMa", 5)) return TRANSMISSION_IN_LEDMANAGER;
+    if(!memcmp(transmissionData, "Panel", 5)) return TRANSMISSION_IN_PANEL;
+    if(!memcmp(transmissionData, "Diode", 5)) return TRANSMISSION_IN_DIODE;
+    if(!memcmp(transmissionData, "Custo", 5)) return TRANSMISSION_IN_CUSTOMPALETTES;
+    if(!memcmp(transmissionData, "Sleep", 5)) return TRANSMISSION_IN_SLEEPTIMER;
+    if(!memcmp(transmissionData, "Light", 5)) return TRANSMISSION_IN_LIGHTSENSOR;
+    
 
     return TRANSMISSION_IN_NONE;
 }
@@ -118,15 +45,7 @@ bool    Comms::doTransmissionEndCheck()
     }
     
     //printBuffer();
-    
-    if
-    (
-        transmissionData[0] == 'C' &&
-        transmissionData[1] == 'l' &&
-        transmissionData[2] == 'e' &&
-        transmissionData[3] == 'a' &&
-        transmissionData[4] == 'r'
-    ) return true;
+    if(!memcmp(transmissionData, "Clear", 5)) return true;
 
     return false;
 }
@@ -157,91 +76,59 @@ void                            Comms::tick()
 
         switch (receivedTransmissionType)
         {
-            case TRANSMISSION_IN_PANELFX:
+            case TRANSMISSION_IN_LEDMANAGER:
             {
-                buffer_PanelFX->vfxData.effect      = waitAndRead();
-                buffer_PanelFX->vfxData.colour      = waitAndRead();
-                buffer_PanelFX->vfxData.offset      = waitAndRead();
-                buffer_PanelFX->vfxData.speed       = waitAndRead();
-                buffer_PanelFX->vfxData.repeat      = true;
+                buffer_LedManager->brightness        = waitAndRead();
+                buffer_LedManager->speed            = waitAndRead();
+            }
+            break;
+            case TRANSMISSION_IN_PANEL:
+            {
+                buffer_Panel->panelNumber         = waitAndRead();
+                buffer_Panel->vfxData.effect      = waitAndRead();
+                buffer_Panel->vfxData.colour      = waitAndRead();
+                buffer_Panel->vfxData.offset      = waitAndRead();
+                buffer_Panel->vfxData.speed       = waitAndRead();
+                buffer_Panel->vfxData.repeat      = true;
                 Serial.println("DD");
             }
             break;
-            case TRANSMISSION_IN_PANELCUSTOM:
+            
+            case TRANSMISSION_IN_DIODE:
             {
-                buffer_PanelCustomRGB->customRGBAmount = waitAndRead();
-
-                for (uint8_t i = 0; i < AMOUNTOFCOLOURS; i++)
-                {
-                    if (i < buffer_PanelCustomRGB->customRGBAmount)
-                    {
-
-                        buffer_PanelCustomRGB->customRGB[i]->r = waitAndRead();
-                        buffer_PanelCustomRGB->customRGB[i]->g = waitAndRead();
-                        buffer_PanelCustomRGB->customRGB[i]->b = waitAndRead();
-                    }
-                    else
-                    {
-                        buffer_PanelCustomRGB->customRGB[i]->r = 0;
-                        buffer_PanelCustomRGB->customRGB[i]->g = 0;
-                        buffer_PanelCustomRGB->customRGB[i]->b = 0;
-                    }
-                }
-            }
-            break;
-            case TRANSMISSION_IN_DIODEFX:
-            {
-                buffer_DiodeFX->panelNumber   = waitAndRead();
-                buffer_DiodeFX->diodeNumber   = waitAndRead();
-                buffer_DiodeFX->vfxData.effect        = waitAndRead();
-                buffer_DiodeFX->vfxData.colour        = waitAndRead();
-                buffer_DiodeFX->vfxData.offset        = waitAndRead();
-                buffer_DiodeFX->vfxData.speed         = waitAndRead();
-                buffer_DiodeFX->vfxData.repeat        = true;
+                buffer_Diode->panelNumber         = waitAndRead();
+                buffer_Diode->diodeNumber         = waitAndRead();
+                buffer_Diode->vfxData.effect      = waitAndRead();
+                buffer_Diode->vfxData.colour      = waitAndRead();
+                buffer_Diode->vfxData.offset      = waitAndRead();
+                buffer_Diode->vfxData.speed       = waitAndRead();
+                buffer_Diode->vfxData.repeat      = true;
                 Serial.println("DD");
             }
             break;
-            case TRANSMISSION_IN_DIODECUSTOM:
+            case TRANSMISSION_IN_CUSTOMPALETTES:
             {
-                buffer_DiodeCustomRGB->customRGBAmount = waitAndRead();
+                buffer_CustomPalette->slot = waitAndRead();
 
                 for (uint8_t i = 0; i < AMOUNTOFCOLOURS; i++)
                 {
-                    if (i < buffer_DiodeCustomRGB->customRGBAmount)
-                    {
-
-                        buffer_DiodeCustomRGB->customRGB[i]->r = waitAndRead();
-                        buffer_DiodeCustomRGB->customRGB[i]->g = waitAndRead();
-                        buffer_DiodeCustomRGB->customRGB[i]->b = waitAndRead();
-                    }
-                    else
-                    {
-                        buffer_DiodeCustomRGB->customRGB[i]->r = 0;
-                        buffer_DiodeCustomRGB->customRGB[i]->g = 0;
-                        buffer_DiodeCustomRGB->customRGB[i]->b = 0;
-                    }
+                    buffer_CustomPalette->customRGB[i]->r = waitAndRead();
+                    buffer_CustomPalette->customRGB[i]->g = waitAndRead();
+                    buffer_CustomPalette->customRGB[i]->b = waitAndRead();
                 }
-            }
-            break;
-            case TRANSMISSION_IN_BRIGHTNESS:
-            {
-                buffer_Brightness = waitAndRead();
             }
             break;
             case TRANSMISSION_IN_SLEEPTIMER:
             {
-                buffer_SleepTimerData->timerID   = waitAndRead();
-                buffer_SleepTimerData->hour      = waitAndRead();
-                buffer_SleepTimerData->minute    = waitAndRead();
-                buffer_SleepTimerData->enabled   = waitAndRead();
+                buffer_SleepTimer->timerID   = waitAndRead();
+                buffer_SleepTimer->hour      = waitAndRead();
+                buffer_SleepTimer->minute    = waitAndRead();
+                buffer_SleepTimer->enabled   = waitAndRead();
             }
             break;
             case TRANSMISSION_IN_LIGHTSENSOR:
             {
-                buffer_LightSensorData->offset = waitAndRead();
-                buffer_LightSensorData->offset = buffer_LightSensorData->offset << 8;
-                buffer_LightSensorData->offset = buffer_LightSensorData->offset | waitAndRead();
-                buffer_LightSensorData->enabled = waitAndRead();
+                buffer_LightSensorOffset = waitAndRead();
             }
             break;
         }
@@ -314,38 +201,33 @@ uint8_t                         Comms::getReadyTransmissionType()
     }
     return readyTransmissionType;
 }
-Transmission_PanelFX            Comms::getTransmission_PanelFX()
+Transmission_LedManager         Comms::getTransmission_LedManager()
 {
     readyTransmissionType = TRANSMISSION_IN_NONE;
-    return *buffer_PanelFX;
+    return *buffer_LedManager;
 }
-Transmission_CustomRGB          Comms::getTransmission_PanelCustomRGB()
+Transmission_Panel              Comms::getTransmission_Panel()
 {
     readyTransmissionType = TRANSMISSION_IN_NONE;
-    return *buffer_PanelCustomRGB;
+    return *buffer_Panel;
 }
-Transmission_DiodeFX            Comms::getTransmission_DiodeFX()
+Transmission_Diode              Comms::getTransmission_Diode()
 {
     readyTransmissionType = TRANSMISSION_IN_NONE;
-    return *buffer_DiodeFX;
+    return *buffer_Diode;
 }
-Transmission_CustomRGB          Comms::getTransmission_DiodeCustomRGB()
+Transmission_CustomPalette      Comms::getTransmission_CustomPalette()
 {
     readyTransmissionType = TRANSMISSION_IN_NONE;
-    return *buffer_DiodeCustomRGB;
+    return *buffer_CustomPalette;
 }
-uint8_t                         Comms::getTransmission_Brightness()
+Transmission_SleepTimer         Comms::getTransmission_SleepTimer()
 {
     readyTransmissionType = TRANSMISSION_IN_NONE;
-    return buffer_Brightness;
+    return *buffer_SleepTimer;
 }
-Transmission_SleepTimerData     Comms::getTransmission_SleepTimerData()
+int8_t                          Comms::getTransmission_LightSensorOffset()
 {
     readyTransmissionType = TRANSMISSION_IN_NONE;
-    return *buffer_SleepTimerData;
-}
-Transmission_LightSensorData    Comms::getTransmission_LightSensorData()
-{
-    readyTransmissionType = TRANSMISSION_IN_NONE;
-    return *buffer_LightSensorData;
+    return buffer_LightSensorOffset;
 }

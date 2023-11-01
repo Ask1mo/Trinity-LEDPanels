@@ -275,42 +275,38 @@ void Trinity::tick()
   comms->tick();
   switch (comms->getReadyTransmissionType())
   {
-    case TRANSMISSION_IN_PANELFX:
+    case TRANSMISSION_IN_LEDMANAGER:
     {
-      //Serial.println("Panel transmission retrieved from comms");
-      Transmission_PanelFX data = comms->getTransmission_PanelFX();
-      //Serial.println("Yom");
+      Transmission_LedManager data = comms->getTransmission_LedManager();
+      ledManager->setBrightness(data.brightness); 
+      ledManager->setSpeed(data.speed); 
+    }
+    break;
+    case TRANSMISSION_IN_PANEL:
+    {
+      Transmission_Panel data = comms->getTransmission_Panel();
       ledManager->setPanelVfx(data.panelNumber, data.vfxData);
-      //Serial.println("Done");
     }
     break;
-    case TRANSMISSION_IN_PANELCUSTOM:
+    case TRANSMISSION_IN_DIODE:
     {
-
-    }
-    break;
-    case TRANSMISSION_IN_DIODEFX:
-    {
-      //Serial.println("Panel transmission retrieved from comms");
-      Transmission_DiodeFX data = comms->getTransmission_DiodeFX();
-      //Serial.println("Yom");
+      Transmission_Diode data = comms->getTransmission_Diode();
       ledManager->setPanelDiodeVfx(data.panelNumber, data.diodeNumber, data.vfxData);
-      //Serial.println("Done");
     }
     break;
-    case TRANSMISSION_IN_DIODECUSTOM:
+    case TRANSMISSION_IN_CUSTOMPALETTES:
     {
-
+      Transmission_CustomPalette data = comms->getTransmission_CustomPalette();
+      for (uint8_t i = 0; i < AMOUNTOFCOLOURS; i++)
+      {
+        ledManager->setCustomPaletteColours(data.slot, i, *data.customRGB[i]);
+      }
     }
     break;
-    case TRANSMISSION_IN_BRIGHTNESS:
-    {
-      ledManager->setBrightness(comms->getTransmission_Brightness());
-    }
-    break;
+    
     case TRANSMISSION_IN_SLEEPTIMER:
     {
-      Transmission_SleepTimerData data = comms->getTransmission_SleepTimerData();
+      Transmission_SleepTimer data = comms->getTransmission_SleepTimer();
       switch (data.timerID)
       {
         case TIMERID_OFFTIMER:
@@ -330,9 +326,7 @@ void Trinity::tick()
     break;
     case TRANSMISSION_IN_LIGHTSENSOR:
     {
-      Transmission_LightSensorData data = comms->getTransmission_LightSensorData();
-      lightSensor->setBrightnessOffset(data.offset);
-      lightSensor->setEnabled(data.enabled);
+      lightSensor->setBrightnessOffset(comms->getTransmission_LightSensorOffset());
     }
     break;
     case TRANSMISSION_IN_REQUEST:

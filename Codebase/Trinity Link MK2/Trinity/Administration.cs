@@ -13,7 +13,7 @@ namespace Trinity
     public class Administration
     {
         string[] EffectNumbers { get; set; }
-        string[,] EffectColours { get; set; }
+        string[] EffectColours { get; set; }
         string FileDirectory { get; set; }
 
         private const byte XPOSITIONS = 7;
@@ -26,7 +26,7 @@ namespace Trinity
 
 
 
-        public Administration(string directory, string[] effectNumbers, string[,] effectColours)//Constructor
+        public Administration(string directory, string[] effectNumbers, string[] effectColours)//Constructor
         {
             FileDirectory = directory;
             EffectNumbers = effectNumbers;
@@ -53,11 +53,8 @@ namespace Trinity
             {
                 try
                 {
-                    byte effectColourArraySelector = 0;
-                    if (panel.FxType == 0) effectColourArraySelector = 1;
-
                     invisiString = EffectNumbers[panel.FxType];
-                    invisiString = EffectColours[effectColourArraySelector, panel.FxNumber];
+                    invisiString = EffectColours[panel.FxNumber];
                 }
                 catch (System.IndexOutOfRangeException)
                 {
@@ -73,7 +70,35 @@ namespace Trinity
             Directory.CreateDirectory(FileDirectory + @"Multiplier Maps\");
 
 
-            AddSetupMap(new SetupMap("Hex", "Ask Blommaert", 6, new byte[YPOSITIONS, XPOSITIONS]
+            AddSetupMap(new SetupMap("Proto", "Ask", 16, new byte[YPOSITIONS, XPOSITIONS]
+            {
+                {255, 255, 255, 255, 255, 255, 255},
+                {255, 255, 255, 255, 255, 255, 255},
+                {000, 001, 002, 003, 004, 005, 255},
+                {255, 255, 255, 255, 255, 255, 255}
+            }));
+            AddSetupMap(new SetupMap("Bill", "Eva", 4, new byte[YPOSITIONS, XPOSITIONS]
+            {
+                {255, 255, 255, 255, 255, 255, 255},
+                {255, 255, 255, 255, 255, 255, 255},
+                {255, 255, 255, 003, 255, 255, 255},
+                {255, 255, 000, 001, 002, 255, 255}
+            }));
+            AddSetupMap(new SetupMap("DualHex", "Liam", 10, new byte[YPOSITIONS, XPOSITIONS]
+            {
+                {255, 255, 255, 255, 255, 255, 255},
+                {255, 255, 255, 255, 255, 255, 255},
+                {255, 009, 008, 007, 006, 005, 255},
+                {255, 000, 001, 002, 003, 004, 255}
+            }));
+            AddSetupMap(new SetupMap("Trinity Prime", "Ask", 16, new byte[YPOSITIONS, XPOSITIONS]
+            {
+                {255, 255, 255, 011, 255, 255, 255},
+                {255, 255, 012, 010, 009, 255, 255},
+                {255, 014, 013, 015, 008, 007, 255},
+                {000, 001, 002, 003, 004, 005, 006}
+            }));
+            AddSetupMap(new SetupMap("Hex", "Ask", 6, new byte[YPOSITIONS, XPOSITIONS]
             {
                 {255, 255, 255, 255, 255, 255, 255},
                 {255, 255, 002, 003, 004, 255, 255},
@@ -81,29 +106,11 @@ namespace Trinity
                 {255, 255, 255, 255, 255, 255, 255}
             }));
 
-            AddSetupMap(new SetupMap("Trinity Prime", "Ask Blommaert", 16, new byte[YPOSITIONS, XPOSITIONS]
-            {
-                {255, 255, 255, 011, 255, 255, 255},
-                {255, 255, 012, 010, 009, 255, 255},
-                {255, 014, 013, 015, 008, 007, 255},
-                {000, 001, 002, 003, 004, 005, 006}
-            }));
+            
 
-            AddSetupMap(new SetupMap("Bill", "Eva van der Made", 4, new byte[YPOSITIONS, XPOSITIONS]
-            {
-                {255, 255, 255, 255, 255, 255, 255},
-                {255, 255, 255, 255, 255, 255, 255},
-                {255, 255, 255, 003, 255, 255, 255},
-                {255, 255, 000, 001, 002, 255, 255}
-            }));
+            
 
-            AddSetupMap(new SetupMap("DualHex", "Liam van Leusden", 10, new byte[YPOSITIONS, XPOSITIONS]
-            {
-                {255, 255, 255, 255, 255, 255, 255},
-                {255, 255, 255, 255, 255, 255, 255},
-                {255, 009, 008, 007, 006, 005, 255},
-                {255, 000, 001, 002, 003, 004, 255}  
-            }));
+            
 
 
 

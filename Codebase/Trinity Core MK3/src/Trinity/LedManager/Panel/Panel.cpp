@@ -265,21 +265,14 @@ String    Panel::convertToTransmission      ()
 {
   #ifdef LINKPROGRAM_MK2
   
-  byte alpha = effect;
-  byte beta = colour;
-  byte charlie = 0;
-
-  charlie = alpha;
-  charlie = charlie << 4;
-  charlie = charlie | beta;
-
   String data = "";
   data += "/";
   data += (char)number;
   data += "/";
   data += (char)offset;
   data += (char)speed;
-  data += (char)charlie;
+  data += (char)effect;
+  data += (char)colour;
   data += "/";
   data += (char)effectVariables.r;
   data += (char)effectVariables.g;
