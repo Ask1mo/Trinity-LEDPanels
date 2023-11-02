@@ -32,12 +32,12 @@
 
 
 /*---=== PUT YOUR SETTINGS HERE!!! ===---*/
-#define PANELSETUP_LIAM
-#define PLATFORM_ARDUINO
-#define LEDTYPE_STANDARD
+#define PANELSETUP_CHRISTMAS
+#define PLATFORM_ESP32_FIREBEETLE2
+#define LEDTYPE_CHRISTMASSTRING
 #define LINKPROGRAM_MK2
 
-#define DEBUGLEVEL DEBUG_WARNINGS
+#define DEBUGLEVEL DEBUG_OPERATIONS
 /*---=== PUT YOUR SETTINGS HERE!!! ===---*/
 
 
@@ -80,8 +80,8 @@
     #define PIN_LEDS        5           //On boadr LED
     #define PIN_LIGHTSENSOR 15          //D?
     #define PIN_ERRORLED    2           //NOT BOUND YET
-    #define ENABLE_DIODECONTROL true    //Individual Diode Fx enabled
-    #define ENABLE_WEBCONTROL true      //Controls via website enabled
+    #define ENABLE_DIODECONTROL false    //Individual Diode Fx enabled
+    #define ENABLE_WEBCONTROL false      //Controls via website enabled
     #define BAUDRATE 115200
     #define CUSTOMPALETTEAMOUNT 5
 #endif
@@ -89,56 +89,38 @@
 
 /* ---=== LED Setup ===---*/
 #ifdef PANELSETUP_PROTO
-    #define PANELAMOUNT     6
-    #define LEDAMOUNT       68
     #define CANVASWIDTH     6
     #define CANVASHEIGHT    2
 #endif
 #ifdef PANELSETUP_ATOS
-    #define PANELAMOUNT     1
-    #define LEDAMOUNT       38
     #define CANVASWIDTH     0
     #define CANVASHEIGHT    0
 #endif
 #ifdef PANELSETUP_EVA
-    #define PANELAMOUNT     4
-    #define LEDAMOUNT       68
     #define CANVASWIDTH     3
     #define CANVASHEIGHT    3
 #endif
 #ifdef PANELSETUP_LIAM
-    #define PANELAMOUNT     10
-    #define LEDAMOUNT       170
     #define CANVASWIDTH     5
     #define CANVASHEIGHT    4
 #endif
 #ifdef PANELSETUP_PRIME
-    #define PANELAMOUNT     16
-    #define LEDAMOUNT       272
     #define CANVASWIDTH     7
     #define CANVASHEIGHT    7
 #endif
 #ifdef PANELSETUP_CHRISTMAS
-    #define PANELAMOUNT     10
-    #define LEDAMOUNT       50
     #define CANVASWIDTH     0
     #define CANVASHEIGHT    0
 #endif
 #ifdef PANELSETUP_WESTPOINT
-    #define PANELAMOUNT     33
-    #define LEDAMOUNT       450
     #define CANVASWIDTH     4
     #define CANVASHEIGHT    0
 #endif
 #ifdef PANELSETUP_MINITOWER
-    #define PANELAMOUNT     5
-    #define LEDAMOUNT       46
     #define CANVASWIDTH     0
     #define CANVASHEIGHT    0
 #endif
 #ifdef PANELSETUP_TEST
-    #define PANELAMOUNT     6
-    #define LEDAMOUNT       18
     #define CANVASWIDTH     3
     #define CANVASHEIGHT    2
 #endif

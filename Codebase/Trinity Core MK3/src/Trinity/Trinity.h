@@ -11,7 +11,6 @@
 class Trinity
 {
 private:
-    Panel           **panels;
     LedManager      *ledManager;
     AskButton       *button;
     LightSensor     *lightSensor;
@@ -20,10 +19,11 @@ private:
 
     uint64_t        prevFrameMillis;
     uint16_t        frameTime;
-    void setupPanels();
 
 public:
     Trinity(uint8_t ledPin, uint8_t buttonPin, uint8_t ldrPin, uint8_t maxFramerate);
+    void addPanel(Panel *panel);
+    void finaliseSetup();
     void tick();
     void forceTick(uint16_t ticks, bool keepPrinting, uint16_t delayTime);  //Manually force the ledmanager to tick without running any other Trinity code.
     void setSpeed(uint8_t speed);
@@ -35,5 +35,6 @@ public:
 
     void setCustomPaletteColours(uint8_t slot, uint8_t colourRGBNumber, ColourRGB colourRGB);
     void setCustomPaletteAvailableColours(uint8_t slot, uint8_t avalaibleColours);
+    uint8_t getPanelAmount();
 };
 #endif

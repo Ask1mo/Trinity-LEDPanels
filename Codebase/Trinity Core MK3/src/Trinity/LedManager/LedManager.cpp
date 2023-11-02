@@ -1,28 +1,24 @@
 #include "ledManager.h"
 
 //Constructor
-LedManager::LedManager                              (Panel **panelsArg)
+LedManager::LedManager                              ()
 {
   if(DEBUGLEVEL >= DEBUG_OPERATIONS)
-    {
-        Serial.print(F("Creating LedManager at adress "));
-        Serial.println((int)this, DEC);
-    }
-
-  panelsAmount  = PANELAMOUNT;
-  brightness    = 255;
-  speed         = 1;
-  enabled       = 1;
-  panels        = panelsArg;
-
-  int ledAmount = 0;
-  for (uint8_t i = 0; i < PANELAMOUNT; i++)
   {
-    panels[i]->setDiodeStart(ledAmount);
-    ledAmount += panels[i]->getDiodeAmount();
+    Serial.print(F("Creating LedManager at adress "));
+    Serial.println((int)this, DEC);
   }
 
+  
+  brightness    = 255;
+  speed         = 1;
+  enabled       = true;
+  panels        = NULL;
+  panelAmount   = 0;
 
+  
+
+  //create custom palettes
   for (uint8_t i = 0; i < CUSTOMPALETTEAMOUNT; i++)
   {
     customPalette[i] = new struct CustomPalette;
@@ -34,18 +30,55 @@ LedManager::LedManager                              (Panel **panelsArg)
     }
   }
 
-  
+  Serial.println(F("...LedManager Started (NOT READY YET, DONT FORGET TO USE finaliseSetup() after adding your panels!!!)"));
+}
+void    LedManager::addPanel                                    (Panel *panel)
+{
+  panels = (Panel**)realloc(panels, sizeof(Panel*) * (panelAmount + 1));
+  if (panels == NULL)
+  {
+    Serial.println(F("ERROR: Could not allocate memory for new panel"));
+    return;
+  }
+  panels[panelAmount] = panel;
+  panelAmount++;
+  Serial.print(F("New panel added, Amount is now: "));
+  Serial.println(panelAmount);
+}
+void LedManager::finaliseSetup()
+{
+  //Count diodes and give them to the panels (tell them where they start)
+  int ledAmount = 0;
+  for (uint8_t i = 0; i < panelAmount; i++)
+  {
+    panels[i]->setDiodeStart(ledAmount);
+    ledAmount += panels[i]->getDiodeAmount();
+  }
 
+  //create static led array
+  const int staticLedAmount = ledAmount;
+  leds = new CRGB[staticLedAmount];
+  if(DEBUGLEVEL >= DEBUG_OPERATIONS)
+  {
+    Serial.print(F("Allocated  "));
+    Serial.print(staticLedAmount);
+    Serial.print(F(" LED's at adress "));
+    Serial.println((int)leds, DEC);
+  }
+
+  if(!leds)
+  {
+    Serial.println(F("ERROR: LedManager::LedManager() Could not create led array"));
+  }
+
+  //start FastLED
   #ifdef PLATFORM_ESP32_FIREBEETLE2_DEBUG
   FastLED.addLeds<NEOPIXEL, PIN_LEDS>(leds, LEDAMOUNT);
   #endif
   #ifndef PLATFORM_ESP32_FIREBEETLE2_DEBUG
-  FastLED.addLeds<WS2812, PIN_LEDS, LEDCOLORDER>(leds, LEDAMOUNT);
+  FastLED.addLeds<WS2812, PIN_LEDS, LEDCOLORDER>(leds, staticLedAmount);
   #endif
-
-  Serial.println(F("...LedManager Started"));
 }
-
 //Public
 //Standard
 void    LedManager::tick                            () 
@@ -54,7 +87,7 @@ void    LedManager::tick                            ()
   {
     if(DEBUGLEVEL >=DEBUG_OPERATIONS) Serial.print(F("t"));
 
-    for (uint8_t i = 0; i < panelsAmount; i++)
+    for (uint8_t i = 0; i < panelAmount; i++)
     {
       panels[i]->tick();
 
@@ -116,7 +149,7 @@ void    LedManager::setEnabled                      (bool enabled)
 }
 uint8_t LedManager::getPanelAmount                  ()
 {
-  return panelsAmount;
+  return panelAmount;
 }
 uint16_t LedManager::getPanelDiodeAmount            (uint8_t panelNumber)
 {

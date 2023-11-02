@@ -7,17 +7,19 @@
 class LedManager
 {
 private:
-  uint8_t                                 panelsAmount;
+  uint8_t                                 panelAmount;
   uint8_t                                 brightness;
   uint8_t                                 speed;
   bool                                    enabled;
   Panel                                   **panels;
-  CRGB                                    leds[LEDAMOUNT];
+  CRGB                                    *leds;
   CustomPalette                           *customPalette[CUSTOMPALETTEAMOUNT];
   
 
 public:
-  LedManager                              (Panel **panelsArg);
+  LedManager                              ();
+  void    addPanel                        (Panel *panel);
+  void    finaliseSetup                   ();
   //Standard
   void    tick                            ();
   void    print                           ();
