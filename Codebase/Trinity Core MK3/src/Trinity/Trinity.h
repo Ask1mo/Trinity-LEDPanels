@@ -19,7 +19,6 @@ private:
 
     uint64_t        prevFrameMillis;
     uint16_t        frameTime;
-    void setupPanels();
 
 public:
     Trinity(uint8_t ledPin, uint8_t buttonPin, uint8_t ldrPin, uint8_t maxFramerate);

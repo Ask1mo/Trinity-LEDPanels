@@ -46,7 +46,7 @@ void setAnimation_Westpoint_Default()
   uint16_t offset = 0;
   for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
   {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, (uint16_t)random(0, 10)*15, 1, true});
+    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, (uint16_t)(random(0, 10)*15), 1, true});
     for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
     {
       trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_SPECIAL_RAINBOW, COLOUR_RED, 0, 5, true});
@@ -61,7 +61,7 @@ void setAnimation_Westpoint_BreathingLines()
 
   for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
   {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, (uint16_t)random(0, 10)*15, 1, true});
+    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, (uint16_t)(random(0, 10)*15), 1, true});
     for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
     {
       trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_PAUSEDBREATHING, COLOUR_CYCLE, j, 20, true});
@@ -75,7 +75,7 @@ void setAnimation_Westpoint_FlashingLines()
 
   for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
   {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, (uint16_t)random(0, 10)*15, 1, true});
+    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, (uint16_t)(random(0, 10)*15), 1, true});
     for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
     {
       trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_PAUSEDFLASH, COLOUR_WHITE, j, 10, true});
@@ -89,7 +89,7 @@ void setAnimation_Westpoint_Rain()
 
   for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
   {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, (uint16_t)random(0, 10)*15, 1, true});
+    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, (uint16_t)(random(0, 10)*15), 1, true});
     for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
     {
       trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_PAUSEDFLASH, COLOUR_BLUE, j, (uint8_t)random(0, 10), true});
@@ -103,7 +103,7 @@ void setAnimation_Westpoint_Matrix()
 
   for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
   {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, (uint16_t)random(0, 10)*15, 1, true});
+    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, (uint16_t)(random(0, 10)*15), 1, true});
     for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
     {
       trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_DECODE, COLOUR_GREEN, j, 10, true});
@@ -150,10 +150,10 @@ void setAnimation_Westpoint_BurningRainbow()
   uint16_t offset = 0;
     for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
     {
-      trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, i*5, 10, true});
+      trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, (uint16_t)(i*5), 10, true});
       for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
       {
-        trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_SPECIAL_RAINBOW, COLOUR_RED, j*5, 10, true});
+        trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_SPECIAL_RAINBOW, COLOUR_RED, (uint16_t)(j*5), 10, true});
         offset++;
       }
   
@@ -169,7 +169,7 @@ void setAnimation_Westpoint_HeartbeatTower()
   uint16_t offset = 0;
     for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
     {
-      trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, i*4, 1, true});
+      trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, (uint16_t)(i*4), 1, true});
       for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
       {
         trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_HEARTBEAT, COLOUR_RED, 0, 1, true});
@@ -457,7 +457,7 @@ void setup()
 
   for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
   {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_RED, (uint16_t)random(0, 10)*15, 1, true});
+    trinity->setPanelVfx(i, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_RED, (uint16_t)(random(0, 10)*15), 1, true});
     for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
     {
       //trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_RED, 0, 5, true});

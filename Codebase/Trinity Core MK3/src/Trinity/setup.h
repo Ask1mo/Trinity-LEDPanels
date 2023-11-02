@@ -33,7 +33,7 @@
 
 /*---=== PUT YOUR SETTINGS HERE!!! ===---*/
 #define PANELSETUP_LIAM
-#define PLATFORM_ARDUINO
+#define PLATFORM_ESP32_WROOMDEVKIT
 #define LEDTYPE_STANDARD
 #define LINKPROGRAM_MK2
 
@@ -80,8 +80,8 @@
     #define PIN_LEDS        5           //On boadr LED
     #define PIN_LIGHTSENSOR 15          //D?
     #define PIN_ERRORLED    2           //NOT BOUND YET
-    #define ENABLE_DIODECONTROL true    //Individual Diode Fx enabled
-    #define ENABLE_WEBCONTROL true      //Controls via website enabled
+    #define ENABLE_DIODECONTROL false    //Individual Diode Fx enabled
+    #define ENABLE_WEBCONTROL false      //Controls via website enabled
     #define BAUDRATE 115200
     #define CUSTOMPALETTEAMOUNT 5
 #endif
