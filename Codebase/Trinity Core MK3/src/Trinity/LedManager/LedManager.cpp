@@ -16,6 +16,37 @@ LedManager::LedManager                              ()
   panels        = NULL;
   panelAmount   = 0;
 
+  
+
+  //create custom palettes
+  for (uint8_t i = 0; i < CUSTOMPALETTEAMOUNT; i++)
+  {
+    customPalette[i] = new struct CustomPalette;
+    for (uint8_t j = 0; j < AMOUNTOFCOLOURS; j++)
+    {
+      customPalette[i]->customRGB[j].r = 0;
+      customPalette[i]->customRGB[j].g = 0;
+      customPalette[i]->customRGB[j].b = 0;
+    }
+  }
+
+  Serial.println(F("...LedManager Started (NOT READY YET, DONT FORGET TO USE finaliseSetup() after adding your panels!!!)"));
+}
+void    LedManager::addPanel                                    (Panel *panel)
+{
+  panels = (Panel**)realloc(panels, sizeof(Panel*) * (panelAmount + 1));
+  if (panels == NULL)
+  {
+    Serial.println(F("ERROR: Could not allocate memory for new panel"));
+    return;
+  }
+  panels[panelAmount] = panel;
+  panelAmount++;
+  Serial.print(F("New panel added, Amount is now: "));
+  Serial.println(panelAmount);
+}
+void LedManager::finaliseSetup()
+{
   //Count diodes and give them to the panels (tell them where they start)
   int ledAmount = 0;
   for (uint8_t i = 0; i < panelAmount; i++)
@@ -47,33 +78,6 @@ LedManager::LedManager                              ()
   #ifndef PLATFORM_ESP32_FIREBEETLE2_DEBUG
   FastLED.addLeds<WS2812, PIN_LEDS, LEDCOLORDER>(leds, staticLedAmount);
   #endif
-
-  //create custom palettes
-  for (uint8_t i = 0; i < CUSTOMPALETTEAMOUNT; i++)
-  {
-    customPalette[i] = new struct CustomPalette;
-    for (uint8_t j = 0; j < AMOUNTOFCOLOURS; j++)
-    {
-      customPalette[i]->customRGB[j].r = 0;
-      customPalette[i]->customRGB[j].g = 0;
-      customPalette[i]->customRGB[j].b = 0;
-    }
-  }
-
-  Serial.println(F("...LedManager Started"));
-}
-void    LedManager::addPanel                                    (Panel *panel)
-{
-  panels = (Panel**)realloc(panels, sizeof(Panel*) * (panelAmount + 1));
-  if (panels == NULL)
-  {
-    Serial.println(F("ERROR: Could not allocate memory for new panel"));
-    return;
-  }
-  panels[panelAmount] = panel;
-  panelAmount++;
-  Serial.print(F("New panel added, Amount is now: "));
-  Serial.println(panelAmount);
 }
 //Public
 //Standard

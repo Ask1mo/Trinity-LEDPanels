@@ -449,6 +449,8 @@ void setup()
   trinity->addPanel(new Panel(5 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, 3));
   #endif
 
+  trinity->finaliseSetup();
+
   currentShowingEffect = 0;
 
   Serial.println(F("---===SETUP COMPLETED===---"));

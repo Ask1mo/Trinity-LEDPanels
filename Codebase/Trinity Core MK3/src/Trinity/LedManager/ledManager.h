@@ -19,6 +19,7 @@ private:
 public:
   LedManager                              ();
   void    addPanel                        (Panel *panel);
+  void    finaliseSetup                   ();
   //Standard
   void    tick                            ();
   void    print                           ();

@@ -40,6 +40,11 @@ void Trinity::addPanel(Panel *panel)
 {
   ledManager->addPanel(panel);
 }
+void Trinity::finaliseSetup()
+{
+  ledManager->finaliseSetup();
+  Serial.println(F("...Trinity Setup Finalised"));
+}
 //Private
 
 //Public
