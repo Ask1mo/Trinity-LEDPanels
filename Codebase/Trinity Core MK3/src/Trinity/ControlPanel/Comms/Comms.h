@@ -2,10 +2,13 @@
 #define COMMS_H
 
 #include <Arduino.h>
+#include <map>
 #include "TransmissionTypes.h"
 
 #define IDENTLENGTH 5
 #define COMPLETEDBUFFERSIZE
+
+
 
 class Comms
 {
@@ -28,7 +31,7 @@ class Comms
     public:
     Comms();
     void                            tick();
-    void                            transmit(uint8_t transmissionType, String data);
+    void                            transmit(String data);
     uint8_t                         getReadyTransmissionType();
     Transmission_LedManager         getTransmission_LedManager();
     Transmission_Panel              getTransmission_Panel();

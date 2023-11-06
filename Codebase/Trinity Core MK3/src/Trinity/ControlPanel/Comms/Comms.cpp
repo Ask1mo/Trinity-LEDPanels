@@ -20,16 +20,14 @@ Comms::Comms()
 //Private
 uint8_t Comms::decodeTransmissionType()
 {
-    if(!memcmp(transmissionData, "Reque", 5)) return TRANSMISSION_IN_REQUEST;
-    if(!memcmp(transmissionData, "Ident", 5)) return TRANSMISSION_IN_IDENT;
-    if(!memcmp(transmissionData, "LedMa", 5)) return TRANSMISSION_IN_LEDMANAGER;
-    if(!memcmp(transmissionData, "Panel", 5)) return TRANSMISSION_IN_PANEL;
-    if(!memcmp(transmissionData, "Diode", 5)) return TRANSMISSION_IN_DIODE;
-    if(!memcmp(transmissionData, "Custo", 5)) return TRANSMISSION_IN_CUSTOMPALETTES;
-    if(!memcmp(transmissionData, "Sleep", 5)) return TRANSMISSION_IN_SLEEPTIMER;
-    if(!memcmp(transmissionData, "Light", 5)) return TRANSMISSION_IN_LIGHTSENSOR;
-    
-
+    if(!memcmp(transmissionData, "Reque", IDENTLENGTH)) return TRANSMISSION_IN_REQUEST;
+    if(!memcmp(transmissionData, "Ident", IDENTLENGTH)) return TRANSMISSION_IN_IDENT;
+    if(!memcmp(transmissionData, "LedMa", IDENTLENGTH)) return TRANSMISSION_IN_LEDMANAGER;
+    if(!memcmp(transmissionData, "Panel", IDENTLENGTH)) return TRANSMISSION_IN_PANEL;
+    if(!memcmp(transmissionData, "Diode", IDENTLENGTH)) return TRANSMISSION_IN_DIODE;
+    if(!memcmp(transmissionData, "Custo", IDENTLENGTH)) return TRANSMISSION_IN_CUSTOMPALETTES;
+    if(!memcmp(transmissionData, "Sleep", IDENTLENGTH)) return TRANSMISSION_IN_SLEEPTIMER;
+    if(!memcmp(transmissionData, "Light", IDENTLENGTH)) return TRANSMISSION_IN_LIGHTSENSOR;
     return TRANSMISSION_IN_NONE;
 }
 uint8_t Comms::waitAndRead()
@@ -45,7 +43,7 @@ bool    Comms::doTransmissionEndCheck()
     }
     
     //printBuffer();
-    if(!memcmp(transmissionData, "Clear", 5)) return true;
+    if(!memcmp(transmissionData, "Clear", IDENTLENGTH)) return true;
 
     return false;
 }
@@ -153,41 +151,8 @@ void                            Comms::tick()
         }
     }
 }
-void                            Comms::transmit(uint8_t transmissionType, String data)
+void                            Comms::transmit(String data)
 {
-    switch (transmissionType)
-    {
-        case TRANSMISSION_OUT_LEDMANAGER:
-        {
-            Serial.print("TXLED");
-        }
-        break;
-        case TRANSMISSION_OUT_PANEL:
-        {
-            Serial.print("TXPAN");
-        }
-        break;
-        case TRANSMISSION_OUT_DIODE:
-        {
-            Serial.print("TXDIO");
-        }
-        break;
-        case TRANSMISSION_OUT_IDENT:
-        {
-            Serial.print("IDENT");
-        }
-        break;
-    }
-
-    /*
-    for (size_t i = 0; i < data.length(); i++)
-    {
-        Serial.write(data[i]);
-        Serial.write(" ");
-        delay(250);
-    }
-    */
-
     Serial.print(data);
     Serial.println("Clear");
 }

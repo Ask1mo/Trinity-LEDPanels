@@ -4,7 +4,6 @@
 #include <Arduino.h>
 #include <FastLED.h>
 #include "Trinity/ledManager/effectProcessor/effectProcessor.h"
-#include "Trinity/DataTypes.h"
 #include "Trinity/setup.h"
 
 
@@ -13,6 +12,7 @@ class Diode
 private:
   uint16_t                                  number;
 
+  uint8_t                                   goalBrightness;
   uint8_t                                   brightness;
   uint8_t                                   *effect; //Points to the effect of the panel. I don't want to have panels running differing effects on it's diodes
   uint8_t                                   colour;
@@ -29,7 +29,7 @@ public:
   //Standard
   void      tick                            ();
   //Effects
-  void      setBrightness                   (uint8_t brightness);
+  void      setGoalBrightness                   (uint8_t goalBrightness);
   void      setVfx                          (VFXData vfxData);
   void      setDataCustom                   (CustomPalette *customPalette);
   //Technical

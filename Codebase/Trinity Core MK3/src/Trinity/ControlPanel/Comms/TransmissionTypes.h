@@ -4,8 +4,6 @@
 
 #include <Arduino.h>
 #include "Trinity/LedManager/effectProcessor/effectProcessor.h"
-//#include "./LedManager/Panel/Diode/Diode.h"
-#include "Trinity/DataTypes.h"
 
 #define TRANSMISSION_IN_NONE                   0
 #define TRANSMISSION_IN_REQUEST                1
@@ -17,12 +15,13 @@
 #define TRANSMISSION_IN_SLEEPTIMER             7
 #define TRANSMISSION_IN_LIGHTSENSOR            8
 
-
+/* these defines are never used, but it's good to keep track
 #define TRANSMISSION_OUT_NONE       0
 #define TRANSMISSION_OUT_IDENT      1
 #define TRANSMISSION_OUT_LEDMANAGER 2
 #define TRANSMISSION_OUT_PANEL      3
 #define TRANSMISSION_OUT_DIODE      4
+*/
 
 
 struct Transmission_LedManager

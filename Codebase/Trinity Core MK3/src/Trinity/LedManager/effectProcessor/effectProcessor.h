@@ -56,7 +56,14 @@ struct ColourRGB
   uint8_t g;
   uint8_t b;
 };
-
+struct VFXData
+{
+  uint8_t effect;
+  uint8_t colour;
+  uint16_t offset;
+  uint8_t speed;
+  bool repeat;
+};
 struct EffectVariables
 {
   uint8_t                                   r;
@@ -66,10 +73,9 @@ struct EffectVariables
   uint8_t                                   c; //Current colour (Can cycle because of COLOUR_COLOURCYCLE)
   uint8_t                                   fxProgression; //Current part of the effect
 };
-
 struct CustomPalette 
 {
-    uint8_t                                   customRGBSlots; //Actually used amount of slots.
+  uint8_t                                   customRGBSlots; //Actually used amount of slots.
   ColourRGB                                 customRGB[AMOUNTOFCOLOURS];
 };
 

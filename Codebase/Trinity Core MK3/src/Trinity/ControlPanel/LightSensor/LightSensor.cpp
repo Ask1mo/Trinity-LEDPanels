@@ -12,8 +12,8 @@ LightSensor::LightSensor(uint8_t pin)
   this->pin = pin;
   pinMode(pin, INPUT_PULLUP);
   enabled = false;
-  recommendedBrightness = 99;
-  brightnessOffset = 0;
+  recommendedBrightness = 100;
+  brightnessOffset = 11;
 
   Serial.println(F("...LightSensor Started"));
 }
@@ -21,10 +21,11 @@ LightSensor::LightSensor(uint8_t pin)
 
 void LightSensor::tick()
 {
-  int reading = analogRead(pin)/8; //I should do 16, as this could lead to byte overflow. But as the resistor never reaches 255 otherwise, I decided to "double" the value
-  reading += 11;
+  uint16_t reading = analogRead(pin)/16; //Lower the resolution to 8 bit
+  reading = reading*2;
+  reading += brightnessOffset;
 
-  if(reading > 254) reading = 254;
+  if(reading >= BRIGHTNESS_3_MAX_VAL) reading = BRIGHTNESS_3_MAX_VAL;
   recommendedBrightness = reading;
 }
 bool LightSensor::getEnabled()

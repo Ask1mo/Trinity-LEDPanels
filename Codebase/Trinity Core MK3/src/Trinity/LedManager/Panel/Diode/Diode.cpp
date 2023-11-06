@@ -5,7 +5,8 @@ Diode::Diode(uint16_t number, uint8_t *panelEffect)
 {
   this->number = number;
 
-  this->brightness  = 255;
+  this->goalBrightness  = 255;
+  this->brightness     = 0;
   this->effect      = panelEffect;
   this->colour      = COLOUR_BLACK;
   this->offset      = 0;
@@ -30,6 +31,10 @@ void      Diode::tick()
   }
   else
   {
+    if      (brightness < goalBrightness) brightness++;
+    else if (brightness > goalBrightness) brightness--;
+
+    
     for (uint8_t i = 0; i < speed; i++)
     {
       if (colour != COLOUR_CYCLE)
@@ -49,9 +54,9 @@ void      Diode::tick()
   }
 }
 //Effects
-void      Diode::setBrightness(uint8_t brightness)
+void      Diode::setGoalBrightness(uint8_t goalBrightness)
 {
-  this->brightness  = brightness;
+  this->goalBrightness  = goalBrightness;
 }
 void      Diode::setVfx(VFXData vfxData)
 {
@@ -80,9 +85,9 @@ void      Diode::setDataCustom(CustomPalette *customPalette)
 //Technical
 CRGB      Diode::getRGB(uint8_t sysBrightness)
 {
-  uint8_t r = (((this->effectVariables.r * this->brightness) / 255) * sysBrightness) / 255;
-  uint8_t g = (((this->effectVariables.g * this->brightness) / 255) * sysBrightness) / 255;
-  uint8_t b = (((this->effectVariables.b * this->brightness) / 255) * sysBrightness) / 255;
+  uint8_t r = (((this->effectVariables.r * this->goalBrightness) / 255) * sysBrightness) / 255;
+  uint8_t g = (((this->effectVariables.g * this->goalBrightness) / 255) * sysBrightness) / 255;
+  uint8_t b = (((this->effectVariables.b * this->goalBrightness) / 255) * sysBrightness) / 255;
   return CRGB(r, g, b);
 }
 void      Diode::resetFXProcessingVars      ()
@@ -96,11 +101,11 @@ void      Diode::resetFXProcessingVars      ()
 //Transmissions
 String    Diode::convertToTransmission()
 {
-  String data = "";
+  String data = "TXDIO";
   
   data += number;
 
-  data += brightness;
+  data += goalBrightness;
   data += *effect;
   data += colour;
   data += offset;
@@ -119,6 +124,8 @@ void      Diode::printDebug()
   Serial.print(F("Diode "));
   Serial.println(number);
 
+  Serial.print(F("goalBrightness "));
+  Serial.print(goalBrightness);
   Serial.print(F("brightness "));
   Serial.print(brightness);
   Serial.print(F(" | effect "));

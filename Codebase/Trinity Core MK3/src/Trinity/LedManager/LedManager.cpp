@@ -1,7 +1,7 @@
 #include "ledManager.h"
 
 //Constructor
-LedManager::LedManager                              ()
+LedManager::LedManager                                  ()
 {
   if(DEBUGLEVEL >= DEBUG_OPERATIONS)
   {
@@ -10,9 +10,9 @@ LedManager::LedManager                              ()
   }
 
   
-  brightness    = 255;
+  goalBrightness= 255;
+  brightness    = 0;
   speed         = 1;
-  enabled       = true;
   panels        = NULL;
   panelAmount   = 0;
 
@@ -32,7 +32,7 @@ LedManager::LedManager                              ()
 
   Serial.println(F("...LedManager Started (NOT READY YET, DONT FORGET TO USE finaliseSetup() after adding your panels!!!)"));
 }
-void    LedManager::addPanel                                    (Panel *panel)
+void      LedManager::addPanel                          (Panel *panel)
 {
   panels = (Panel**)realloc(panels, sizeof(Panel*) * (panelAmount + 1));
   if (panels == NULL)
@@ -45,7 +45,7 @@ void    LedManager::addPanel                                    (Panel *panel)
   Serial.print(F("New panel added, Amount is now: "));
   Serial.println(panelAmount);
 }
-void LedManager::finaliseSetup()
+void      LedManager::begin                             ()
 {
   //Count diodes and give them to the panels (tell them where they start)
   int ledAmount = 0;
@@ -66,14 +66,9 @@ void LedManager::finaliseSetup()
     Serial.println((int)leds, DEC);
   }
 
-  if(!leds)
-  {
-    Serial.println(F("ERROR: LedManager::LedManager() Could not create led array"));
-  }
-
   //start FastLED
   #ifdef PLATFORM_ESP32_FIREBEETLE2_DEBUG
-  FastLED.addLeds<NEOPIXEL, PIN_LEDS>(leds, LEDAMOUNT);
+  FastLED.addLeds<NEOPIXEL, PIN_LEDS>(leds, staticLedAmount);
   #endif
   #ifndef PLATFORM_ESP32_FIREBEETLE2_DEBUG
   FastLED.addLeds<WS2812, PIN_LEDS, LEDCOLORDER>(leds, staticLedAmount);
@@ -81,8 +76,14 @@ void LedManager::finaliseSetup()
 }
 //Public
 //Standard
-void    LedManager::tick                            () 
+void      LedManager::tick                              () 
 {
+  if      (brightness < goalBrightness) brightness++;
+  else if (brightness > goalBrightness) brightness--;
+
+  
+
+
   for (uint8_t i = 0; i < speed; i++)
   {
     if(DEBUGLEVEL >=DEBUG_OPERATIONS) Serial.print(F("t"));
@@ -98,31 +99,31 @@ void    LedManager::tick                            ()
     }
   }
 } 
-void    LedManager::print                           () 
+void      LedManager::print                             () 
 {
   if(DEBUGLEVEL >= DEBUG_OPERATIONS) Serial.print(F("p"));
   FastLED.show(); 
 }
 //Effects
-uint8_t LedManager::getBrightness                   ()
+uint8_t   LedManager::getGoalBrightness                 ()
 {
-  return brightness;
+  return goalBrightness;
 }
-void    LedManager::setBrightness                   (uint8_t brightness)
+void      LedManager::setGoalBrightness                 (uint8_t goalBrightness)
 {
-  this->brightness = brightness;
+  this->goalBrightness = goalBrightness;
 }
-void    LedManager::setSpeed                        (uint8_t speed)
+void      LedManager::setSpeed                          (uint8_t speed)
 {
   this->speed = speed;
 }
 //Panel Effects
-void    LedManager::setPanelBrightness              (uint8_t panelNumber, uint8_t brightness)
+void      LedManager::setPanelBrightness                (uint8_t panelNumber, uint8_t goalBrightness)
 {
   //Serial.println("Setting panel data (In ledmanager)");
-  panels[panelNumber]->setBrightness(brightness);
+  panels[panelNumber]->setGoalBrightness(goalBrightness);
 }
-void    LedManager::setPanelVfx                     (uint8_t panelNumber, VFXData vfxData)
+void      LedManager::setPanelVfx                       (uint8_t panelNumber, VFXData vfxData)
 {
   //Serial.println("Setting panel data (In ledmanager)");
   panels[panelNumber]->setVfx(vfxData);
@@ -133,49 +134,49 @@ void    LedManager::setPanelVfx                     (uint8_t panelNumber, VFXDat
   }
 }
 //Diode Effects
-void    LedManager::setPanelBrightness              (uint8_t panelNumber, uint16_t diodeNumber, uint8_t brightness)
+void      LedManager::setPanelBrightness                (uint8_t panelNumber, uint16_t diodeNumber, uint8_t goalBrightness)
 {
   
 }
-void    LedManager::setPanelDiodeVfx                (uint8_t panelNumber, uint16_t diodeNumber, VFXData vfxData)
+void      LedManager::setPanelDiodeVfx                  (uint8_t panelNumber, uint16_t diodeNumber, VFXData vfxData)
 {
+  if (panelNumber > panelAmount)
+  {
+    Serial.print(F("LedManager::setPanelDiodeVfx() Too high panel number requested: "));
+    Serial.print(panelNumber);
+    Serial.print(F(". Max: "));
+    Serial.println(panelAmount);
+  }
   //Serial.println("Setting diode data (In ledmanager)");
   panels[panelNumber]->setDiodeVfx(diodeNumber, vfxData);
 }
 //Technical
-void    LedManager::setEnabled                      (bool enabled)
-{
-  this->enabled = enabled;
-}
-uint8_t LedManager::getPanelAmount                  ()
+uint8_t   LedManager::getPanelAmount                    ()
 {
   return panelAmount;
 }
-uint16_t LedManager::getPanelDiodeAmount            (uint8_t panelNumber)
+uint16_t  LedManager::getPanelDiodeAmount               (uint8_t panelNumber)
 {
   return panels[panelNumber]->getDiodeAmount();
 }
 //Transmissions
-String  LedManager::convertToTansmission            ()
+String    LedManager::convertToTansmission              ()
 {
-  String data = "";
-  
-  data += (char)brightness;
+  String data = "TXLED";
+  data += (char)goalBrightness;
   data += (char)speed;
-  data += (char)enabled;
-
   return data;
 }
-String  LedManager::convertPanelToTransmission      (uint8_t panelNumber)
+String    LedManager::convertPanelToTransmission        (uint8_t panelNumber)
 {
   return panels[panelNumber]->convertToTransmission();
 }
-String  LedManager::convertPanelDiodeToTransmission (uint8_t panelNumber,uint16_t diodeNumber)
+String    LedManager::convertPanelDiodeToTransmission   (uint8_t panelNumber,uint16_t diodeNumber)
 {
   return panels[panelNumber]->convertDiodeToTransmission(diodeNumber);
 }
 
-void LedManager::setCustomPaletteColours(uint8_t slot, uint8_t colourRGBNumber, ColourRGB colourRGB)
+void      LedManager::setCustomPaletteColours           (uint8_t slot, uint8_t colourRGBNumber, ColourRGB colourRGB)
 {
   if (slot >= CUSTOMPALETTEAMOUNT)
   {
@@ -206,7 +207,7 @@ void LedManager::setCustomPaletteColours(uint8_t slot, uint8_t colourRGBNumber, 
   customPalette[slot]->customRGB[colourRGBNumber].g = colourRGB.g;
   customPalette[slot]->customRGB[colourRGBNumber].b = colourRGB.b;
 }
-void LedManager::setCustomPaletteAvailableColours(uint8_t slot, uint8_t avalaibleColours)
+void      LedManager::setCustomPaletteAvailableColours  (uint8_t slot, uint8_t avalaibleColours)
 {
   customPalette[slot]->customRGBSlots = avalaibleColours;
 }

@@ -14,11 +14,13 @@ Trinity::Trinity(uint8_t ledPin, uint8_t buttonPin, uint8_t ldrPin, uint8_t maxF
   }
 
   ledManager      = new LedManager(); //Todo: Made LedManager accept const ints
-  button          = new AskButton(buttonPin, 100);
+  button          = new AskButton(buttonPin, 500);
   lightSensor     = new LightSensor(ldrPin);
   sleepTimer      = new SleepTimer();
   comms           = new Comms();
+  webserver       = new Webserver();
 
+  setBrightnessMode(BRIGHTNESS_3_MAX);
   prevFrameMillis = 0;
   frameTime = 1000/maxFramerate;
 
@@ -40,9 +42,9 @@ void Trinity::addPanel(Panel *panel)
 {
   ledManager->addPanel(panel);
 }
-void Trinity::finaliseSetup()
+void Trinity::begin()
 {
-  ledManager->finaliseSetup();
+  ledManager->begin();
   Serial.println(F("...Trinity Setup Finalised"));
 }
 //Private
@@ -50,6 +52,8 @@ void Trinity::finaliseSetup()
 //Public
 void Trinity::tick()
 {
+  webserver->tick();
+
   //Frame pushing
   uint64_t currentMillis = millis();
   if(currentMillis >= (prevFrameMillis+frameTime))
@@ -66,28 +70,32 @@ void Trinity::tick()
   {
     case BUTTON_TAPPED: //Brightness cycle
     {
-      switch (ledManager->getBrightness())
+      switch (brightnessMode)
       {
+        case BRIGHTNESS_4_AUT:
+        {
+          setBrightnessMode(BRIGHTNESS_0_OFF);
+          lightSensor->setEnabled(false);
+          Serial.println(F("Changing sys brightness to OFF"));
+        }
+        break;
         case BRIGHTNESS_0_OFF:
         {
-          ledManager->setEnabled(true);
-          ledManager->setBrightness(BRIGHTNESS_1_DIM);
+          setBrightnessMode(BRIGHTNESS_1_DIM);
           lightSensor->setEnabled(false);
           Serial.println(F("Changing sys brightness to DIM"));
         }
         break;
         case BRIGHTNESS_1_DIM:
         {
-          ledManager->setEnabled(true);
-          ledManager->setBrightness(BRIGHTNESS_2_NOR);
+          setBrightnessMode(BRIGHTNESS_2_NOR);
           lightSensor->setEnabled(false);
           Serial.println(F("Changing sys brightness to NORMAL"));
         }
         break;
         case BRIGHTNESS_2_NOR:
         {
-          ledManager->setEnabled(true);
-          ledManager->setBrightness(BRIGHTNESS_3_MAX);
+          setBrightnessMode(BRIGHTNESS_3_MAX);
           lightSensor->setEnabled(false);
           Serial.println(F("Changing sys brightness to MAX"));
 
@@ -95,18 +103,9 @@ void Trinity::tick()
         break;
         case BRIGHTNESS_3_MAX:
         {
-          ledManager->setEnabled(true);
-          ledManager->setBrightness(BRIGHTNESS_4_AUT);
+          setBrightnessMode(BRIGHTNESS_4_AUT);
           lightSensor->setEnabled(true);
           Serial.println(F("Changing sys brightness to Automatic"));
-        }
-        break;
-        default:
-        {
-          ledManager->setEnabled(true);
-          ledManager->setBrightness(BRIGHTNESS_0_OFF);
-          lightSensor->setEnabled(false);
-          Serial.println(F("Changing sys brightness to OFF"));
         }
         break;
       }
@@ -122,8 +121,8 @@ void Trinity::tick()
   if (lightSensor->getEnabled())
   {
     lightSensor->tick();
-    if(ledManager->getBrightness() != lightSensor->getRecommendedBrightness())
-    ledManager->setBrightness(lightSensor->getRecommendedBrightness());
+    //if(ledManager->getGoalBrightness() != lightSensor->getRecommendedBrightness())
+    ledManager->setGoalBrightness(lightSensor->getRecommendedBrightness());
   }
 
   //Waking up or Shutting down system from sleep timer
@@ -133,14 +132,14 @@ void Trinity::tick()
     case TURN_OFF:
     {
       Serial.println(F("SleepTimer Turning system off"));
-      ledManager->setBrightness(BRIGHTNESS_0_OFF);
+      ledManager->setGoalBrightness(BRIGHTNESS_0_OFF);
     }
     break;
 
     case TURN_ON:
     {
       Serial.println(F("SleepTimer Turning system on"));
-      if(ledManager->getBrightness() == BRIGHTNESS_0_OFF)ledManager->setBrightness(BRIGHTNESS_2_NOR);
+      if(ledManager->getGoalBrightness() == BRIGHTNESS_0_OFF)ledManager->setGoalBrightness(BRIGHTNESS_2_NOR);
     }
     break;
   }
@@ -152,7 +151,7 @@ void Trinity::tick()
     case TRANSMISSION_IN_LEDMANAGER:
     {
       Transmission_LedManager data = comms->getTransmission_LedManager();
-      ledManager->setBrightness(data.brightness); 
+      ledManager->setGoalBrightness(data.brightness); 
       ledManager->setSpeed(data.speed); 
     }
     break;
@@ -205,17 +204,14 @@ void Trinity::tick()
     break;
     case TRANSMISSION_IN_REQUEST:
     {
-      comms->transmit(TRANSMISSION_OUT_LEDMANAGER, ledManager->convertToTansmission());
-
+      comms->transmit(ledManager->convertToTansmission());
       for (uint8_t i = 0; i < ledManager->getPanelAmount(); i++)
       {
-        
-        comms->transmit(TRANSMISSION_OUT_PANEL, ledManager->convertPanelToTransmission(i));
-
+        comms->transmit(ledManager->convertPanelToTransmission(i));
         #if ENABLE_DIODECONTROL
         for (uint8_t j = 0; j < ledManager->getPanelDiodeAmount(i); j++)
         {
-          comms->transmit(TRANSMISSION_OUT_DIODE, ledManager->convertPanelDiodeToTransmission(i,j));
+          comms->transmit(ledManager->convertPanelDiodeToTransmission(i,j));
         }
         #endif
       }
@@ -223,7 +219,7 @@ void Trinity::tick()
     break;
     case TRANSMISSION_IN_IDENT:
     {
-      comms->transmit(TRANSMISSION_OUT_IDENT, "");
+      comms->transmit("IDENT");
     }
     break;
   }
@@ -253,9 +249,25 @@ void Trinity::setSpeed(uint8_t speed)
 {
   ledManager->setSpeed(speed);
 }
-void Trinity::setBrightness(uint8_t brightness)
+void Trinity::setBrightnessMode(uint8_t brightnessMode)
 {
-  ledManager->setBrightness(brightness);
+  this->brightnessMode = brightnessMode;
+
+  switch (brightnessMode)
+  {
+    case BRIGHTNESS_0_OFF:
+    ledManager->setGoalBrightness(BRIGHTNESS_0_OFF_VAL);
+    break;
+    case BRIGHTNESS_1_DIM:
+    ledManager->setGoalBrightness(BRIGHTNESS_1_DIM_VAL);
+    break;
+    case BRIGHTNESS_2_NOR:
+    ledManager->setGoalBrightness(BRIGHTNESS_2_NOR_VAL);
+    break;
+    case BRIGHTNESS_3_MAX:
+    ledManager->setGoalBrightness(BRIGHTNESS_3_MAX_VAL);
+    break;
+  }
 }
 void Trinity::setPanelVfx(uint8_t panelNumber, VFXData vfxData)
 {
@@ -267,14 +279,6 @@ uint16_t Trinity::getPanelDiodeAmount(uint8_t panelNumber)
 }
 void Trinity::setPanelDiodeVfx(uint8_t panelNumber, uint16_t diodeNumber, VFXData vfxData)
 {
-  if (panelNumber > ledManager->getPanelAmount())
-  {
-    Serial.print(F("Trinity::setPanelDiodeVfx() Too high panel number requested: "));
-    Serial.print(panelNumber);
-    Serial.print(F(". Max: "));
-    Serial.println(ledManager->getPanelAmount());
-  }
-  
   ledManager->setPanelDiodeVfx(panelNumber, diodeNumber, vfxData);
 }
 

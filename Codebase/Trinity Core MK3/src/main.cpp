@@ -1,7 +1,19 @@
 #include "main.h"
 
 
-#ifdef ANIMATIONSET_WESTPOINT
+
+void setAnimation_Default()
+{
+  trinity->setSpeed(1);
+  for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
+  {
+    trinity->setPanelVfx(i, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_BLACK, (uint16_t)(random(0, 10)*15), 1, true});
+    for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
+    {
+      trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_BLACK, uint16_t(j*10), 1, true});
+    }
+  }
+}
 void playAnimation_Reset()
 {
   Serial.println(F("playAnimation_Reset"));
@@ -21,21 +33,14 @@ void playAnimation_Reset()
   trinity->forceTick(diodeNumbers, true, 10);
   delay(1000);
 }
-
 void setAnimation_Westpoint_FullWhite()
 {
   Serial.println(F("setAnimation_Westpoint_FullWhite"));
   trinity->setSpeed(1);
 
-  uint16_t offset = 0;
   for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
   {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_STATIC, COLOUR_WHITE, (uint16_t)(random(0, 10)*15), 1, true});
-    for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
-    {
-      trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_STATIC, COLOUR_WHITE, 0, 5, true});
-      offset++;
-    }
+    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_STATIC, COLOUR_WHITE, 0, 1, true});
   }
 }
 void setAnimation_Westpoint_Default()
@@ -340,7 +345,7 @@ void setAnimation_Westpoint_ColourBlink()
   }
   trinity->forceTick(64, false, 0);
 }
-#endif
+
 
 void setup()
 {
@@ -441,33 +446,23 @@ void setup()
   trinity->addPanel(new Panel( 4, 4, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      6 ));
   #endif
   #ifdef PANELSETUP_TEST
-  trinity->addPanel(new Panel(0 0, 0, CLOCK_COUNTERWISE, COMPASS_SOUTH_EAST, 3));
-  trinity->addPanel(new Panel(1 0, 0, CLOCK_COUNTERWISE, COMPASS_SOUTH,      3));
-  trinity->addPanel(new Panel(2 0, 0, CLOCK_COUNTERWISE, COMPASS_SOUTH_WEST, 3));
-  trinity->addPanel(new Panel(3 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, 3));
-  trinity->addPanel(new Panel(4 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      3));
-  trinity->addPanel(new Panel(5 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, 3));
+  trinity->addPanel(new Panel(0, 0, 0, CLOCK_COUNTERWISE, COMPASS_SOUTH_EAST, 3));
+  trinity->addPanel(new Panel(1, 0, 0, CLOCK_COUNTERWISE, COMPASS_SOUTH,      3));
+  trinity->addPanel(new Panel(2, 0, 0, CLOCK_COUNTERWISE, COMPASS_SOUTH_WEST, 3));
+  trinity->addPanel(new Panel(3, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, 3));
+  trinity->addPanel(new Panel(4, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      3));
+  trinity->addPanel(new Panel(5, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, 3));
   #endif
 
-  trinity->finaliseSetup();
+  trinity->begin();
 
   currentShowingEffect = 0;
 
   Serial.println(F("---===SETUP COMPLETED===---"));
-
-
-
-  for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
-  {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_RED, (uint16_t)(random(0, 10)*15), 1, true});
-    for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
-    {
-      //trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_RED, 0, 5, true});
-      //offset++;
-    }
-  }
   
-  /*
+  setAnimation_Default();
+  
+  /* Some temp custom palette stuff
   trinity->setSpeed(5);
 
   trinity->setCustomPaletteColours(0, 0, (ColourRGB){255, 128, 0});
@@ -478,22 +473,16 @@ void setup()
   for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
   {
     trinity->setPanelVfx(i, (VFXData){EFFECT_CUSTOM_DECODE, 0, 0, 1, true});
-    //
     for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
     {
       trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_STATIC, COLOUR_WHITE, 0, 1, true});
     }
-    //
   }
   */
-
-
-
 }
 
 void loop()
 {
-
   trinity->tick();
 
   #if ENABLECYCLING
@@ -572,6 +561,7 @@ void loop()
       if(DEBUGLEVEL >= DEBUG_ERRORS) Serial.println(F("ERROR: NO ANIMATIONSET SELECTED"));
       break;
     }
+  }
   #endif
 }
 

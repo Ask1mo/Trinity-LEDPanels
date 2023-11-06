@@ -7,6 +7,7 @@
 #include "ControlPanel/LightSensor/LightSensor.h"
 #include "ControlPanel/SleepTimer/SleepTimer.h"
 #include "ControlPanel/Comms/Comms.h"
+#include "ControlPanel/Webserver/Webserver.h"
 
 class Trinity
 {
@@ -16,18 +17,20 @@ private:
     LightSensor     *lightSensor;
     SleepTimer      *sleepTimer;
     Comms           *comms;
+    Webserver       *webserver;
 
+    uint8_t         brightnessMode;
     uint64_t        prevFrameMillis;
     uint16_t        frameTime;
 
 public:
     Trinity(uint8_t ledPin, uint8_t buttonPin, uint8_t ldrPin, uint8_t maxFramerate);
     void addPanel(Panel *panel);
-    void finaliseSetup();
+    void begin();
     void tick();
     void forceTick(uint16_t ticks, bool keepPrinting, uint16_t delayTime);  //Manually force the ledmanager to tick without running any other Trinity code.
     void setSpeed(uint8_t speed);
-    void setBrightness(uint8_t brightness);
+    void setBrightnessMode(uint8_t brightness);
     
     void setPanelVfx(uint8_t panelNumber, VFXData vfxData);
     uint16_t getPanelDiodeAmount(uint8_t panelNumber);

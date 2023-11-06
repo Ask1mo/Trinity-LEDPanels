@@ -8,9 +8,9 @@ class LedManager
 {
 private:
   uint8_t                                 panelAmount;
+  uint8_t                                 goalBrightness;
   uint8_t                                 brightness;
   uint8_t                                 speed;
-  bool                                    enabled;
   Panel                                   **panels;
   CRGB                                    *leds;
   CustomPalette                           *customPalette[CUSTOMPALETTEAMOUNT];
@@ -19,22 +19,21 @@ private:
 public:
   LedManager                              ();
   void    addPanel                        (Panel *panel);
-  void    finaliseSetup                   ();
+  void    begin                   ();
   //Standard
   void    tick                            ();
   void    print                           ();
   //Effects
-  uint8_t getBrightness                   ();
-  void    setBrightness                   (uint8_t brightness);
+  uint8_t getGoalBrightness                   ();
+  void    setGoalBrightness                   (uint8_t goalGoalBrightness);
   void    setSpeed                        (uint8_t speed);
   //Panel Effects
-  void    setPanelBrightness              (uint8_t panelNumber, uint8_t brightness);
+  void    setPanelBrightness              (uint8_t panelNumber, uint8_t goalBrightness);
   void    setPanelVfx                     (uint8_t panelNumber, VFXData vfxData);
   //Diode Effects
-  void    setPanelBrightness              (uint8_t panelNumber, uint16_t diodeNumber, uint8_t brightness);
+  void    setPanelBrightness              (uint8_t panelNumber, uint16_t diodeNumber, uint8_t goalBrightness);
   void    setPanelDiodeVfx                (uint8_t panelNumber, uint16_t diodeNumber, VFXData vfxData);
   //Technical
-  void    setEnabled                      (bool enabled);
   uint8_t getPanelAmount                  ();
   uint16_t getPanelDiodeAmount            (uint8_t panelNumber);
   //Transmissions

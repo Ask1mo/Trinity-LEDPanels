@@ -32,9 +32,9 @@
 
 
 /*---=== PUT YOUR SETTINGS HERE!!! ===---*/
-#define PANELSETUP_CHRISTMAS
-#define PLATFORM_ESP32_FIREBEETLE2
-#define LEDTYPE_CHRISTMASSTRING
+#define PANELSETUP_TEST
+#define PLATFORM_ESP32_FIREBEETLE2_DEBUG
+#define LEDTYPE_STANDARD
 #define LINKPROGRAM_MK2
 
 #define DEBUGLEVEL DEBUG_OPERATIONS
@@ -59,7 +59,7 @@
     #define PIN_BUTTON      27          //On board button
     #define PIN_LEDS        4           //D?
     #define PIN_ERRORLED    2           //No pinout, only internal on board
-    #define PIN_LIGHTSENSOR 15          //D?
+    #define PIN_LIGHTSENSOR 35          //D?
     #define ENABLE_DIODECONTROL true    //Individual Diode Fx enabled
     #define ENABLE_WEBCONTROL true      //Controls via website enabled
     #define BAUDRATE 115200
@@ -68,7 +68,7 @@
 #ifdef PLATFORM_ESP32_FIREBEETLE2_DEBUG
     #define PIN_BUTTON      27          //On board button
     #define PIN_LEDS        5           //On boadr LED
-    #define PIN_LIGHTSENSOR 15          //D?
+    #define PIN_LIGHTSENSOR 35          //D?
     #define PIN_ERRORLED    2           //No pinout, only internal on board
     #define ENABLE_DIODECONTROL true    //Individual Diode Fx enabled
     #define ENABLE_WEBCONTROL true      //Controls via website enabled

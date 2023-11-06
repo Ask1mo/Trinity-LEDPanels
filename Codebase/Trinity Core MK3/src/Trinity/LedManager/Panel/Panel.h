@@ -34,6 +34,7 @@ private:
   uint16_t                                  diodeAmount; // Amount of leds in this panel
   uint16_t                                  diodeStart;  // The coordinate of the first LED
   
+  uint8_t                                   goalBrightness;
   uint8_t                                   brightness;
   uint8_t                                   effect;
   uint8_t                                   colour;
@@ -51,11 +52,11 @@ public:
   //Standard
   void      tick                            ();
   //Effects
-  void      setBrightness                   (uint8_t brightness);
+  void      setGoalBrightness                   (uint8_t goalBrightness);
   void      setVfx                          (VFXData vfxData);
   void      setDataCustom                   (CustomPalette *customPaletteArg);
   //Diode Effects
-  void      setDiodeBrightness              (uint16_t diodeNumber, uint8_t brightness);
+  void      setDiodeGoalBrightness              (uint16_t diodeNumber, uint8_t goalBrightness);
   void      setDiodeVfx                     (uint16_t diodeNumber, VFXData vfxData);
   void      setDiodeDataCustom              (uint16_t diodeNumber, CustomPalette *customPalette);
   //Mask Effects
@@ -64,7 +65,7 @@ public:
   uint8_t   getPanelNumber                  ();
   uint8_t   getX                            ();
   uint8_t   getY                            ();
-  CRGB      getDiodeRGB                     (uint8_t number, uint8_t brightness);
+  CRGB      getDiodeRGB                     (uint8_t number, uint8_t sysBrightness);
   uint16_t  getDiodeAmount                  ();
   uint16_t  getDiodeStart                   ();
   void      setDiodeStart                   (uint16_t ledStart);

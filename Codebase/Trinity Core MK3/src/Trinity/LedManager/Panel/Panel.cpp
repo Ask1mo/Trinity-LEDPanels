@@ -30,7 +30,8 @@ Panel::Panel                                (uint8_t number, uint8_t x, uint8_t 
   this->diodeAmount   = diodeAmount;
   this->diodeStart    = 0;  // The coordinate of the first LED
 
-  this->brightness   = 255;
+  this->goalBrightness   = 255;
+  this->brightness  = 0;
   this->effect       = EFFECT_DEV_UNBOUND;
   this->colour       = COLOUR_BLACK;
   this->offset       = 0;
@@ -57,6 +58,9 @@ void      Panel::tick                       ()
   }
   else
   {
+    if      (brightness < goalBrightness) brightness++;
+    else if (brightness > goalBrightness) brightness--;
+
     for (uint8_t i = 0; i < speed; i++)
     {
       if (detailed)
@@ -100,9 +104,9 @@ void      Panel::tick                       ()
   }
 }
 //Effects
-void      Panel::setBrightness              (uint8_t brightness)
+void      Panel::setGoalBrightness              (uint8_t goalBrightness)
 {
-  this->brightness  = brightness;
+  this->goalBrightness  = goalBrightness;
 }
 void      Panel::setVfx                     (VFXData vfxData)
 {
@@ -144,9 +148,9 @@ void      Panel::setDataCustom              (CustomPalette *customPaletteArg)
   }
 }
 //Diode Effects
-void      Panel::setDiodeBrightness         (uint16_t diodeNumber, uint8_t brightness)
+void      Panel::setDiodeGoalBrightness         (uint16_t diodeNumber, uint8_t goalBrightness)
 {
-  diodes[diodeNumber]->setBrightness(brightness);
+  diodes[diodeNumber]->setGoalBrightness(goalBrightness);
 }
 void      Panel::setDiodeVfx                (uint16_t diodeNumber, VFXData vfxData)
 {
@@ -232,13 +236,6 @@ CRGB      Panel::getDiodeRGB                (uint8_t number, uint8_t sysBrightne
   }
 
   return diodes[number]->getRGB(sysBrightness);
-
-  /*
-  uint8_t redValue    = (this->r * this->brightness)/255;
-  uint8_t greenValue  = (this->g * this->brightness)/255;
-  uint8_t blueValue   = (this->b * this->brightness)/255;
-  return CRGB(redValue, greenValue, blueValue);
-  */
 }
 uint16_t  Panel::getDiodeAmount             ()
 {
@@ -265,7 +262,7 @@ String    Panel::convertToTransmission      ()
 {
   #ifdef LINKPROGRAM_MK2
   
-  String data = "";
+  String data = "TXPAN";
   data += "/";
   data += (char)number;
   data += "/";
@@ -282,14 +279,14 @@ String    Panel::convertToTransmission      ()
   return data;
   #endif
   #ifdef LINKPROGRAM_MK3
-  String data = "";
+  String data = "TXPAN";
 
   data += (char)number;
   data += (char)compassDir;
   data += (char)clockDir;
   data += (char)diodeAmount; // Amount of leds in this panel
 
-  data += (char)brightness;
+  data += (char)goalBrightness;
   data += (char)effect;
   data += (char)colour;
   data += (char)offset;
@@ -324,6 +321,8 @@ void      Panel::printDebug                 ()
   Serial.print(F(" | diodeStart "));
   Serial.println(diodeStart);
 
+  Serial.print(F("goalBrightness "));
+  Serial.print(goalBrightness);
   Serial.print(F("brightness "));
   Serial.print(brightness);
   Serial.print(F(" | effect "));
