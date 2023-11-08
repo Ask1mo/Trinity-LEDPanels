@@ -18,7 +18,17 @@ Trinity::Trinity(uint8_t ledPin, uint8_t buttonPin, uint8_t ldrPin, uint8_t maxF
   lightSensor     = new LightSensor(ldrPin);
   sleepTimer      = new SleepTimer();
   comms           = new Comms();
-  webserver       = new Webserver();
+  //link       = new Link();
+
+  const char* ssid = "network name";
+  const char* password = "password";
+  WebServerManager webServerManager(ssid, password, 80);
+  webServerManager.start();
+  while (true)
+  {
+    webServerManager.handleClient();
+  }
+  
 
   setBrightnessMode(BRIGHTNESS_3_MAX);
   prevFrameMillis = 0;
@@ -52,7 +62,7 @@ void Trinity::begin()
 //Public
 void Trinity::tick()
 {
-  webserver->tick();
+  //link->tick();
 
   //Frame pushing
   uint64_t currentMillis = millis();

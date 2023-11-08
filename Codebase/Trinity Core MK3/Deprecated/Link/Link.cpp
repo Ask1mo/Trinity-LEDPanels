@@ -1,8 +1,26 @@
-
-#include "Webserver.h"
+/*
+#include "Link.h"
 #include "Trinity/setup.h"
 
-Webserver::Webserver()
+WebServer server(80); //Probably bad. Probably shouldn't put this variable here and put it in the Link class instead. But hey it makes the funny code compile so I'm not complaining.
+
+void handleRoot() {
+ String s = MAIN_page; //Read HTML contents
+  server.send(200, "text/html", s); //Send web page
+}
+ 
+void handleADC()
+{
+  int a = analogRead(A0);
+  String adcValue = String(a);
+ 
+  server.send(200, "text/plane", adcValue); //Send ADC value only to client ajax request
+}
+
+
+
+
+Link::Link()
 {
   if(DEBUGLEVEL >= DEBUG_OPERATIONS)
   {
@@ -12,14 +30,14 @@ Webserver::Webserver()
     Serial.print(F("Connecting to "));
     Serial.println(SSID);
   }
-  server = new WiFiServer(80);
+  //server = new WebServer(80);
   WiFi.begin(SSID, PASSWORD);
   connected = false;
 
   Serial.println(F("...Webserver Started"));
 }
 
-void Webserver::tick()
+void Link::tick()
 {
   if (WiFi.status() != WL_CONNECTED)
   {
@@ -30,15 +48,19 @@ void Webserver::tick()
   else if (!connected) //If connected but not noted down before
   {
     connected = true;
-    server->begin();
+    server.on("/", handleRoot);      //This is display page
+    server.on("/readADC", handleADC);//To get update of ADC Value only
+    server.begin();
     Serial.println(F("Server connected, IP address: "));
     Serial.println(WiFi.localIP());
   }
 
 
 
+  server.handleClient();
 
-  WiFiClient client = server->available();   // Listen for incoming clients
+  
+  WiFiClient client = server.available();   // Listen for incoming clients
 
   if (client)
   {                             // If a new client connects,
@@ -78,10 +100,12 @@ void Webserver::tick()
     client.stop();
     Serial.println(F("Client disconnected.\n"));
   }
+  
 }
+*/
 
-
-void Webserver::printPage(WiFiClient client)
+/*
+void Link::printPage(WiFiClient client)
 {
   // HTTP headers always start with a response code (e.g. HTTP/1.1 200 OK)
   // and a content-type so the client knows what's coming, then a blank line:
@@ -120,14 +144,15 @@ void Webserver::printPage(WiFiClient client)
   client.println("<!DOCTYPE html><html>");
   client.println("<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
   client.println("<link rel=\"icon\" href=\"data:,\">");
+  // Web Page Heading
+  client.println("<title>Trinity</title>");
+  client.println("<body><h1>ESP32 Web Server</h1>");
   // CSS to style the on/off buttons 
   // Feel free to change the background-color and font-size attributes to fit your preferences
   client.println("<style>html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}");
-  client.println(".button { background-color: #4CAF50; border: none; color: white; padding: 16px 40px;");
-  client.println("text-decoration: none; font-size: 30px; margin: 2px; cursor: pointer;}");
-  client.println(".button2 {background-color: #555555;}</style></head>");
-  // Web Page Heading
-  client.println("<body><h1>ESP32 Web Server</h1>");
+  client.println(".button { background-color: #4CAF50; border: none; color: white; padding: 16px 40px; text-decoration: none; font-size: 30px; margin: 2px; cursor: pointer;}");
+  client.println(".button2{ background-color: #555555;}</style></head>");
+  
   
   // Display current state, and ON/OFF buttons for GPIO 26  
   client.println("<p>GPIO 26 - State " + output26State + "</p>");
@@ -158,3 +183,4 @@ void Webserver::printPage(WiFiClient client)
   client.println();
   // Break out of the while loop
 }
+*/

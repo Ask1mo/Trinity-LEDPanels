@@ -1,8 +1,12 @@
-#ifndef WEBSERVER_H
-#define WEBSERVER_H
+/*
+#ifndef LINK_H
+#define LINK_H
 
 #include <Arduino.h>
 #include <WiFi.h>
+#include <WiFiClient.h>
+#include <Webserver.h>
+#include "index.html"
 
 //const char* ssid = "Askimo";
 //const char* password = "CringeDingus2003!";
@@ -13,29 +17,33 @@
 #define PIN_B 14
 
 
+void            handleRoot(WebServer *server);
+void            handleADC(WebServer *server);
 
 
 
 
-class Webserver
+
+class Link
 {
 private:
-    WiFiServer      *server;
+    
     String          header;
     String          output26State = "off";
     String          output27State = "off";
     unsigned long   currentTime;
     unsigned long   previousTime = 0; 
     bool            connected;
-    void            printPage(WiFiClient client);
+    //void            printPage(WebServer client);
+    
     
 public:
-    Webserver();
+    Link();
     void tick();
 };
 
 #endif
-
+*/
 
 
 

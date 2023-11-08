@@ -7,7 +7,9 @@
 #include "ControlPanel/LightSensor/LightSensor.h"
 #include "ControlPanel/SleepTimer/SleepTimer.h"
 #include "ControlPanel/Comms/Comms.h"
-#include "ControlPanel/Webserver/Webserver.h"
+//#include "ControlPanel/Link/Link.h"
+#include "ControlPanel/WifiManager/WebServerManager.h"
+//#include "ControlPanel/WifiManager/index.html"
 
 class Trinity
 {
@@ -17,7 +19,8 @@ private:
     LightSensor     *lightSensor;
     SleepTimer      *sleepTimer;
     Comms           *comms;
-    Webserver       *webserver;
+    //Link            *link;
+
 
     uint8_t         brightnessMode;
     uint64_t        prevFrameMillis;
