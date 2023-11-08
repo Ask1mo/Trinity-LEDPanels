@@ -17,7 +17,7 @@ void WebServerManager::start()
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 
-  server.on("/", std::bind(&WebServerManager::handleRoot, this));
+  server.on("/",        std::bind(&WebServerManager::handleRoot, this));
   server.on("/readPOT", std::bind(&WebServerManager::handlePOT, this));
   server.begin();
   Serial.println("HTTP server started");
@@ -35,6 +35,12 @@ void WebServerManager::handleRoot()
 
 void WebServerManager::handlePOT()
 {
-  String POTval = String(analogRead(A0));
+  String POTval = "color: rgb(";
+  POTval += String(random(0, 255));
+  POTval += String(", ");
+  POTval += String(random(0, 255));
+  POTval += String(", ");
+  POTval += String(random(0, 255));
+  POTval += String(");");
   server.send(200, "text/plane", POTval);
 }

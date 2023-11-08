@@ -20,8 +20,8 @@ Trinity::Trinity(uint8_t ledPin, uint8_t buttonPin, uint8_t ldrPin, uint8_t maxF
   comms           = new Comms();
   //link       = new Link();
 
-  const char* ssid = "network name";
-  const char* password = "password";
+  const char* ssid = "Askimo";
+  const char* password = "CringeDingus2003!";
   WebServerManager webServerManager(ssid, password, 80);
   webServerManager.start();
   while (true)
