@@ -2,18 +2,22 @@
 #include <WebServer.h>
 #include <WiFi.h>
 
+#define SSID "Askimo"
+#define PASSWORD "CringeDingus2003!"
+
 class WebServerManager
 {
 public:
-  WebServerManager(const char* ssid, const char* password, int port);
-  void start();
-  void handleClient();
+  WebServerManager(uint8_t panelAmount, uint8_t canvasWidth, uint8_t canvasHeight);
+  void tick();
 
 private:
   WebServer server;
   WiFiClient client;
-  const char* ssid;
-  const char* password;
+
+  uint8_t panelAmount;
+  uint8_t canvasWidth;
+  uint8_t canvasHeight;
 
   void handleRoot();
   void handlePOT();

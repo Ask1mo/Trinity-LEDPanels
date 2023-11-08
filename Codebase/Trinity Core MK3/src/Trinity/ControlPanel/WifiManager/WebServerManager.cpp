@@ -2,13 +2,14 @@
 #include "WebServerManager.h"
 #include "webpage.html"
 
-WebServerManager::WebServerManager(const char* ssid, const char* password, int port) : server(port), ssid(ssid), password(password) {}
-
-void WebServerManager::start()
+WebServerManager::WebServerManager(uint8_t panelAmount, uint8_t canvasWidth, uint8_t canvasHeight)
 {
-  Serial.begin(115200);
+  this->panelAmount = panelAmount;
+  this->canvasWidth = canvasWidth;
+  this->canvasHeight = canvasHeight;
+
   WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
+  WiFi.begin(SSID, PASSWORD);
   Serial.println("Connecting to WiFi");
   while(WiFi.waitForConnectResult() != WL_CONNECTED)
   {
@@ -23,18 +24,20 @@ void WebServerManager::start()
   Serial.println("HTTP server started");
 }
 
-void WebServerManager::handleClient()
+void WebServerManager::tick()
 {
-  server.handleClient(); delay(1);
+  server.handleClient();
 }
-
 void WebServerManager::handleRoot()
 {
-  server.send(200, "text/html", webpageCode);
+  String html = webpageCode;
+  html.replace("{width}", String(canvasWidth));
+  html.replace("{height}", String(canvasHeight));
+  server.send(200, "text/html", html);
 }
-
 void WebServerManager::handlePOT()
 {
+  /*
   String POTval = "color: rgb(";
   POTval += String(random(0, 255));
   POTval += String(", ");
@@ -42,5 +45,7 @@ void WebServerManager::handlePOT()
   POTval += String(", ");
   POTval += String(random(0, 255));
   POTval += String(");");
+  */
+  String POTval = String(random(0, 360));
   server.send(200, "text/plane", POTval);
 }

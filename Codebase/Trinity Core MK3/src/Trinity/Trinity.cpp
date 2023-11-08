@@ -13,21 +13,14 @@ Trinity::Trinity(uint8_t ledPin, uint8_t buttonPin, uint8_t ldrPin, uint8_t maxF
     Serial.println((int)this, DEC);
   }
 
-  ledManager      = new LedManager(); //Todo: Made LedManager accept const ints
-  button          = new AskButton(buttonPin, 500);
-  lightSensor     = new LightSensor(ldrPin);
-  sleepTimer      = new SleepTimer();
-  comms           = new Comms();
-  //link       = new Link();
+  ledManager        = new LedManager(); //Todo: Made LedManager accept const ints
+  button            = new AskButton(buttonPin, 500);
+  lightSensor       = new LightSensor(ldrPin);
+  sleepTimer        = new SleepTimer();
+  comms             = new Comms();
 
-  const char* ssid = "Askimo";
-  const char* password = "CringeDingus2003!";
-  WebServerManager webServerManager(ssid, password, 80);
-  webServerManager.start();
-  while (true)
-  {
-    webServerManager.handleClient();
-  }
+  setupComplete = false;
+
   
 
   setBrightnessMode(BRIGHTNESS_3_MAX);
@@ -55,6 +48,8 @@ void Trinity::addPanel(Panel *panel)
 void Trinity::begin()
 {
   ledManager->begin();
+  webServerManager  = new WebServerManager(ledManager->getPanelAmount(), CANVASWIDTH, CANVASHEIGHT);
+  setupComplete = true;
   Serial.println(F("...Trinity Setup Finalised"));
 }
 //Private
@@ -62,7 +57,13 @@ void Trinity::begin()
 //Public
 void Trinity::tick()
 {
-  //link->tick();
+  if (!setupComplete)
+  {
+    if (DEBUGLEVEL >= DEBUG_ERRORS)Serial.println(F("Trinity not setup yet"));
+    return;
+  }
+  
+  webServerManager->tick();
 
   //Frame pushing
   uint64_t currentMillis = millis();

@@ -14,12 +14,15 @@
 class Trinity
 {
 private:
-    LedManager      *ledManager;
-    AskButton       *button;
-    LightSensor     *lightSensor;
-    SleepTimer      *sleepTimer;
-    Comms           *comms;
-    //Link            *link;
+    LedManager          *ledManager;
+    AskButton           *button;
+    LightSensor         *lightSensor;
+    SleepTimer          *sleepTimer;
+    Comms               *comms;
+    //Link              *link;
+    WebServerManager    *webServerManager;
+
+    bool setupComplete;
 
 
     uint8_t         brightnessMode;
