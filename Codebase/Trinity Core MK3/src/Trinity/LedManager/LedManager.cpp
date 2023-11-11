@@ -9,7 +9,8 @@ LedManager::LedManager                                  ()
     Serial.println((int)this, DEC);
   }
 
-  
+  canvasWidth   = 0;
+  canvasHeight  = 0;
   goalBrightness= 255;
   brightness    = 0;
   speed         = 1;
@@ -34,6 +35,9 @@ LedManager::LedManager                                  ()
 }
 void      LedManager::addPanel                          (Panel *panel)
 {
+  if (panel->getX() > canvasWidth) canvasWidth = panel->getX();
+  if (panel->getY() > canvasHeight) canvasHeight = panel->getY();
+  
   panels = (Panel**)realloc(panels, sizeof(Panel*) * (panelAmount + 1));
   if (panels == NULL)
   {
@@ -73,6 +77,30 @@ void      LedManager::begin                             ()
   #ifndef PLATFORM_ESP32_FIREBEETLE2_DEBUG
   FastLED.addLeds<WS2812, PIN_LEDS, LEDCOLORDER>(leds, staticLedAmount);
   #endif
+
+
+
+  // Allocate memory for the 2D array
+  panelMatrix = new Panel**[canvasWidth];
+  for(uint8_t i = 0; i < canvasWidth; ++i)
+  {
+    panelMatrix[i] = new Panel*[canvasHeight];
+  }
+
+  // Initialize all elements to nullptr
+  for(uint8_t i = 0; i < canvasWidth; ++i)
+  {
+    for(uint8_t j = 0; j < canvasHeight; ++j)
+    {
+      panelMatrix[i][j] = nullptr;
+    }
+  }
+
+  //Add all panels to their corresponding spots in the matrix
+  for (uint8_t i = 0; i < panelAmount; i++)
+  {
+    panelMatrix[panels[i]->getX()][panels[i]->getY()] = panels[i];
+  }
 }
 //Public
 //Standard

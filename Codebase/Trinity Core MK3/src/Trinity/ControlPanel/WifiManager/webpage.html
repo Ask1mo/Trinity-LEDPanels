@@ -83,7 +83,14 @@ String webpageCode = R"***(
     <script>
       var canvas = document.getElementById('myCanvas');
       var ctx = canvas.getContext('2d');
-  
+      function setCanvasSize(width, height) {
+            var canvas = document.getElementById('myCanvas');
+            canvas.width = width;
+            canvas.height = height;
+        }
+        // Call the function with the desired width and height
+        setCanvasSize({width}, {height});
+        
       class Triangle {
         constructor(x, y, size, color, angle) {
           this.x = x;

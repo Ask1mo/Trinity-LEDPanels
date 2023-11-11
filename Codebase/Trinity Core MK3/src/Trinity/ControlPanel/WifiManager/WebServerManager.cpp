@@ -31,8 +31,8 @@ void WebServerManager::tick()
 void WebServerManager::handleRoot()
 {
   String html = webpageCode;
-  html.replace("{width}", String(canvasWidth));
-  html.replace("{height}", String(canvasHeight));
+  html.replace("{canvasWidth}", String(canvasWidth));
+  html.replace("{canvasHeight}", String(canvasHeight));
   server.send(200, "text/html", html);
 }
 void WebServerManager::handlePOT()

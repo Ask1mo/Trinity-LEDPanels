@@ -8,18 +8,22 @@ class LedManager
 {
 private:
   uint8_t                                 panelAmount;
+  uint8_t                                 canvasWidth;
+  uint8_t                                 canvasHeight;
   uint8_t                                 goalBrightness;
   uint8_t                                 brightness;
   uint8_t                                 speed;
   Panel                                   **panels;
+  Panel                                   ***panelMatrix;
   CRGB                                    *leds;
   CustomPalette                           *customPalette[CUSTOMPALETTEAMOUNT];
+
   
 
 public:
   LedManager                              ();
   void    addPanel                        (Panel *panel);
-  void    begin                   ();
+  void    begin                           ();
   //Standard
   void    tick                            ();
   void    print                           ();
@@ -36,6 +40,8 @@ public:
   //Technical
   uint8_t getPanelAmount                  ();
   uint16_t getPanelDiodeAmount            (uint8_t panelNumber);
+  uint8_t getCanvasWidth                  ();
+  uint8_t getCanvasHeight                 ();
   //Transmissions
   String  convertToTansmission            ();
   String  convertPanelToTransmission      (uint8_t panelNumber);

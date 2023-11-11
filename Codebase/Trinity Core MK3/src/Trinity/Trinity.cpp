@@ -48,7 +48,7 @@ void Trinity::addPanel(Panel *panel)
 void Trinity::begin()
 {
   ledManager->begin();
-  webServerManager  = new WebServerManager(ledManager->getPanelAmount(), CANVASWIDTH, CANVASHEIGHT);
+  webServerManager  = new WebServerManager(ledManager->getPanelAmount(), ledManager->getCanvasWidth(), ledManager->getCanvasHeight());
   setupComplete = true;
   Serial.println(F("...Trinity Setup Finalised"));
 }
