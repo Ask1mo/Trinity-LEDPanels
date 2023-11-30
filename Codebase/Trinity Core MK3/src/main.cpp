@@ -440,6 +440,12 @@ void setup()
   for (uint8_t i = 0; i < 4; i++) trinity->addPanel(new Panel(i, i, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 10));
   trinity->addPanel(new Panel( 4, 4, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      6 ));
   #endif
+  #ifdef PANELSETUP_CLOSET
+  for (uint8_t i = 0; i < 4; i++) trinity->addPanel(new Panel(i, i, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 10));
+  trinity->addPanel(new Panel( 4, 4, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      6 ));
+  for (uint8_t i = 0; i < 6; i++) trinity->addPanel(new Panel(i+4, i+4, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, LEDSAMOUNT_TRIANGLE));
+  trinity->addPanel(new Panel( 4, 4, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      6 ));
+  #endif
   #ifdef PANELSETUP_TEST
   trinity->addPanel(new Panel(0 0, 0, CLOCK_COUNTERWISE, COMPASS_SOUTH_EAST, 3));
   trinity->addPanel(new Panel(1 0, 0, CLOCK_COUNTERWISE, COMPASS_SOUTH,      3));
@@ -459,7 +465,7 @@ void setup()
 
   for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
   {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_RED, (uint16_t)(random(0, 10)*15), 1, true});
+    trinity->setPanelVfx(i, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_RED, (uint16_t)(random(0, 10)*100), 1, true});
     for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
     {
       //trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_RED, 0, 5, true});
