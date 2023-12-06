@@ -11,10 +11,12 @@ WebServerManager::WebServerManager(uint8_t panelAmount, uint8_t canvasWidth, uin
   WiFi.mode(WIFI_STA);
   WiFi.begin(SSID, PASSWORD);
   Serial.println("Connecting to WiFi");
+  /*Tijdelijk
   while(WiFi.waitForConnectResult() != WL_CONNECTED)
   {
     delay(500); Serial.print(".");
   }
+  */
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 

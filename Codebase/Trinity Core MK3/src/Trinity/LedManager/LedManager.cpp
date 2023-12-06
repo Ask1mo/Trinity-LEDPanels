@@ -35,9 +35,6 @@ LedManager::LedManager                                  ()
 }
 void      LedManager::addPanel                          (Panel *panel)
 {
-  if (panel->getX() > canvasWidth) canvasWidth = panel->getX();
-  if (panel->getY() > canvasHeight) canvasHeight = panel->getY();
-  
   panels = (Panel**)realloc(panels, sizeof(Panel*) * (panelAmount + 1));
   if (panels == NULL)
   {
@@ -78,8 +75,26 @@ void      LedManager::begin                             ()
   FastLED.addLeds<WS2812, PIN_LEDS, LEDCOLORDER>(leds, staticLedAmount);
   #endif
 
-
-
+  /*
+  Serial.println(F("Prepping canvasWidth and canvasHeight"));
+  //Prepare the panel matrix x and y
+  for (uint8_t i = 0; i < panelAmount; i++)
+  {
+    if (panels[i]->getX() > canvasWidth)
+    {
+      canvasWidth = panels[i]->getX()+1;
+      Serial.print(F("New canvasWidth: "));
+      Serial.println(canvasWidth);
+    }
+    if (panels[i]->getY() > canvasHeight)
+    {
+      canvasHeight = panels[i]->getY()+1;
+      Serial.print(F("New canvasHeight: "));
+      Serial.println(canvasHeight);
+    }
+  }
+  
+  Serial.println(F("Allocating the panel matrix"));
   // Allocate memory for the 2D array
   panelMatrix = new Panel**[canvasWidth];
   for(uint8_t i = 0; i < canvasWidth; ++i)
@@ -87,6 +102,7 @@ void      LedManager::begin                             ()
     panelMatrix[i] = new Panel*[canvasHeight];
   }
 
+  Serial.println(F("Setting all elements to nullptr"));
   // Initialize all elements to nullptr
   for(uint8_t i = 0; i < canvasWidth; ++i)
   {
@@ -96,11 +112,37 @@ void      LedManager::begin                             ()
     }
   }
 
+  Serial.println(F("Adding all panels to the matrix"));
   //Add all panels to their corresponding spots in the matrix
   for (uint8_t i = 0; i < panelAmount; i++)
   {
+    
+    Serial.println(F("Panel index out of bounds"));
+
+    Serial.print(F("Adding panel to position "));
+    Serial.print(panels[i]->getX());
+    Serial.print(F(","));
+    Serial.println(panels[i]->getY());
+    
+    if (panels[i]->getX() >= canvasWidth || panels[i]->getY() >= canvasHeight)
+    {
+      Serial.print(F("Panel index out of bounds: "));
+      Serial.print(panels[i]->getX());
+      Serial.print(F(","));
+      Serial.print(panels[i]->getY());
+
+      Serial.print(F("Canvas size: "));
+      Serial.print(canvasWidth);
+      Serial.print(F(","));
+      Serial.println(canvasHeight);
+    }
+    
     panelMatrix[panels[i]->getX()][panels[i]->getY()] = panels[i];
+    
   }
+  */
+
+  Serial.println(F("LedManager Ready!"));
 }
 //Public
 //Standard
@@ -186,6 +228,14 @@ uint8_t   LedManager::getPanelAmount                    ()
 uint16_t  LedManager::getPanelDiodeAmount               (uint8_t panelNumber)
 {
   return panels[panelNumber]->getDiodeAmount();
+}
+uint8_t   LedManager::getCanvasWidth                    ()
+{
+  return canvasWidth;
+}
+uint8_t   LedManager::getCanvasHeight                   ()
+{
+  return canvasHeight;
 }
 //Transmissions
 String    LedManager::convertToTansmission              ()
