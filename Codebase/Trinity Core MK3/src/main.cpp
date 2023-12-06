@@ -460,25 +460,27 @@ void setup()
 
   Serial.println(F("---===SETUP COMPLETED===---"));
   
-  setAnimation_Default();
+  trinity->setSpeed(1);
+  for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
+
+
+
+  //setAnimation_Default();
   
-  /* Some temp custom palette stuff
+  //Some temp custom palette stuff
   trinity->setSpeed(5);
 
   trinity->setCustomPaletteColours(0, 0, (ColourRGB){255, 128, 0});
-  trinity->setCustomPaletteColours(0, 1, (ColourRGB){255, 0, 255});
-  trinity->setCustomPaletteColours(0, 2, (ColourRGB){0, 128, 255});
-  trinity->setCustomPaletteAvailableColours(0, 3);
+  trinity->setCustomPaletteAvailableColours(0, 1);
 
   for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
   {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_CUSTOM_DECODE, 0, 0, 1, true});
+    trinity->setPanelVfx(i, (VFXData){EFFECT_CUSTOM_STATIC, 0, 0, 1, true});
     for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
     {
-      trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_STATIC, COLOUR_WHITE, 0, 1, true});
+      trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_CUSTOM_STATIC, 0, 0, 1, true});
     }
   }
-  */
 }
 
 void loop()
