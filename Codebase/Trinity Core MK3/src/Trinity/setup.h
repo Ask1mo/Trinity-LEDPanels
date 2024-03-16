@@ -1,43 +1,19 @@
-/*---=== Setting examples ===---*/
-//PANELSETUP_PROTO
-//PANELSETUP_ATOS
-//PANELSETUP_EVA
-//PANELSETUP_LIAM
-//PANELSETUP_PRIME
-//PANELSETUP_CHRISTMAS
-//PANELSETUP_WESTPOINT
-//PANELSETUP_MINITOWER
-//PANELSETUP_TEST
-
-//PLATFORM_ARDUINO
-//PLATFORM_ESP32_FIREBEETLE2
-//PLATFORM_ESP32_FIREBEETLE2_DEBUG
-//PLATFORM_ESP32_WROOMDEVKIT
-
-//LEDTYPE_STANDARD
-//LEDTYPE_CHRISTMASSTRING
-
 //LINKPROGRAM_MK2
 //LINKPROGRAM_MK3
 
-#define DEBUG_DISABLED              0
-#define DEBUG_ERRORS                1
-#define DEBUG_WARNINGS              2
-#define DEBUG_OPERATIONS            3
-#define DEBUG_DAYISRUINED           5
-/*---=== Setting examples ===---*/
+
 
 
 
 
 
 /*---=== PUT YOUR SETTINGS HERE!!! ===---*/
-#define PANELSETUP_PRIME
-#define PLATFORM_ESP32_FIREBEETLE2
+#define PANELSETUP_HOUSECUBE
+#define PLATFORM_ESP32_WROOMDEVKIT
 #define LEDTYPE_STANDARD
 #define LINKPROGRAM_MK2
 
-#define DEBUGLEVEL DEBUG_DISABLED
+#define DEBUGLEVEL DEBUG_WARNINGS
 /*---=== PUT YOUR SETTINGS HERE!!! ===---*/
 
 
@@ -77,10 +53,10 @@
 #endif
 #ifdef PLATFORM_ESP32_WROOMDEVKIT
     #define PIN_BUTTON      27          //On board button
-    #define PIN_LEDS        5           //On boadr LED
+    #define PIN_LEDS        32           //On boadr LED
     #define PIN_LIGHTSENSOR 15          //D?
     #define PIN_ERRORLED    2           //NOT BOUND YET
-    #define ENABLE_DIODECONTROL false    //Individual Diode Fx enabled
+    #define ENABLE_DIODECONTROL true    //Individual Diode Fx enabled
     #define ENABLE_WEBCONTROL false      //Controls via website enabled
     #define BAUDRATE 115200
     #define CUSTOMPALETTEAMOUNT 5
@@ -124,6 +100,15 @@
     #define CANVASWIDTH     3
     #define CANVASHEIGHT    2
 #endif
+#ifdef PANELSETUP_HOUSECUBE
+    #define CANVASWIDTH     0
+    #define CANVASHEIGHT    0
+#endif
+#ifdef PANELSETUP_POWERWIRE
+    #define CANVASWIDTH     0
+    #define CANVASHEIGHT    0
+#endif
+
 /* ---=== LED Setup ===---*/
 
 /* ---=== Strip Setup ===---*/
@@ -135,3 +120,11 @@
 #endif
 /* ---=== Strip Setup ===---*/
 
+
+/*---=== Debug Setup ===---*/
+#define DEBUG_DISABLED              0
+#define DEBUG_ERRORS                1
+#define DEBUG_WARNINGS              2
+#define DEBUG_OPERATIONS            3
+#define DEBUG_DAYISRUINED           5
+/*---=== Debug Setup ===---*/

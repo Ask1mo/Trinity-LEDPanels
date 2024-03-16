@@ -4,7 +4,7 @@
 
 void setAnimation_Default()
 {
-  trinity->setSpeed(1);
+  trinity->setSpeed(15);
   for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
   {
     trinity->setPanelVfx(i, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_BLACK, (uint16_t)(random(0, 10)*15), 1, true});
@@ -446,12 +446,18 @@ void setup()
   trinity->addPanel(new Panel( 4, 4, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      6 ));
   #endif
   #ifdef PANELSETUP_TEST
-  trinity->addPanel(new Panel(0, 0, 0, CLOCK_COUNTERWISE, COMPASS_SOUTH_EAST, 3));
-  trinity->addPanel(new Panel(1, 0, 0, CLOCK_COUNTERWISE, COMPASS_SOUTH,      3));
-  trinity->addPanel(new Panel(2, 0, 0, CLOCK_COUNTERWISE, COMPASS_SOUTH_WEST, 3));
-  trinity->addPanel(new Panel(3, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, 3));
-  trinity->addPanel(new Panel(4, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      3));
-  trinity->addPanel(new Panel(5, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, 3));
+  trinity->addPanel(new Panel(0, 0, 0, CLOCK_COUNTERWISE, COMPASS_SOUTH_EAST, 5));
+  trinity->addPanel(new Panel(1, 0, 0, CLOCK_COUNTERWISE, COMPASS_SOUTH,      5));
+  trinity->addPanel(new Panel(2, 0, 0, CLOCK_COUNTERWISE, COMPASS_SOUTH_WEST, 5));
+  trinity->addPanel(new Panel(3, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, 5));
+  trinity->addPanel(new Panel(4, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      5));
+  trinity->addPanel(new Panel(5, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, 5));
+  #endif
+  #ifdef PANELSETUP_HOUSECUBE
+  for (uint8_t i = 0; i < 20; i++) trinity->addPanel(new Panel(i, i, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 6));
+  #endif
+    #ifdef PANELSETUP_POWERWIRE
+  for (uint8_t i = 0; i < 60; i++) trinity->addPanel(new Panel(i, i, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 1));
   #endif
 
   trinity->begin();
@@ -459,32 +465,60 @@ void setup()
   currentShowingEffect = 0;
 
   Serial.println(F("---===SETUP COMPLETED===---"));
+
+
+
+
   
+
+  #ifdef PANELSETUP_HOUSECUBE
+  //One time LED setup
+
+
+  /*
   trinity->setSpeed(1);
+
+  uint16_t offset = 0;
   for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
+  {
+    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_STATIC, COLOUR_WHITE, offset, 1, true});
+    for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
+    {
+      trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_STATIC, COLOUR_WHITE, offset, 1, true});
+      offset+=5;
+    }
+  }
+  */
+
+
+  trinity->setSpeed(1);
+
+  uint16_t offset = 0;
+  for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
+  {
+    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_PLANE, COLOUR_RED, 0, 1, true});
+  }
 
 
 
-  //setAnimation_Default();
-  
-  //Some temp custom palette stuff
-  trinity->setSpeed(5);
 
-  trinity->setCustomPaletteColours(0, 0, (ColourRGB){255, 128, 0});
-  trinity->setCustomPaletteAvailableColours(0, 1);
+ #endif
+
+
+  #ifdef PANELSETUP_POWERWIRE
+  //One time LED setup
+  trinity->setSpeed(3);
 
   for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
   {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_CUSTOM_STATIC, 0, 0, 1, true});
-    for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
-    {
-      trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_CUSTOM_STATIC, 0, 0, 1, true});
-    }
+    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_PAUSEDBREATHING, COLOUR_YELLOW, i*10, 5, true});
   }
+  #endif
 }
 
 void loop()
 {
+
   trinity->tick();
 
   #if ENABLECYCLING
