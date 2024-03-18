@@ -33,9 +33,9 @@
 
 
 /*---=== PUT YOUR SETTINGS HERE!!! ===---*/
-#define PANELSETUP_CHRISTMAS
+#define PANELSETUP_PRAETOR
 #define PLATFORM_ARDUINO
-#define LEDTYPE_CHRISTMASSTRING
+#define LEDTYPE_STANDARD
 #define LINKPROGRAM_MK2
 
 #define DEBUGLEVEL DEBUG_DISABLED
@@ -47,11 +47,11 @@
 
 /*---=== Pin Mapping ===---*/
 #ifdef PLATFORM_ARDUINO
-    #define PIN_BUTTON      2           //D2
-    #define PIN_LEDS        12          //D12
+    #define PIN_BUTTON      12           //D2
+    #define PIN_LEDS        3          //D12
     #define PIN_ERRORLED    13          //D13
     #define PIN_LIGHTSENSOR A0          //A0
-    #define ENABLE_DIODECONTROL false   //Arduino is not powerful enough for per diode control. So it's disabled
+    #define ENABLE_DIODECONTROL true   //Arduino is not powerful enough for per diode control. So it's disabled
     #define ENABLE_WEBCONTROL false     //Arduino has no website capabilities
     #define BAUDRATE 9600
     #define CUSTOMPALETTEAMOUNT 5
@@ -127,6 +127,10 @@
 #endif
 #ifdef PANELSETUP_TEST
     #define CANVASWIDTH     3
+    #define CANVASHEIGHT    2
+#endif
+#ifdef PANELSETUP_PRAETOR
+    #define CANVASWIDTH     6
     #define CANVASHEIGHT    2
 #endif
 /* ---=== LED Setup ===---*/

@@ -162,8 +162,10 @@ void      Panel::setDiodeVfx                (uint16_t diodeNumber, VFXData vfxDa
     setVfx(vfxData);
     return;
   }
+  detailed = true;
 
-  if (effect != vfxData.effect)
+
+  //if (effect != vfxData.effect)
   {
     effect = vfxData.effect;
     if(DEBUGLEVEL >= DEBUG_OPERATIONS)

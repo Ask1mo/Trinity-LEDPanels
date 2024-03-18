@@ -454,6 +454,12 @@ void setup()
   trinity->addPanel(new Panel(4 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      3));
   trinity->addPanel(new Panel(5 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, 3));
   #endif
+  #ifdef PANELSETUP_PRAETOR
+  trinity->addPanel(new Panel(0, 0, 0, CLOCK_COUNTERWISE, COMPASS_SOUTH_EAST, 4));
+  trinity->addPanel(new Panel(1, 0, 0, CLOCK_COUNTERWISE, COMPASS_SOUTH,     19));
+  trinity->addPanel(new Panel(2, 0, 0, CLOCK_COUNTERWISE, COMPASS_SOUTH_WEST, 4));
+  trinity->addPanel(new Panel(3, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, 4));
+  #endif
 
   trinity->finaliseSetup();
 
@@ -463,15 +469,50 @@ void setup()
 
 
 
+  trinity->setSpeed(1);
+
   for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
   {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_RED, (uint16_t)(random(0, 10)*100), 1, true});
+    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_HEARTBEAT, COLOUR_RED, 0, 1, true});
+    //
     for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
     {
-      //trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_RED, 0, 5, true});
-      //offset++;
+      trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_HEARTBEAT, COLOUR_RED, 0, 1, false});
     }
+    //
   }
+  
+  trinity->forceTick(500, true, 0);
+ 
+
+  int offsetmulti = 6;
+
+  trinity->setPanelVfx(0, (VFXData){EFFECT_STOCK_STATIC, COLOUR_RED, 0, 1, true});
+  for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(0); j++)
+  {
+    trinity->setPanelDiodeVfx(0, j, (VFXData){EFFECT_STOCK_STATIC, COLOUR_RED, j * offsetmulti, 1, true});
+  }
+
+
+trinity->setPanelVfx(1, (VFXData){EFFECT_STOCK_STATIC, COLOUR_CYAN, 0, 1, true});
+for (uint16_t j = 0; j <= 9; j++)
+{
+    trinity->setPanelDiodeVfx(1, j, (VFXData){EFFECT_STOCK_STATIC, COLOUR_CYAN, j * offsetmulti, 1, true});
+    trinity->setPanelDiodeVfx(1, j+9, (VFXData){EFFECT_STOCK_STATIC, COLOUR_CYAN, (9-j) * offsetmulti, 1, true});
+}
+
+  trinity->setPanelVfx(2, (VFXData){EFFECT_STOCK_STATIC, COLOUR_RED, 0, 1, true});
+  for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(2); j++)
+  {
+    trinity->setPanelDiodeVfx(2, j, (VFXData){EFFECT_STOCK_STATIC, COLOUR_RED, j * offsetmulti, 1, true});
+  }
+
+  trinity->setPanelVfx(3, (VFXData){EFFECT_STOCK_STATIC, COLOUR_RED, 0, 1, true});
+  for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(3); j++)
+  {
+    trinity->setPanelDiodeVfx(3, j, (VFXData){EFFECT_STOCK_STATIC, COLOUR_RED, j * offsetmulti, 1, true});
+  }
+  
   
   /*
   trinity->setSpeed(5);
