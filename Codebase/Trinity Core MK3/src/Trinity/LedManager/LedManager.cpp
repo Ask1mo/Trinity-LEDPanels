@@ -16,7 +16,7 @@ LedManager::LedManager                                  ()
   speed         = 1;
   panels        = NULL;
   panelAmount   = 0;
-
+  diodeAmount   = 0;
   
 
   //create custom palettes
@@ -49,30 +49,29 @@ void      LedManager::addPanel                          (Panel *panel)
 void      LedManager::begin                             ()
 {
   //Count diodes and give them to the panels (tell them where they start)
-  int ledAmount = 0;
   for (uint8_t i = 0; i < panelAmount; i++)
   {
-    panels[i]->setDiodeStart(ledAmount);
-    ledAmount += panels[i]->getDiodeAmount();
+    panels[i]->setDiodeStart(diodeAmount);
+    diodeAmount += panels[i]->getDiodeAmount();
   }
 
   //create static led array
-  const int staticLedAmount = ledAmount;
-  leds = new CRGB[staticLedAmount];
+  const int staticDiodeAmount = diodeAmount;
+  leds = new CRGB[staticDiodeAmount];
   if(DEBUGLEVEL >= DEBUG_OPERATIONS)
   {
     Serial.print(F("Allocated  "));
-    Serial.print(staticLedAmount);
+    Serial.print(staticDiodeAmount);
     Serial.print(F(" LED's at adress "));
     Serial.println((int)leds, DEC);
   }
 
   //start FastLED
   #ifdef PLATFORM_ESP32_FIREBEETLE2_DEBUG
-  FastLED.addLeds<NEOPIXEL, PIN_LEDS>(leds, staticLedAmount);
+  FastLED.addLeds<NEOPIXEL, PIN_LEDS>(leds, staticDiodeAmount);
   #endif
   #ifndef PLATFORM_ESP32_FIREBEETLE2_DEBUG
-  FastLED.addLeds<WS2812, PIN_LEDS, LEDCOLORDER>(leds, staticLedAmount);
+  FastLED.addLeds<WS2812, PIN_LEDS, LEDCOLORDER>(leds, staticDiodeAmount);
   #endif
 
   /*
@@ -224,6 +223,10 @@ void      LedManager::setPanelDiodeVfx                  (uint8_t panelNumber, ui
 uint8_t   LedManager::getPanelAmount                    ()
 {
   return panelAmount;
+}
+uint16_t  LedManager::getDiodeAmount                    ()
+{
+  return diodeAmount;
 }
 uint16_t  LedManager::getPanelDiodeAmount               (uint8_t panelNumber)
 {

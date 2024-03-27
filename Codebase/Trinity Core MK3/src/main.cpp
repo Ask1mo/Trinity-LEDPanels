@@ -456,8 +456,14 @@ void setup()
   #ifdef PANELSETUP_HOUSECUBE
   for (uint8_t i = 0; i < 20; i++) trinity->addPanel(new Panel(i, i, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 6));
   #endif
-    #ifdef PANELSETUP_POWERWIRE
+  #ifdef PANELSETUP_HOUSECUBEV2
+  for (uint8_t i = 0; i < 10; i++) trinity->addPanel(new Panel(i, i, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 60));
+  #endif
+  #ifdef PANELSETUP_POWERWIRE
   for (uint8_t i = 0; i < 60; i++) trinity->addPanel(new Panel(i, i, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 1));
+  #endif
+  #ifdef PANELSETUP_VOICETUBE
+  for (uint8_t i = 0; i < 10; i++) trinity->addPanel(new Panel(i, i, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 6));
   #endif
 
   trinity->begin();
@@ -473,8 +479,6 @@ void setup()
 
   #ifdef PANELSETUP_HOUSECUBE
   //One time LED setup
-
-
   /*
   trinity->setSpeed(1);
 
@@ -489,8 +493,6 @@ void setup()
     }
   }
   */
-
-
   trinity->setSpeed(1);
 
   uint16_t offset = 0;
@@ -498,6 +500,39 @@ void setup()
   {
     trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_PLANE, COLOUR_RED, 0, 1, true});
   }
+ #endif
+
+ #ifdef PANELSETUP_HOUSECUBEV2
+  //One time LED setup
+  lastPowerUpdate = 0;
+  pinMode(PIN_RELAY, INPUT);
+  button = new AskButton(PIN_BUTTON, 100);
+
+  trinity->setSpeed(1);
+  trinity->setBrightnessMode(BRIGHTNESS_2_NOR);
+
+
+  uint16_t offset = 0;
+  for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
+  {
+    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_STATIC, COLOUR_RED, 0, 1, true});
+    for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
+    {
+      trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_STATIC, COLOUR_RED, offset, 1, true});
+      offset++;
+    }
+  }
+    powerPercentage = 50;
+
+/*
+  trinity->setSpeed(1);
+
+  uint16_t offset = 0;
+  for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
+  {
+    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_PLANE, COLOUR_RED, 0, 1, true});
+  }
+  */
 
 
 
@@ -506,6 +541,8 @@ void setup()
 
 
   #ifdef PANELSETUP_POWERWIRE
+  
+  pinMode(PIN_RELAY, OUTPUT);
   //One time LED setup
   trinity->setSpeed(3);
 
@@ -514,12 +551,215 @@ void setup()
     trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_PAUSEDBREATHING, COLOUR_YELLOW, i*10, 5, true});
   }
   #endif
+
+  #ifdef PANELSETUP_VOICETUBE
+
+  Serial.println(F("TEST MESSAGE AAAAAAAAAAAAAAAAAAAAAAAAA"));
+
+  pinMode(PIN_RELAY, INPUT);
+  //One time LED setup
+  trinity->setSpeed(10);
+  for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
+  {
+    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_STATIC, COLOUR_BLACK, 0, 5, true});
+  }
+
+  #endif
+
 }
 
 void loop()
 {
-
   trinity->tick();
+  uint64_t currentMillis = millis();
+
+
+  #ifdef PANELSETUP_POWERWIRE
+  if(currentMillis >= (prevMillis+10000))
+  {
+    prevMillis = currentMillis;
+    dayNight = !dayNight;
+
+    if (dayNight)// If it's day
+    {
+      Serial.println(F("Day"));
+      digitalWrite(PIN_RELAY, HIGH);
+      trinity->setBrightnessMode(BRIGHTNESS_3_MAX);
+    }
+    else
+    {
+      Serial.println(F("Night"));
+      digitalWrite(PIN_RELAY, LOW);
+      trinity->setBrightnessMode(BRIGHTNESS_0_OFF);
+    }
+    
+  }
+  #endif
+
+  #ifdef PANELSETUP_HOUSECUBEV2
+
+
+  
+  if (currentMillis >= (lastPowerUpdate+POWERUPDATEINTERVAL))
+  {
+    lastPowerUpdate = currentMillis;
+
+    dayNight = digitalRead(PIN_RELAY);
+    if (dayNight) //If it's day
+    {
+      if(!button->getPressState())
+      {
+        if(powerPercentage < 100)
+        {
+          powerPercentage+=POWERUPDATEVARIABLE;
+          if (powerPercentage >= 100)
+          {
+            Serial.println(F("Power overload!"));
+
+            for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
+            {
+              trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_BLINK, COLOUR_YELLOW, random16(0, 200), random8(2, 6), true});
+            }
+            trinity->forceTick(100, true, 0);
+
+            trinity->setBrightnessMode(BRIGHTNESS_0_OFF);
+            trinity->forceTick(100, true, 0);
+            for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
+            {
+              trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_STATIC, COLOUR_BLACK, 0, 1, true});
+            }
+
+            powerPercentage = 50;
+            trinity->setBrightnessMode(BRIGHTNESS_2_NOR);
+            delay(1000);
+          }
+        }
+
+        colour = COLOUR_YELLOW;
+      }
+      else
+      {
+        colour = COLOUR_GREEN;
+      }
+    }
+    else
+    {
+      if(button->getPressState())
+      {
+        if(powerPercentage > 0)
+        {
+          powerPercentage-=POWERUPDATEVARIABLE;
+          if(powerPercentage <= 0)
+          {
+            Serial.println(F("Power depleted!"));
+            for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
+            {
+              trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_BLINK, COLOUR_RED, random16(0, 200), random8(2, 6), true});
+            }
+            trinity->forceTick(100, true, 0);
+
+            trinity->setBrightnessMode(BRIGHTNESS_0_OFF);
+            trinity->forceTick(100, true, 0);
+            for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
+            {
+              trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_STATIC, COLOUR_BLACK, 0, 1, true});
+            }
+
+            powerPercentage = 50;
+            trinity->setBrightnessMode(BRIGHTNESS_2_NOR);
+            delay(1000);
+          }
+        }
+
+        colour = COLOUR_RED;
+      }
+      else
+      {
+        colour = COLOUR_GREEN;
+      }
+    }
+  }
+
+
+
+
+  
+
+    uint16_t diodeNumber = 0;
+    for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
+    {
+      for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
+      {
+        if(powerPercentage > ((float)diodeNumber/3)) //Magic number makes diodeamount back to 3
+        {
+          if(button->getPressState())
+          {
+            trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_STATIC, colour, 0, 1, true});
+          }
+          else
+          {
+            trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_STATIC, colour, 0, 1, true});
+          }
+        }
+        else
+        {
+          trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_STATIC, COLOUR_BLACK, 0, 1, true});
+        }
+        diodeNumber++;
+      }
+    }
+  
+  
+  #endif
+
+  #ifdef PANELSETUP_VOICETUBE
+
+  
+
+    
+    if (digitalRead(PIN_RELAY))sensorHits++;
+    sensorPolls++;
+
+
+    if(currentMillis >= (prevSensorMillis+SENSORPOLLTIME))
+    {
+      prevSensorMillis = currentMillis;
+      uint16_t requiredSensorHits = sensorPolls * SENSORTRIGGERPERCENTAGE;
+      
+      if((sensorHits*100) > requiredSensorHits)
+      {
+        Serial.println(F("TRIGGERED"));
+
+        uint8_t colour = random8(1, 7);
+
+        uint16_t offset = 0;
+        for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
+        {
+          for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
+          {
+            offset+=5;
+          }
+        }
+
+        for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
+        {
+          trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_FLASH, colour, 0, 1, false});
+          for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
+          {
+            trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_FLASH, colour, offset, 1, false});
+            offset-=5;
+          }
+        }
+      }
+
+      sensorHits = 0;
+      sensorPolls = 0;
+    }  
+
+  #endif
+
+
+
 
   #if ENABLECYCLING
   uint64_t currentMillis = millis();

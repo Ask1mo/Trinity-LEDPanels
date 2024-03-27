@@ -77,56 +77,7 @@ void Trinity::tick()
   }
 
   //Button press handling
-  switch(button->getCommand())
-  {
-    case BUTTON_TAPPED: //Brightness cycle
-    {
-      switch (brightnessMode)
-      {
-        case BRIGHTNESS_4_AUT:
-        {
-          setBrightnessMode(BRIGHTNESS_0_OFF);
-          lightSensor->setEnabled(false);
-          Serial.println(F("Changing sys brightness to OFF"));
-        }
-        break;
-        case BRIGHTNESS_0_OFF:
-        {
-          setBrightnessMode(BRIGHTNESS_1_DIM);
-          lightSensor->setEnabled(false);
-          Serial.println(F("Changing sys brightness to DIM"));
-        }
-        break;
-        case BRIGHTNESS_1_DIM:
-        {
-          setBrightnessMode(BRIGHTNESS_2_NOR);
-          lightSensor->setEnabled(false);
-          Serial.println(F("Changing sys brightness to NORMAL"));
-        }
-        break;
-        case BRIGHTNESS_2_NOR:
-        {
-          setBrightnessMode(BRIGHTNESS_3_MAX);
-          lightSensor->setEnabled(false);
-          Serial.println(F("Changing sys brightness to MAX"));
-
-        }
-        break;
-        case BRIGHTNESS_3_MAX:
-        {
-          setBrightnessMode(BRIGHTNESS_4_AUT);
-          lightSensor->setEnabled(true);
-          Serial.println(F("Changing sys brightness to Automatic"));
-        }
-        break;
-      }
-    }
-    break;
-    case BUTTON_HELD: //Preset cycle
-    {
-      Serial.println(F("Preset loading not implemented"));
-    }
-  }
+  //TEMP REMOVED FOR GLOW
   
   //Auto brightness handling
   if (lightSensor->getEnabled())
@@ -280,6 +231,11 @@ void Trinity::setBrightnessMode(uint8_t brightnessMode)
     break;
   }
 }
+uint16_t Trinity::getDiodeAmount()
+{
+  ledManager->getDiodeAmount();
+}
+
 void Trinity::setPanelVfx(uint8_t panelNumber, VFXData vfxData)
 {
   ledManager->setPanelVfx(panelNumber, vfxData);

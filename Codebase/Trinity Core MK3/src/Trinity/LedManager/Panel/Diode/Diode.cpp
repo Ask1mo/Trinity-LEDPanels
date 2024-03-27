@@ -16,6 +16,7 @@ Diode::Diode(uint16_t number, uint8_t *panelEffect)
   this->effectVariables.g                   = 0;
   this->effectVariables.b                   = 0;
 
+
   resetFXProcessingVars();
 }
 
@@ -42,13 +43,18 @@ void      Diode::tick()
         effectVariables.c = colour;
       }
       
+      if (!effectFinished) effectFinished = processEffect(*effect, &effectVariables, customPalette);
 
-      bool effectFinished = processEffect(*effect, &effectVariables, customPalette);
 
       if(colour == COLOUR_CYCLE && effectFinished)
       {
         effectVariables.c++;
         if(effectVariables.c == AMOUNTOFCOLOURS) effectVariables.c = (COLOUR_BLACK + 1);
+      }
+      else if (effectFinished)
+      {
+        if (repeat) effectFinished = false;
+      
       }
     }
   }
@@ -96,6 +102,7 @@ void      Diode::resetFXProcessingVars      ()
   this->effectVariables.fxProgression           = 0;      // In effect cycling
   this->effectVariables.c                       = 0; // Cycles of the whole effect (But with different colourss)
   this->offsetTimer                     = 0;
+  this->effectFinished                   = false;
 }
 
 //Transmissions

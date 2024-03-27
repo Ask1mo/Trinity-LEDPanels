@@ -8,7 +8,7 @@
 
 
 /*---=== PUT YOUR SETTINGS HERE!!! ===---*/
-#define PANELSETUP_HOUSECUBE
+#define PANELSETUP_VOICETUBE
 #define PLATFORM_ESP32_WROOMDEVKIT
 #define LEDTYPE_STANDARD
 #define LINKPROGRAM_MK2
@@ -104,7 +104,15 @@
     #define CANVASWIDTH     0
     #define CANVASHEIGHT    0
 #endif
+#ifdef PANELSETUP_HOUSECUBEV2
+    #define CANVASWIDTH     0
+    #define CANVASHEIGHT    0
+#endif
 #ifdef PANELSETUP_POWERWIRE
+    #define CANVASWIDTH     0
+    #define CANVASHEIGHT    0
+#endif
+#ifdef PANELSETUP_VOICETUBE
     #define CANVASWIDTH     0
     #define CANVASHEIGHT    0
 #endif

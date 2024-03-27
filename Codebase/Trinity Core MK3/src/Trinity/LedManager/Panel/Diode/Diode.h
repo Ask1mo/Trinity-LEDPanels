@@ -24,6 +24,8 @@ private:
   EffectVariables                           effectVariables;
   uint16_t                                  offsetTimer;
 
+  bool effectFinished;
+
 public:
   Diode                                     (uint16_t number, uint8_t *panelEffect);
   //Standard

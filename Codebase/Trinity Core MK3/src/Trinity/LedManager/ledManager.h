@@ -8,6 +8,7 @@ class LedManager
 {
 private:
   uint8_t                                 panelAmount;
+  uint16_t                                diodeAmount;
   uint8_t                                 canvasWidth;
   uint8_t                                 canvasHeight;
   uint8_t                                 goalBrightness;
@@ -39,6 +40,7 @@ public:
   void    setPanelDiodeVfx                (uint8_t panelNumber, uint16_t diodeNumber, VFXData vfxData);
   //Technical
   uint8_t getPanelAmount                  ();
+  uint16_t getDiodeAmount                 ();
   uint16_t getPanelDiodeAmount            (uint8_t panelNumber);
   uint8_t getCanvasWidth                  ();
   uint8_t getCanvasHeight                 ();

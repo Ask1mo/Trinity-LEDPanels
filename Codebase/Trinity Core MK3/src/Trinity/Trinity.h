@@ -37,6 +37,7 @@ public:
     void forceTick(uint16_t ticks, bool keepPrinting, uint16_t delayTime);  //Manually force the ledmanager to tick without running any other Trinity code.
     void setSpeed(uint8_t speed);
     void setBrightnessMode(uint8_t brightness);
+    uint16_t getDiodeAmount();
     
     void setPanelVfx(uint8_t panelNumber, VFXData vfxData);
     uint16_t getPanelDiodeAmount(uint8_t panelNumber);
