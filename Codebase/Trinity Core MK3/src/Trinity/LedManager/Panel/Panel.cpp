@@ -167,14 +167,17 @@ void      Panel::setDiodeVfx                (uint16_t diodeNumber, VFXData vfxDa
     return;
   }
 
-  if (effect != vfxData.effect)
+  /*if (effect != vfxData.effect)
   {
     effect = vfxData.effect;
+    detailed = true;
     if(DEBUGLEVEL >= DEBUG_OPERATIONS)
     {
       Serial.print(F(" (Panel copied effect intended for diode)"));
     }
   }
+  */
+ detailed = true;
   diodes[diodeNumber]->setVfx(vfxData);
 
 

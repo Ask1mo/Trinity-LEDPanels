@@ -24,6 +24,7 @@ Trinity::Trinity(uint8_t ledPin, uint8_t buttonPin, uint8_t ldrPin, uint8_t maxF
   
 
   setBrightnessMode(BRIGHTNESS_3_MAX);
+  currentEffect = 0;
   prevFrameMillis = 0;
   frameTime = 1000/maxFramerate;
 
@@ -40,6 +41,8 @@ Trinity::Trinity(uint8_t ledPin, uint8_t buttonPin, uint8_t ldrPin, uint8_t maxF
   */
 
   Serial.println(F("...Trinity Started"));
+
+
 }
 void Trinity::addPanel(Panel *panel)
 {
@@ -51,6 +54,10 @@ void Trinity::begin()
   webServerManager  = new WebServerManager(ledManager->getPanelAmount(), ledManager->getCanvasWidth(), ledManager->getCanvasHeight());
   setupComplete = true;
   Serial.println(F("...Trinity Setup Finalised"));
+
+    setAnimation_Atos_0();
+    currentEffect = 1;
+
 }
 //Private
 
@@ -79,7 +86,7 @@ void Trinity::tick()
   //Button press handling
   switch(button->getCommand())
   {
-    case BUTTON_TAPPED: //Brightness cycle
+    case BUTTON_HELD: //Brightness cycle
     {
       switch (brightnessMode)
       {
@@ -91,7 +98,7 @@ void Trinity::tick()
         }
         break;
         case BRIGHTNESS_0_OFF:
-        {
+        { 
           setBrightnessMode(BRIGHTNESS_1_DIM);
           lightSensor->setEnabled(false);
           Serial.println(F("Changing sys brightness to DIM"));
@@ -114,17 +121,54 @@ void Trinity::tick()
         break;
         case BRIGHTNESS_3_MAX:
         {
-          setBrightnessMode(BRIGHTNESS_4_AUT);
-          lightSensor->setEnabled(true);
-          Serial.println(F("Changing sys brightness to Automatic"));
+          setBrightnessMode(BRIGHTNESS_0_OFF);
+          lightSensor->setEnabled(false);
+          Serial.println(F("Changing sys brightness to OFFtomatic"));
         }
         break;
       }
     }
     break;
-    case BUTTON_HELD: //Preset cycle
+    case BUTTON_TAPPED: //Preset cycle
     {
-      Serial.println(F("Preset loading not implemented"));
+      switch (currentEffect)
+      {
+        case 0:
+        {
+          setAnimation_Atos_0();
+          currentEffect++;
+        }
+        break;
+        case 1:
+        {
+          setAnimation_Atos_1();
+          currentEffect++;
+        }
+        break;
+        case 2:
+        {
+          setAnimation_Atos_2();
+          currentEffect++;
+        }
+        break;
+        case 3:
+        {
+          setAnimation_Atos_3();
+          currentEffect++;
+        }
+        break;
+        case 4:
+        {
+          setAnimation_Atos_4();
+          currentEffect++;
+        }
+        break;
+        case 5:
+        {
+          currentEffect = 0;
+        }
+        break;
+      }
     }
   }
   
@@ -305,4 +349,76 @@ void Trinity::setCustomPaletteAvailableColours(uint8_t slot, uint8_t avalaibleCo
 uint8_t Trinity::getPanelAmount()
 {
   return ledManager->getPanelAmount();
+}
+
+
+//TEMP
+void Trinity::setAnimation_Atos_0() //Special Synth
+{
+  setSpeed(1);
+
+  setPanelVfx(0, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_BLACK, 0, 1, true});
+  for (uint16_t j = 0; j < getPanelDiodeAmount(0); j++)
+  {
+    setPanelDiodeVfx(0, j, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_BLACK, 0, 1, true});
+  }
+
+  setPanelVfx(1, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_BLACK, 0, 1, true});
+  for (uint16_t j = 0; j < getPanelDiodeAmount(1); j++)
+  {
+    setPanelDiodeVfx(1, j, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_BLACK, 0, 1, true});
+  }
+
+  setPanelVfx(2, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_BLACK, 0, 1, true});
+  for (uint16_t j = 0; j < getPanelDiodeAmount(2); j++)
+  {
+    setPanelDiodeVfx(2, j, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_BLACK, 0, 1, true});
+  }
+}
+void Trinity::setAnimation_Atos_1() //Super Rainbow
+{
+
+  setSpeed(4);
+
+  uint16_t offset = 0;
+    for (uint16_t i = 0; i < getPanelAmount(); i++)
+    {
+      setPanelVfx(i, (VFXData){EFFECT_SPECIAL_RAINBOW, COLOUR_RED, (uint16_t)(i*5), 10, true});
+      for (uint16_t j = 0; j < getPanelDiodeAmount(i); j++)
+      {
+        setPanelDiodeVfx(i, j, (VFXData){EFFECT_SPECIAL_RAINBOW, COLOUR_RED, (uint16_t)(j*5), 10, true});
+        offset++;
+      }
+    }
+}
+void Trinity::setAnimation_Atos_2() //Red Decode
+{
+  setSpeed(1);
+
+  for (uint16_t i = 0; i < getPanelAmount(); i++)
+  {
+    setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, (uint16_t)(random(0, 10)*15), 1, true});
+    for (uint16_t j = 0; j < getPanelDiodeAmount(i); j++)
+    {
+      setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, j, 10, true});
+    }
+  }
+}
+void Trinity::setAnimation_Atos_3() //Static Cool
+{
+  setSpeed(1);
+
+  setPanelVfx(0, (VFXData){EFFECT_STOCK_STATIC, COLOUR_RED,  0, 1, true});
+  setPanelVfx(1, (VFXData){EFFECT_STOCK_STATIC, COLOUR_BLUE, 0, 1, true});
+  setPanelVfx(2, (VFXData){EFFECT_STOCK_STATIC, COLOUR_RED,  0, 1, true});
+
+}
+void Trinity::setAnimation_Atos_4() //Static white
+{
+  setSpeed(1);
+
+  for (uint16_t i = 0; i < getPanelAmount(); i++)
+  {
+    setPanelVfx(i, (VFXData){EFFECT_STOCK_STATIC, COLOUR_WHITE, 0, 1, true});
+  }
 }

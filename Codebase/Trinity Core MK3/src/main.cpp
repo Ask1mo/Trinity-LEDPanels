@@ -346,7 +346,6 @@ void setAnimation_Westpoint_ColourBlink()
   trinity->forceTick(64, false, 0);
 }
 
-
 void setup()
 {
   Serial.begin(BAUDRATE);
@@ -362,7 +361,9 @@ void setup()
   trinity->addPanel(new Panel(5, 5, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, LEDSAMOUNT_TRIANGLE));
   #endif
   #ifdef PANELSETUP_ATOS
-  trinity->addPanel(new Panel(0, 0, 0, CLOCK_COUNTERWISE, COMPASS_WEST, 38));
+  trinity->addPanel(new Panel(0, 0, 0, CLOCK_COUNTERWISE, COMPASS_WEST, 14));
+  trinity->addPanel(new Panel(0, 0, 0, CLOCK_COUNTERWISE, COMPASS_WEST, 10));
+  trinity->addPanel(new Panel(0, 0, 0, CLOCK_COUNTERWISE, COMPASS_WEST, 14));
   #endif
   #ifdef PANELSETUP_EVA
   trinity->addPanel(new Panel(0, 0, 0, CLOCK_COUNTERWISE, COMPASS_SOUTH_EAST, LEDSAMOUNT_TRIANGLE));
@@ -459,28 +460,6 @@ void setup()
   currentShowingEffect = 0;
 
   Serial.println(F("---===SETUP COMPLETED===---"));
-  
-  trinity->setSpeed(1);
-  for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
-
-
-
-  //setAnimation_Default();
-  
-  //Some temp custom palette stuff
-  trinity->setSpeed(5);
-
-  trinity->setCustomPaletteColours(0, 0, (ColourRGB){255, 128, 0});
-  trinity->setCustomPaletteAvailableColours(0, 1);
-
-  for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
-  {
-    trinity->setPanelVfx(i, (VFXData){EFFECT_CUSTOM_STATIC, 0, 0, 1, true});
-    for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
-    {
-      trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_CUSTOM_STATIC, 0, 0, 1, true});
-    }
-  }
 }
 
 void loop()

@@ -25,6 +25,7 @@ private:
     bool setupComplete;
 
 
+    uint8_t         currentEffect;
     uint8_t         brightnessMode;
     uint64_t        prevFrameMillis;
     uint16_t        frameTime;
@@ -45,5 +46,11 @@ public:
     void setCustomPaletteColours(uint8_t slot, uint8_t colourRGBNumber, ColourRGB colourRGB);
     void setCustomPaletteAvailableColours(uint8_t slot, uint8_t avalaibleColours);
     uint8_t getPanelAmount();
+
+    void setAnimation_Atos_0();
+    void setAnimation_Atos_1();
+    void setAnimation_Atos_2();
+    void setAnimation_Atos_3();
+    void setAnimation_Atos_4();
 };
 #endif

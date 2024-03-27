@@ -32,8 +32,8 @@
 
 
 /*---=== PUT YOUR SETTINGS HERE!!! ===---*/
-#define PANELSETUP_PRIME
-#define PLATFORM_ESP32_FIREBEETLE2
+#define PANELSETUP_ATOS
+#define PLATFORM_ESP32_WEMOSS2MINI
 #define LEDTYPE_STANDARD
 #define LINKPROGRAM_MK2
 
@@ -81,6 +81,16 @@
     #define PIN_LIGHTSENSOR 15          //D?
     #define PIN_ERRORLED    2           //NOT BOUND YET
     #define ENABLE_DIODECONTROL false    //Individual Diode Fx enabled
+    #define ENABLE_WEBCONTROL false      //Controls via website enabled
+    #define BAUDRATE 115200
+    #define CUSTOMPALETTEAMOUNT 5
+#endif
+#ifdef PLATFORM_ESP32_WEMOSS2MINI
+    #define PIN_BUTTON      34          //On board button
+    #define PIN_LEDS        35           //On boadr LED
+    #define PIN_LIGHTSENSOR 15          //D?
+    #define PIN_ERRORLED    2           //NOT BOUND YET
+    #define ENABLE_DIODECONTROL true    //Individual Diode Fx enabled
     #define ENABLE_WEBCONTROL false      //Controls via website enabled
     #define BAUDRATE 115200
     #define CUSTOMPALETTEAMOUNT 5
