@@ -160,11 +160,6 @@ void Trinity::tick()
         case 4:
         {
           setAnimation_Atos_4();
-          currentEffect++;
-        }
-        break;
-        case 5:
-        {
           currentEffect = 0;
         }
         break;
@@ -357,51 +352,134 @@ void Trinity::setAnimation_Atos_0() //Special Synth
 {
   setSpeed(1);
 
-  setPanelVfx(0, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_BLACK, 0, 1, true});
+  for (uint16_t i = 0; i < getPanelAmount(); i++)
+  {
+    setPanelVfx(i, (VFXData){EFFECT_STOCK_STATIC, COLOUR_BLACK, 0, 1, true});
+  }
+  forceTick(1, true, 0);
+
+  uint8_t multiplier = 10;
+  uint8_t diodesAmount;
+  uint16_t offset;
+  uint8_t speed = 3;
+
+
+  //Right panel
+  diodesAmount = getPanelDiodeAmount(0);
+  offset = diodesAmount*multiplier;
+  setPanelVfx(0, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_BLACK, 100, 1, true});
   for (uint16_t j = 0; j < getPanelDiodeAmount(0); j++)
   {
-    setPanelDiodeVfx(0, j, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_BLACK, 0, 1, true});
+    if (j < diodesAmount/2) offset -= multiplier;
+    else offset += multiplier;
+    setPanelDiodeVfx(0, j, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_BLACK, offset, speed, true});
   }
 
+  //Middle panel
+  diodesAmount = getPanelDiodeAmount(1);
+  offset = diodesAmount*multiplier;
   setPanelVfx(1, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_BLACK, 0, 1, true});
   for (uint16_t j = 0; j < getPanelDiodeAmount(1); j++)
   {
-    setPanelDiodeVfx(1, j, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_BLACK, 0, 1, true});
+    if (j < diodesAmount/2) offset -= multiplier;
+    else offset += multiplier;
+    setPanelDiodeVfx(1, j, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_BLACK, offset, speed, true});
   }
 
-  setPanelVfx(2, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_BLACK, 0, 1, true});
+  //Left panel
+  diodesAmount = getPanelDiodeAmount(2);
+  offset = diodesAmount*multiplier;
+  setPanelVfx(2, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_BLACK, 100, 1, true});
   for (uint16_t j = 0; j < getPanelDiodeAmount(2); j++)
   {
-    setPanelDiodeVfx(2, j, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_BLACK, 0, 1, true});
+    if (j < diodesAmount/2) offset -= multiplier;
+    else offset += multiplier;
+    setPanelDiodeVfx(2, j, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_BLACK, offset, speed, true});
   }
 }
+
 void Trinity::setAnimation_Atos_1() //Super Rainbow
 {
 
   setSpeed(4);
 
-  uint16_t offset = 0;
-    for (uint16_t i = 0; i < getPanelAmount(); i++)
-    {
-      setPanelVfx(i, (VFXData){EFFECT_SPECIAL_RAINBOW, COLOUR_RED, (uint16_t)(i*5), 10, true});
-      for (uint16_t j = 0; j < getPanelDiodeAmount(i); j++)
-      {
-        setPanelDiodeVfx(i, j, (VFXData){EFFECT_SPECIAL_RAINBOW, COLOUR_RED, (uint16_t)(j*5), 10, true});
-        offset++;
-      }
-    }
+  uint8_t multiplier = 10;
+  uint8_t diodesAmount;
+  uint16_t offset;
+  uint8_t speed = 15;
+
+
+  //Right panel
+  diodesAmount = getPanelDiodeAmount(0);
+  offset = diodesAmount*multiplier;
+  setPanelVfx(0, (VFXData){EFFECT_SPECIAL_RAINBOW, COLOUR_BLACK, 50, 1, true});
+  for (uint16_t j = 0; j < getPanelDiodeAmount(0); j++)
+  {
+    if (j < diodesAmount/2) offset -= multiplier;
+    else offset += multiplier;
+    setPanelDiodeVfx(0, j, (VFXData){EFFECT_SPECIAL_RAINBOW, COLOUR_BLACK, offset, speed, true});
+  }
+
+  //Middle panel
+  diodesAmount = getPanelDiodeAmount(1);
+  offset = diodesAmount*multiplier;
+  setPanelVfx(1, (VFXData){EFFECT_SPECIAL_RAINBOW, COLOUR_BLACK, 0, 1, true});
+  for (uint16_t j = 0; j < getPanelDiodeAmount(1); j++)
+  {
+    if (j < diodesAmount/2) offset -= multiplier;
+    else offset += multiplier;
+    setPanelDiodeVfx(1, j, (VFXData){EFFECT_SPECIAL_RAINBOW, COLOUR_BLACK, offset, speed, true});
+  }
+
+  //Left panel
+  diodesAmount = getPanelDiodeAmount(2);
+  offset = diodesAmount*multiplier;
+  setPanelVfx(2, (VFXData){EFFECT_SPECIAL_RAINBOW, COLOUR_BLACK, 50, 1, true});
+  for (uint16_t j = 0; j < getPanelDiodeAmount(2); j++)
+  {
+    if (j < diodesAmount/2) offset -= multiplier;
+    else offset += multiplier;
+    setPanelDiodeVfx(2, j, (VFXData){EFFECT_SPECIAL_RAINBOW, COLOUR_BLACK, offset, speed, true});
+  }
 }
 void Trinity::setAnimation_Atos_2() //Red Decode
 {
-  setSpeed(1);
+  setSpeed(10);
+  uint8_t multiplier = 10;
+  uint8_t diodesAmount;
+  uint16_t offset;
+  uint8_t speed = 1;
 
-  for (uint16_t i = 0; i < getPanelAmount(); i++)
+
+  //Right panel
+  diodesAmount = getPanelDiodeAmount(0);
+  offset = diodesAmount*multiplier;
+  setPanelVfx(0, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, 10, 1, true});
+  for (uint16_t j = 0; j < getPanelDiodeAmount(0); j++)
   {
-    setPanelVfx(i, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, (uint16_t)(random(0, 10)*15), 1, true});
-    for (uint16_t j = 0; j < getPanelDiodeAmount(i); j++)
-    {
-      setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, j, 10, true});
-    }
+    offset -= multiplier;
+    setPanelDiodeVfx(0, j, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, offset, speed, true});
+  }
+
+  //Middle panel
+  diodesAmount = getPanelDiodeAmount(1);
+  offset = diodesAmount*multiplier;
+  setPanelVfx(1, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, 0, 1, true});
+  for (uint16_t j = 0; j < getPanelDiodeAmount(1); j++)
+  {
+    if (j < diodesAmount/2) offset -= multiplier;
+    else offset += multiplier;
+    setPanelDiodeVfx(1, j, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, offset, speed, true});
+  }
+
+  //Left panel
+  diodesAmount = getPanelDiodeAmount(2);
+  offset = 0;
+  setPanelVfx(2, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, 10, 1, true});
+  for (uint16_t j = 0; j < getPanelDiodeAmount(2); j++)
+  {
+    offset += multiplier;
+    setPanelDiodeVfx(2, j, (VFXData){EFFECT_STOCK_DECODE, COLOUR_RED, offset, speed, true});
   }
 }
 void Trinity::setAnimation_Atos_3() //Static Cool
