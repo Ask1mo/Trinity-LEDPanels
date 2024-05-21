@@ -16,13 +16,16 @@ private:
   uint8_t                                   brightness;
   uint8_t                                   *effect; //Points to the effect of the panel. I don't want to have panels running differing effects on it's diodes
   uint8_t                                   colour;
+  uint8_t                                   colourNew;
   uint16_t                                  offset;
   uint8_t                                   speed;
   bool                                      repeat;
+  bool                                      keepPrinting;
   
   CustomPalette                             *customPalette;
   EffectVariables                           effectVariables;
   uint16_t                                  offsetTimer;
+  bool                                      offsetReady;
 
   bool effectFinished;
 
@@ -32,11 +35,11 @@ public:
   void      tick                            ();
   //Effects
   void      setGoalBrightness                   (uint8_t goalBrightness);
-  void      setVfx                          (VFXData vfxData);
+  void      setVfx                          (VFXData vfxData, bool keepPrinting);
   void      setDataCustom                   (CustomPalette *customPalette);
   //Technical
   CRGB      getRGB                          (uint8_t sysBrightness);
-  void      resetFXProcessingVars           ();
+  void      resetFXProcessingVars           (bool resetDelays = true);
   //Transmisisons
   String    convertToTransmission           ();
   //Debug

@@ -120,13 +120,13 @@ void Trinity::tick()
     case TRANSMISSION_IN_PANEL:
     {
       Transmission_Panel data = comms->getTransmission_Panel();
-      ledManager->setPanelVfx(data.panelNumber, data.vfxData);
+      ledManager->setPanelVfx(data.panelNumber, data.vfxData, false);
     }
     break;
     case TRANSMISSION_IN_DIODE:
     {
       Transmission_Diode data = comms->getTransmission_Diode();
-      ledManager->setPanelDiodeVfx(data.panelNumber, data.diodeNumber, data.vfxData);
+      ledManager->setPanelDiodeVfx(data.panelNumber, data.diodeNumber, data.vfxData, false);
     }
     break;
     case TRANSMISSION_IN_CUSTOMPALETTES:
@@ -233,20 +233,20 @@ void Trinity::setBrightnessMode(uint8_t brightnessMode)
 }
 uint16_t Trinity::getDiodeAmount()
 {
-  ledManager->getDiodeAmount();
+  return ledManager->getDiodeAmount();
 }
 
-void Trinity::setPanelVfx(uint8_t panelNumber, VFXData vfxData)
+void Trinity::setPanelVfx(uint8_t panelNumber, VFXData vfxData, bool keepPrinting)
 {
-  ledManager->setPanelVfx(panelNumber, vfxData);
+  ledManager->setPanelVfx(panelNumber, vfxData, keepPrinting);
 }
 uint16_t Trinity::getPanelDiodeAmount(uint8_t panelNumber)
 {
   return ledManager->getPanelDiodeAmount(panelNumber);
 }
-void Trinity::setPanelDiodeVfx(uint8_t panelNumber, uint16_t diodeNumber, VFXData vfxData)
+void Trinity::setPanelDiodeVfx(uint8_t panelNumber, uint16_t diodeNumber, VFXData vfxData, bool keepPrinting)
 {
-  ledManager->setPanelDiodeVfx(panelNumber, diodeNumber, vfxData);
+  ledManager->setPanelDiodeVfx(panelNumber, diodeNumber, vfxData, keepPrinting);
 }
 
 void Trinity::setCustomPaletteColours(uint8_t slot, uint8_t colourRGBNumber, ColourRGB colourRGB)

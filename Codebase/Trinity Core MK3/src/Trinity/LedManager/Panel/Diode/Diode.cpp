@@ -30,7 +30,14 @@ void      Diode::tick()
   {
     offsetTimer++;
   }
-  else
+  else if (keepPrinting)
+  {
+    resetFXProcessingVars(false);
+    keepPrinting = false;
+    colour = colourNew;
+  }
+
+  if (offsetTimer >= offset || keepPrinting)
   {
     if      (brightness < goalBrightness) brightness++;
     else if (brightness > goalBrightness) brightness--;
@@ -64,7 +71,7 @@ void      Diode::setGoalBrightness(uint8_t goalBrightness)
 {
   this->goalBrightness  = goalBrightness;
 }
-void      Diode::setVfx(VFXData vfxData)
+void      Diode::setVfx(VFXData vfxData, bool keepPrinting)
 {
   if(DEBUGLEVEL >= DEBUG_OPERATIONS)
   {
@@ -72,10 +79,22 @@ void      Diode::setVfx(VFXData vfxData)
     Serial.println(number);
   }
   
-  this->colour      = vfxData.colour;
+  this->keepPrinting = keepPrinting;
+  if(keepPrinting)
+  {
+    this->colourNew   = vfxData.colour;
+  }
+  else
+  {
+    this->colour      = vfxData.colour;
+  }
+
   this->offset      = vfxData.offset;
   this->speed       = vfxData.speed;
   this->repeat      = vfxData.repeat;
+
+
+
   resetFXProcessingVars();
 
   if(DEBUGLEVEL >= DEBUG_DAYISRUINED)
@@ -96,13 +115,17 @@ CRGB      Diode::getRGB(uint8_t sysBrightness)
   uint8_t b = (((this->effectVariables.b * this->goalBrightness) / 255) * sysBrightness) / 255;
   return CRGB(r, g, b);
 }
-void      Diode::resetFXProcessingVars      ()
+void      Diode::resetFXProcessingVars      (bool resetDelays)
 {
   this->effectVariables.d                       = 0;
   this->effectVariables.fxProgression           = 0;      // In effect cycling
   this->effectVariables.c                       = 0; // Cycles of the whole effect (But with different colourss)
-  this->offsetTimer                     = 0;
-  this->effectFinished                   = false;
+  
+  if (resetDelays)
+  {
+    this->offsetTimer                     = 0;
+    this->effectFinished                   = false;
+  }
 }
 
 //Transmissions

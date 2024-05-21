@@ -34,10 +34,10 @@ public:
   void    setSpeed                        (uint8_t speed);
   //Panel Effects
   void    setPanelBrightness              (uint8_t panelNumber, uint8_t goalBrightness);
-  void    setPanelVfx                     (uint8_t panelNumber, VFXData vfxData);
+  void    setPanelVfx                     (uint8_t panelNumber, VFXData vfxData, bool keepPrinting);
   //Diode Effects
   void    setPanelBrightness              (uint8_t panelNumber, uint16_t diodeNumber, uint8_t goalBrightness);
-  void    setPanelDiodeVfx                (uint8_t panelNumber, uint16_t diodeNumber, VFXData vfxData);
+  void    setPanelDiodeVfx                (uint8_t panelNumber, uint16_t diodeNumber, VFXData vfxData, bool keepPrinting);
   //Technical
   uint8_t getPanelAmount                  ();
   uint16_t getDiodeAmount                 ();
