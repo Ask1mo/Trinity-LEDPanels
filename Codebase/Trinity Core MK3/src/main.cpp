@@ -465,6 +465,9 @@ void setup()
   #ifdef PANELSETUP_VOICETUBE
   for (uint8_t i = 0; i < 10; i++) trinity->addPanel(new Panel(i, i, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 6));
   #endif
+  #ifdef PANELSETUP_VOICETUBE_PSV
+  for (uint8_t i = 0; i < 20; i++) trinity->addPanel(new Panel(i, 0, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 15));
+  #endif
 
   trinity->begin();
 
@@ -553,6 +556,20 @@ void setup()
   #endif
 
   #ifdef PANELSETUP_VOICETUBE
+
+  Serial.println(F("TEST MESSAGE AAAAAAAAAAAAAAAAAAAAAAAAA"));
+
+  pinMode(PIN_RELAY, INPUT);
+  //One time LED setup
+  trinity->setSpeed(10);
+  for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
+  {
+    trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_STATIC, COLOUR_BLACK, 0, 5, true});
+  }
+
+  #endif
+
+  #ifdef PANELSETUP_VOICETUBE_PSV
 
   Serial.println(F("TEST MESSAGE AAAAAAAAAAAAAAAAAAAAAAAAA"));
 
@@ -713,6 +730,52 @@ void loop()
   #endif
 
   #ifdef PANELSETUP_VOICETUBE
+
+  
+
+    
+    if (digitalRead(PIN_RELAY))sensorHits++;
+    sensorPolls++;
+
+
+    if(currentMillis >= (prevSensorMillis+SENSORPOLLTIME))
+    {
+      prevSensorMillis = currentMillis;
+      uint16_t requiredSensorHits = sensorPolls * SENSORTRIGGERPERCENTAGE;
+      
+      if((sensorHits*100) > requiredSensorHits)
+      {
+        Serial.println(F("TRIGGERED"));
+
+        uint8_t colour = random8(1, 7);
+
+        uint16_t offset = 0;
+        for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
+        {
+          for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
+          {
+            offset+=5;
+          }
+        }
+
+        for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
+        {
+          trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_FLASH, colour, 0, 1, false});
+          for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
+          {
+            trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_FLASH, colour, offset, 1, false});
+            offset-=5;
+          }
+        }
+      }
+
+      sensorHits = 0;
+      sensorPolls = 0;
+    }  
+
+  #endif
+
+  #ifdef PANELSETUP_VOICETUBE_PSV
 
   
 
