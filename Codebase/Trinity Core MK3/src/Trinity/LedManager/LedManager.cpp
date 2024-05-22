@@ -192,10 +192,10 @@ void      LedManager::setPanelBrightness                (uint8_t panelNumber, ui
   //Serial.println("Setting panel data (In ledmanager)");
   panels[panelNumber]->setGoalBrightness(goalBrightness);
 }
-void      LedManager::setPanelVfx                       (uint8_t panelNumber, VFXData vfxData, bool keepPrinting)
+void      LedManager::setPanelVfx                       (uint8_t panelNumber, VFXData vfxData)
 {
   //Serial.println("Setting panel data (In ledmanager)");
-  panels[panelNumber]->setVfx(vfxData, keepPrinting);
+  panels[panelNumber]->setVfx(vfxData);
 
   if (CUSTOMEFFECTNUMBER_FIRST <= vfxData.effect && vfxData.effect <= CUSTOMEFFECTNUMBER_LAST) //If it's a custom colour effect: Apply colour palette
   {
@@ -207,7 +207,7 @@ void      LedManager::setPanelBrightness                (uint8_t panelNumber, ui
 {
   
 }
-void      LedManager::setPanelDiodeVfx                  (uint8_t panelNumber, uint16_t diodeNumber, VFXData vfxData, bool keepPrinting)
+void      LedManager::setPanelDiodeVfx                  (uint8_t panelNumber, uint16_t diodeNumber, VFXData vfxData)
 {
   if (panelNumber > panelAmount)
   {
@@ -217,7 +217,7 @@ void      LedManager::setPanelDiodeVfx                  (uint8_t panelNumber, ui
     Serial.println(panelAmount);
   }
   //Serial.println("Setting diode data (In ledmanager)");
-  panels[panelNumber]->setDiodeVfx(diodeNumber, vfxData, keepPrinting);
+  panels[panelNumber]->setDiodeVfx(diodeNumber, vfxData);
 }
 //Technical
 uint8_t   LedManager::getPanelAmount                    ()

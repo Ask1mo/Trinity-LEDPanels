@@ -31,7 +31,7 @@ uint64_t lastPowerUpdate;
 uint32_t sensorHits;
 uint32_t sensorPolls;
 uint64_t prevSensorMillis;
-#define SENSORPOLLTIME 2000
+#define SENSORPOLLTIME 250
 #define SENSORTRIGGERPERCENTAGE 10
 
 

@@ -37,14 +37,11 @@ private:
   uint8_t                                   goalBrightness;
   uint8_t                                   brightness;
   uint8_t                                   effect;
-  uint8_t                                   effectNew;
   uint8_t                                   colour;
-  uint8_t                                   colourNew;
   uint16_t                                  offset;
   uint8_t                                   speed;
   bool                                      repeat;
   bool                                      detailed;
-  bool                                      keepPrinting;
 
   CustomPalette                             *customPalette;
   EffectVariables                           effectVariables;
@@ -56,11 +53,11 @@ public:
   void      tick                            ();
   //Effects
   void      setGoalBrightness                   (uint8_t goalBrightness);
-  void      setVfx                          (VFXData vfxData, bool keepPrinting);
+  void      setVfx                          (VFXData vfxData);
   void      setDataCustom                   (CustomPalette *customPaletteArg);
   //Diode Effects
   void      setDiodeGoalBrightness              (uint16_t diodeNumber, uint8_t goalBrightness);
-  void      setDiodeVfx                     (uint16_t diodeNumber, VFXData vfxData, bool keepPrinting);
+  void      setDiodeVfx                     (uint16_t diodeNumber, VFXData vfxData);
   void      setDiodeDataCustom              (uint16_t diodeNumber, CustomPalette *customPalette);
   //Mask Effects
   void      setMaskPercentage               (uint8_t percentage);
@@ -72,7 +69,7 @@ public:
   uint16_t  getDiodeAmount                  ();
   uint16_t  getDiodeStart                   ();
   void      setDiodeStart                   (uint16_t ledStart);
-  void      resetFXProcessingVars           (bool resetDelays = true);
+  void      resetFXProcessingVars           ();
   //Transmissions
   String    convertToTransmission           ();
   String    convertDiodeToTransmission  	  (uint16_t diodeNumber);

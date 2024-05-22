@@ -56,15 +56,7 @@ void      Panel::tick                       ()
   {
     offsetTimer++;
   }
-  else if (keepPrinting)
-  {
-    resetFXProcessingVars(false);
-    keepPrinting = false;
-    colour = colourNew;
-    effect = effectNew;
-  }
-
-  if (offsetTimer >= offset || keepPrinting)
+  else
   {
     if      (brightness < goalBrightness) brightness++;
     else if (brightness > goalBrightness) brightness--;
@@ -116,33 +108,20 @@ void      Panel::setGoalBrightness              (uint8_t goalBrightness)
 {
   this->goalBrightness  = goalBrightness;
 }
-void      Panel::setVfx                     (VFXData vfxData, bool keepPrinting)
+void      Panel::setVfx                     (VFXData vfxData)
 {
   if(DEBUGLEVEL >= DEBUG_OPERATIONS)
   {
     Serial.print(F("Panel.setVFX(); P"));
     Serial.println(number);
   }
-
-  this->keepPrinting = keepPrinting;
-  if(keepPrinting)
-  {
-    this->colourNew   = vfxData.colour;
-    this->effectNew   = vfxData.effect;
-  }
-  else
-  {
-    this->effect      = vfxData.effect;
-    this->colour      = vfxData.colour;
-  }
-
-
+  
+  this->effect      = vfxData.effect;
+  this->colour      = vfxData.colour;
   this->offset      = vfxData.offset;
   this->speed       = vfxData.speed;
   this->repeat      = vfxData.repeat;
   this->detailed    = false;
-
-  
   resetFXProcessingVars();
 
   if(DEBUGLEVEL >= DEBUG_DAYISRUINED)
@@ -173,7 +152,7 @@ void      Panel::setDiodeGoalBrightness         (uint16_t diodeNumber, uint8_t g
 {
   diodes[diodeNumber]->setGoalBrightness(goalBrightness);
 }
-void      Panel::setDiodeVfx                (uint16_t diodeNumber, VFXData vfxData, bool keepPrinting)
+void      Panel::setDiodeVfx                (uint16_t diodeNumber, VFXData vfxData)
 {
   if(DEBUGLEVEL >= DEBUG_OPERATIONS)
   {
@@ -184,7 +163,7 @@ void      Panel::setDiodeVfx                (uint16_t diodeNumber, VFXData vfxDa
   if(!ENABLE_DIODECONTROL)
   {
     if(DEBUGLEVEL >= DEBUG_WARNINGS) Serial.println(F("Warning: Panel.setDiodeVfx() Diode control disabled in Setup.h, new effect applied to panel instead"));
-    setVfx(vfxData, keepPrinting);
+    setVfx(vfxData);
     return;
   }
 
@@ -197,7 +176,7 @@ void      Panel::setDiodeVfx                (uint16_t diodeNumber, VFXData vfxDa
       Serial.print(F(" (Panel copied effect intended for diode)"));
     }
   }
-  diodes[diodeNumber]->setVfx(vfxData, keepPrinting);
+  diodes[diodeNumber]->setVfx(vfxData);
 
 
   resetFXProcessingVars();
@@ -271,17 +250,13 @@ void      Panel::setDiodeStart              (uint16_t ledStart)
 {
   this->diodeStart = ledStart;
 }
-void      Panel::resetFXProcessingVars      (bool resetDelays)
+void      Panel::resetFXProcessingVars      ()
 {
 
-  this->effectVariables.d                   = 0; //Dummy
+  this->effectVariables.d                   = 0;
   this->effectVariables.c                   = 0; //Current colour (Can cycle because of COLOUR_COLOURCYCLE)
   this->effectVariables.fxProgression       = 0; // In effect cycling
-  
-  if (resetDelays)
-  {
-    this->offsetTimer                       = 0;
-  }
+  this->offsetTimer                         = 0;
 }
 //Transmissions
 String    Panel::convertToTransmission      ()
