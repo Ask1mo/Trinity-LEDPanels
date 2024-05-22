@@ -13,7 +13,6 @@
 #define PIN_BUTTON 25
 
 Trinity *trinity;
-AskButton *button;
 
 uint64_t prevMillis;
 uint8_t currentShowingEffect;
@@ -34,6 +33,13 @@ uint64_t prevSensorMillis;
 #define SENSORPOLLTIME 250
 #define SENSORTRIGGERPERCENTAGE 10
 
+
+AskButton *dingusButtonA;
+AskButton *dingusButtonB;
+bool someoneIsTalking;
+uint8_t currentEffectColour;
+uint64_t lastMillis_buttonPressA;
+uint64_t lastMillis_buttonPressB;
 
 
 #endif
