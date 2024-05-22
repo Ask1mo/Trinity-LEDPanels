@@ -466,7 +466,10 @@ void setup()
   for (uint8_t i = 0; i < 10; i++) trinity->addPanel(new Panel(i, i, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 6));
   #endif
   #ifdef PANELSETUP_VOICETUBE_PSV
-  for (uint8_t i = 0; i < 20; i++) trinity->addPanel(new Panel(i, 0, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 15));
+  trinity->addPanel(new Panel(0, 0, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 130));//Dead panel
+  trinity->addPanel(new Panel(1, 0, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 10));//Horn A panel
+  trinity->addPanel(new Panel(2, 0, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 150));//Pipe panel
+  trinity->addPanel(new Panel(3, 0, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 10));//Horn B panel
   #endif
 
   trinity->begin();
@@ -783,14 +786,12 @@ void loop()
     someoneIsTalking = true;
     lastMillis_buttonPressA = currentMillis;
     currentEffectColour = random8(1, 7);
-    for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
-    {
-      trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_STATIC, COLOUR_BLACK, 0, 1, true});
-      for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
+
+      for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(2); j++)
       {
-        trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_STATIC, COLOUR_BLACK, 0, 1, true});
+        trinity->setPanelDiodeVfx(2, j, (VFXData){EFFECT_STOCK_STATIC, COLOUR_BLACK, 0, 1, true});
       }
-    }
+    
     trinity->forceTick(1, true, 0);
   }
   
@@ -800,22 +801,21 @@ void loop()
     uint16_t elapsedleds_someoneIsTalking = elapsedMillis_someoneIsTalking / 20;
     uint16_t offset = 0;
     uint16_t diodeNumber = 0;
-    for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
-    {
-      for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(i); j++)
+
+      for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(2); j++)
       {
         if(diodeNumber < elapsedleds_someoneIsTalking)
         {
-          trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_FLASH, COLOUR_GREEN, 0, 1, false});
+          trinity->setPanelDiodeVfx(2, j, (VFXData){EFFECT_STOCK_FLASH, COLOUR_GREEN, 0, 1, false});
         }
         else
         {
-          trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_FLASH, COLOUR_GREEN, offset, 1, false});
+          trinity->setPanelDiodeVfx(2, j, (VFXData){EFFECT_STOCK_FLASH, COLOUR_GREEN, offset, 1, false});
           offset+=5;
         }
         diodeNumber++;
       }
-    }
+    
   }  
 
 
@@ -833,13 +833,12 @@ void loop()
     someoneIsTalking = true;
     lastMillis_buttonPressB = currentMillis;
     currentEffectColour = random8(1, 7);
-    for (int16_t i = trinity->getPanelAmount() - 1; i >= 0; i--)
-    {
-      for (int16_t j = trinity->getPanelDiodeAmount(i) - 1; j >= 0; j--)
+
+      for (int16_t j = trinity->getPanelDiodeAmount(2) - 1; j >= 0; j--)
       {
-        trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_STATIC, COLOUR_BLACK, 0, 1, true});
+        trinity->setPanelDiodeVfx(2, j, (VFXData){EFFECT_STOCK_STATIC, COLOUR_BLACK, 0, 1, true});
       }
-    }
+    
     trinity->forceTick(1, true, 0);
   }
 
@@ -853,22 +852,21 @@ void loop()
 
     uint16_t offset = 0;
     int16_t diodeNumber = 0;//= trinity->getPanelAmount() * trinity->getPanelDiodeAmount(0) - 1;
-    for (int16_t i = trinity->getPanelAmount() - 1; i >= 0; i--)
-    {
-      for (int16_t j = trinity->getPanelDiodeAmount(i) - 1; j >= 0; j--)
+
+      for (int16_t j = trinity->getPanelDiodeAmount(2) - 1; j >= 0; j--)
       {
         if(diodeNumber < elapsedleds_someoneIsTalking)
         {
-          trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_FLASH, COLOUR_CYAN, 0, 1, false});
+          trinity->setPanelDiodeVfx(2, j, (VFXData){EFFECT_STOCK_FLASH, COLOUR_CYAN, 0, 1, false});
         }
         else
         {
-          trinity->setPanelDiodeVfx(i, j, (VFXData){EFFECT_STOCK_FLASH, COLOUR_CYAN, offset, 1, false});
+          trinity->setPanelDiodeVfx(2, j, (VFXData){EFFECT_STOCK_FLASH, COLOUR_CYAN, offset, 1, false});
           offset+=5;
         }
         diodeNumber++;
       }
-    }
+    
   }
   #endif
 
