@@ -41,5 +41,8 @@ uint8_t currentEffectColour;
 uint64_t lastMillis_buttonPressA;
 uint64_t lastMillis_buttonPressB;
 
+#define INTERVAL_FILTER 5000
+uint64_t lastMillis_filter;
+
 
 #endif

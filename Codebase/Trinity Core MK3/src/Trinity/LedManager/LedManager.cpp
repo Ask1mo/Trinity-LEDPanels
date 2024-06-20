@@ -171,6 +171,20 @@ void      LedManager::tick                              ()
 void      LedManager::print                             () 
 {
   if(DEBUGLEVEL >= DEBUG_OPERATIONS) Serial.print(F("p"));
+
+
+  //Black out every even led
+  if(filter)
+  {
+    for (uint16_t i = 0; i < diodeAmount; i++)
+    {
+      if (i % 2 == 0)
+      {
+        leds[i] = CRGB(0, 0, 0);
+      }
+    }
+  }
+
   FastLED.show(); 
 }
 //Effects
@@ -291,4 +305,9 @@ void      LedManager::setCustomPaletteColours           (uint8_t slot, uint8_t c
 void      LedManager::setCustomPaletteAvailableColours  (uint8_t slot, uint8_t avalaibleColours)
 {
   customPalette[slot]->customRGBSlots = avalaibleColours;
+}
+
+void     LedManager::toggleFilter                         ()
+{
+  filter = !filter;
 }

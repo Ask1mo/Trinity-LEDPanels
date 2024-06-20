@@ -19,6 +19,8 @@ private:
   CRGB                                    *leds;
   CustomPalette                           *customPalette[CUSTOMPALETTEAMOUNT];
 
+  bool filter = false;
+
   
 
 public:
@@ -51,6 +53,8 @@ public:
 
   void setCustomPaletteColours(uint8_t slot, uint8_t colourRGBNumber, ColourRGB colourRGB);
   void setCustomPaletteAvailableColours(uint8_t slot, uint8_t avalaibleColours);
+
+  void toggleFilter();
 };  
 
 #endif

@@ -262,3 +262,8 @@ uint8_t Trinity::getPanelAmount()
 {
   return ledManager->getPanelAmount();
 }
+
+void Trinity::toggleFilter()
+{
+  ledManager->toggleFilter();
+}

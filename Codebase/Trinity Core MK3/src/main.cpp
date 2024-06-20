@@ -466,10 +466,10 @@ void setup()
   for (uint8_t i = 0; i < 10; i++) trinity->addPanel(new Panel(i, i, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 6));
   #endif
   #ifdef PANELSETUP_VOICETUBE_PSV
-  trinity->addPanel(new Panel(0, 0, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 130));//Dead panel
-  trinity->addPanel(new Panel(1, 0, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 10));//Horn A panel
-  trinity->addPanel(new Panel(2, 0, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 150));//Pipe panel
-  trinity->addPanel(new Panel(3, 0, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 10));//Horn B panel
+  trinity->addPanel(new Panel(0, 0, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 95));//Dead panel
+  trinity->addPanel(new Panel(1, 0, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 20));//Horn A panel
+  trinity->addPanel(new Panel(2, 0, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 160));//Pipe panel
+  trinity->addPanel(new Panel(3, 0, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 20));//Horn B panel
   #endif
 
   trinity->begin();
@@ -579,11 +579,15 @@ void setup()
   dingusButtonA = new AskButton(PIN_RELAY, 100);
   dingusButtonB = new AskButton(PIN_BUTTON, 100);
   //One time LED setup
+  /*
   trinity->setSpeed(10);
   for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
   {
     trinity->setPanelVfx(i, (VFXData){EFFECT_STOCK_STATIC, COLOUR_BLACK, 0, 5, true});
   }
+  */
+
+ //setAnimation_Default();
 
   #endif
 
@@ -593,6 +597,13 @@ void loop()
 {
   trinity->tick();
   uint64_t currentMillis = millis();
+
+  if(currentMillis >= (lastMillis_filter+INTERVAL_FILTER))
+  {
+    lastMillis_filter = currentMillis;
+    currentShowingEffect++;
+    trinity->toggleFilter();
+  }
 
 
   #ifdef PANELSETUP_POWERWIRE
@@ -798,19 +809,40 @@ void loop()
   if(someoneIsTalking && dingusButtonA->getPressState())
   {    
     uint64_t elapsedMillis_someoneIsTalking = currentMillis - lastMillis_buttonPressA;
-    uint16_t elapsedleds_someoneIsTalking = elapsedMillis_someoneIsTalking / 20;
+    uint16_t elapsedleds_someoneIsTalking = elapsedMillis_someoneIsTalking / 50;
+    uint16_t elapsedleds_someoneIsTalkingMini = elapsedMillis_someoneIsTalking / 100;
     uint16_t offset = 0;
     uint16_t diodeNumber = 0;
 
+
+      //Major
       for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(2); j++)
       {
         if(diodeNumber < elapsedleds_someoneIsTalking)
         {
-          trinity->setPanelDiodeVfx(2, j, (VFXData){EFFECT_STOCK_FLASH, COLOUR_GREEN, 0, 1, false});
+          trinity->setPanelDiodeVfx(2, j, (VFXData){EFFECT_STOCK_FLASH, currentEffectColour, 0, 1, false});
+
         }
         else
         {
-          trinity->setPanelDiodeVfx(2, j, (VFXData){EFFECT_STOCK_FLASH, COLOUR_GREEN, offset, 1, false});
+          trinity->setPanelDiodeVfx(2, j, (VFXData){EFFECT_STOCK_FLASH, currentEffectColour, offset, 1, false});
+          offset+=5;
+        }
+        diodeNumber++;
+      }
+
+      //Mini
+      for (uint16_t j = 0; j < trinity->getPanelDiodeAmount(1); j++)
+      {
+        if(diodeNumber < elapsedleds_someoneIsTalking)
+        {
+          trinity->setPanelDiodeVfx(1, j, (VFXData){EFFECT_STOCK_FLASH, currentEffectColour, 0, 1, false});
+          trinity->setPanelDiodeVfx(3, j, (VFXData){EFFECT_STOCK_FLASH, currentEffectColour, 0, 1, false});
+        }
+        else
+        {
+          trinity->setPanelDiodeVfx(1, j, (VFXData){EFFECT_STOCK_FLASH, currentEffectColour, offset, 1, false});
+          trinity->setPanelDiodeVfx(3, j, (VFXData){EFFECT_STOCK_FLASH, currentEffectColour, offset, 1, false});
           offset+=5;
         }
         diodeNumber++;
@@ -848,20 +880,38 @@ void loop()
   {
     
     uint64_t elapsedMillis_someoneIsTalking = currentMillis - lastMillis_buttonPressB;
-    uint16_t elapsedleds_someoneIsTalking = elapsedMillis_someoneIsTalking / 20;
+    uint16_t elapsedleds_someoneIsTalking = elapsedMillis_someoneIsTalking / 50;
+    uint16_t elapsedleds_someoneIsTalkingMini = elapsedMillis_someoneIsTalking / 100;
 
     uint16_t offset = 0;
     int16_t diodeNumber = 0;//= trinity->getPanelAmount() * trinity->getPanelDiodeAmount(0) - 1;
 
+      //Major
       for (int16_t j = trinity->getPanelDiodeAmount(2) - 1; j >= 0; j--)
       {
         if(diodeNumber < elapsedleds_someoneIsTalking)
         {
-          trinity->setPanelDiodeVfx(2, j, (VFXData){EFFECT_STOCK_FLASH, COLOUR_CYAN, 0, 1, false});
+          trinity->setPanelDiodeVfx(2, j, (VFXData){EFFECT_STOCK_FLASH, currentEffectColour, 0, 1, false});
         }
         else
         {
-          trinity->setPanelDiodeVfx(2, j, (VFXData){EFFECT_STOCK_FLASH, COLOUR_CYAN, offset, 1, false});
+          trinity->setPanelDiodeVfx(2, j, (VFXData){EFFECT_STOCK_FLASH, currentEffectColour, offset, 1, false});
+          offset+=5;
+        }
+        diodeNumber++;
+      }
+      //Mini
+      for (int16_t j = trinity->getPanelDiodeAmount(1) - 1; j >= 0; j--)
+      {
+        if(diodeNumber < elapsedleds_someoneIsTalking)
+        {
+          trinity->setPanelDiodeVfx(1, j, (VFXData){EFFECT_STOCK_FLASH, currentEffectColour, 0, 1, false});
+          trinity->setPanelDiodeVfx(3, j, (VFXData){EFFECT_STOCK_FLASH, currentEffectColour, 0, 1, false});
+        }
+        else
+        {
+          trinity->setPanelDiodeVfx(1, j, (VFXData){EFFECT_STOCK_FLASH, currentEffectColour, offset, 1, false});
+          trinity->setPanelDiodeVfx(3, j, (VFXData){EFFECT_STOCK_FLASH, currentEffectColour, offset, 1, false});
           offset+=5;
         }
         diodeNumber++;
