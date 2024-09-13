@@ -33,9 +33,9 @@
 
 
 /*---=== PUT YOUR SETTINGS HERE!!! ===---*/
-#define PANELSETUP_CHRISTMAS
-#define PLATFORM_ARDUINO
-#define LEDTYPE_CHRISTMASSTRING
+#define PANELSETUP_WESTPOINT
+#define PLATFORM_ESP32_WROOMDEVKIT
+#define LEDTYPE_STANDARD
 #define LINKPROGRAM_MK2
 
 #define DEBUGLEVEL DEBUG_DISABLED
@@ -78,7 +78,7 @@
 #endif
 #ifdef PLATFORM_ESP32_WROOMDEVKIT
     #define PIN_BUTTON      27          //On board button
-    #define PIN_LEDS        5           //On boadr LED
+    #define PIN_LEDS        12           //On boadr LED
     #define PIN_LIGHTSENSOR 15          //D?
     #define PIN_ERRORLED    2           //NOT BOUND YET
     #define ENABLE_DIODECONTROL false    //Individual Diode Fx enabled

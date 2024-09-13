@@ -5,7 +5,7 @@
 void playAnimation_Reset()
 {
   Serial.println(F("playAnimation_Reset"));
-  trinity->setSpeed(1);
+  trinity->setSpeed(3);
 
   uint16_t diodeNumbers = 0;
   for (uint16_t i = 0; i < trinity->getPanelAmount(); i++)
@@ -400,41 +400,7 @@ void setup()
   #endif
   #ifdef PANELSETUP_WESTPOINT
   //Tower Base
-  trinity->addPanel(new Panel( 0, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel( 1, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      11));
-  trinity->addPanel(new Panel( 2, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel( 3, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      11));
-  trinity->addPanel(new Panel( 4, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel( 5, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel( 6, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      11));
-  trinity->addPanel(new Panel( 7, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel( 8, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel( 9, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel(10, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      11));
-  trinity->addPanel(new Panel(11, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel(12, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      11));
-  trinity->addPanel(new Panel(13, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel(14, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      9 ));
-  //Tower Top
-  trinity->addPanel(new Panel(15, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel(16, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      11));
-  trinity->addPanel(new Panel(17, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel(18, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel(19, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel(20, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel(21, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      11));
-  trinity->addPanel(new Panel(22, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel(23, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel(24, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      11));
-  trinity->addPanel(new Panel(25, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel(26, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      11));
-  trinity->addPanel(new Panel(27, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel(28, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      12));
-  //Rigns
-  trinity->addPanel(new Panel(29, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      37));
-  trinity->addPanel(new Panel(30, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      37));
-  trinity->addPanel(new Panel(31, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      37));
-  trinity->addPanel(new Panel(32, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      37));
+  for (uint8_t i = 0; i < 54; i++) trinity->addPanel(new Panel(i, i, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 5));
   #endif
   #ifdef PANELSETUP_MINITOWER
   for (uint8_t i = 0; i < 4; i++) trinity->addPanel(new Panel(i, i, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 10));
@@ -494,7 +460,7 @@ void setup()
   */
 
 
-
+ trinity->setBrightness(100);
 }
 
 void loop()
@@ -580,5 +546,5 @@ void loop()
     }
   #endif
 }
-
+}
 
