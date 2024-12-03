@@ -5,7 +5,6 @@ Diode::Diode(uint16_t number, uint8_t *panelEffect)
 {
   this->number = number;
 
-  this->brightness  = 255;
   this->effect      = panelEffect;
   this->colour      = COLOUR_BLACK;
   this->offset      = 0;
@@ -23,6 +22,10 @@ Diode::Diode(uint16_t number, uint8_t *panelEffect)
 void      Diode::tick()
 {
   if(DEBUGLEVEL >= DEBUG_DAYISRUINED)printDebug();
+
+  //Brightness
+  if      (brightness < goalBrightness) brightness++;
+  else if (brightness > goalBrightness) brightness--;
   
   if (offsetTimer < offset)
   {
@@ -49,9 +52,16 @@ void      Diode::tick()
   }
 }
 //Effects
-void      Diode::setBrightness(uint8_t brightness)
+void      Diode::setBrightness(uint8_t brightness, bool smooth)
 {
-  this->brightness  = brightness;
+  if (smooth)
+  {
+    goalBrightness = brightness;
+  }
+  else
+  {
+    this->brightness = brightness;
+  }
 }
 void      Diode::setVfx(VFXData vfxData)
 {

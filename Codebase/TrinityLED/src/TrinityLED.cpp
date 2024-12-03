@@ -1,8 +1,11 @@
 #include "TrinityLED.h"
 
 
+
+
+
 //Constructor
-Trinity::Trinity(uint8_t ledPin, uint8_t framerate)
+Trinity::Trinity(uint8_t ledPin, uint8_t framerate, bool diodeControl)
 {
   Serial.println(F("Trinity MK4 - Ask Blommaert"));
 
@@ -16,10 +19,10 @@ Trinity::Trinity(uint8_t ledPin, uint8_t framerate)
   sleepTimer      = new SleepTimer();
 
   
-  brightness      = 255;
   speed           = 1;
   prevFrameMillis = 0;
   frameTime       = 1000/framerate;
+  this->allowDiodeControl = diodeControl;
 
   Serial.print(F("...Trinity Initialised with frameRate of "));
   Serial.print(framerate);
@@ -47,7 +50,7 @@ Trinity::Trinity(uint8_t ledPin, uint8_t framerate)
     sleepTimer->setTurnOffTime(9,59);
   */
 
-  Serial.println(F("...Trinity Started (NOT READY YET, DONT FORGET TO USE finaliseSetup() after adding your panels!!!)"));
+  Serial.println(F("...Trinity Started (NOT READY YET, DONT FORGET TO USE Trinity->begin() after adding your panels!!!)"));
 
 }
 void    Trinity::addPanel                                    (Panel *panel)
@@ -63,6 +66,17 @@ void    Trinity::addPanel                                    (Panel *panel)
   Serial.print(F("New panel added, Amount is now: "));
   Serial.println(panelAmount);
 }
+
+void    Trinity::addPanel                                    (uint8_t x, uint8_t y, uint8_t compassDir, bool clockDir, uint16_t diodeAmount)
+{
+  addPanel(new Panel(panelAmount, x, y, compassDir, clockDir, diodeAmount, allowDiodeControl));
+}
+
+void    Trinity::addPanel                                    (uint16_t diodeAmount)
+{
+  addPanel(new Panel(panelAmount, 0, 0, 0, 0, diodeAmount, allowDiodeControl));
+}
+
 void Trinity::begin()
 {
   //Count diodes and give them to the panels (tell them where they start)
@@ -96,12 +110,16 @@ void Trinity::begin()
   #ifndef PLATFORM_ESP32_FIREBEETLE2_DEBUG
   FastLED.addLeds<WS2812, PIN_LEDS, LEDCOLORDER>(leds, staticLedAmount);
   #endif
+
+  prepareCanvas();
+
 }
 //Public
 //Standard
 
 void    Trinity::tick                            () 
 {
+
   uint32_t currentMillis = millis();
 
   //Frame pushing
@@ -115,14 +133,14 @@ void    Trinity::tick                            ()
     case TURN_OFF:
     {
       Serial.println(F("SleepTimer Turning system off"));
-      setBrightness(0);
+      setBrightness(0, true);
     }
     break;
 
     case TURN_ON:
     {
       Serial.println(F("SleepTimer Turning system on"));
-      if(getBrightness() == 0)setBrightness(100);
+      if(getBrightness() == 0)setBrightness(100, true);
     }
     break;
   }
@@ -147,6 +165,11 @@ void    Trinity::tick_leds                       ()
   {
     prevFrameMillis = currentMillis;
 
+    //Brightness
+    if      (brightness < goalBrightness) brightness++;
+    else if (brightness > goalBrightness) brightness--;
+    
+    //FX
     for (uint8_t i = 0; i < speed; i++)
     {
       if(DEBUGLEVEL >=DEBUG_OPERATIONS) Serial.print(F("t"));
@@ -198,19 +221,34 @@ uint8_t Trinity::getBrightness                   ()
 {
   return brightness;
 }
-void    Trinity::setBrightness                   (uint8_t brightness)
+void    Trinity::setBrightness                   (uint8_t brightness, bool smooth)
 {
-  this->brightness = brightness;
+  if (smooth)
+  {
+    goalBrightness = brightness;
+  }
+  else
+  {
+    this->brightness = brightness;
+  }
 }
 void    Trinity::setSpeed                        (uint8_t speed)
 {
   this->speed = speed;
 }
 //Panel Effects
-void    Trinity::setPanelBrightness              (uint8_t panelNumber, uint8_t brightness)
+void    Trinity::setPanelBrightness              (uint8_t panelNumber, uint8_t brightness, bool smooth)
 {
-  //Serial.println("Setting panel data (In ledmanager)");
-  panels[panelNumber]->setBrightness(brightness);
+  if (panelNumber > panelAmount)
+  {
+    Serial.print(F("ERROR: Trinity::setPanelBrightness(): Too high panel number requested: "));
+    Serial.print(panelNumber);
+    Serial.print(F(". Max: "));
+    Serial.println(panelAmount);
+    return;
+  }
+
+  panels[panelNumber]->setBrightness(brightness, smooth);
 }
 void    Trinity::setPanelVfx                     (uint8_t panelNumber, VFXData vfxData)
 {
@@ -223,9 +261,27 @@ void    Trinity::setPanelVfx                     (uint8_t panelNumber, VFXData v
   }
 }
 //Diode Effects
-void    Trinity::setPanelBrightness              (uint8_t panelNumber, uint16_t diodeNumber, uint8_t brightness)
+void    Trinity::setPanelDiodeBrightness              (uint8_t panelNumber, uint16_t diodeNumber, uint8_t brightness, bool smooth)
 {
+  if (panelNumber > panelAmount)
+  {
+    Serial.print(F("ERROR: Trinity::setPanelDiodeBrightness(): Too high panel number requested: "));
+    Serial.print(panelNumber);
+    Serial.print(F(". Max: "));
+    Serial.println(panelAmount);
+    return;
+  }
+
+  if (diodeNumber > panels[panelNumber]->getDiodeAmount())
+  {
+    Serial.print(F("ERROR: Trinity::setPanelDiodeBrightness(): Too high diode number requested: "));
+    Serial.print(diodeNumber);
+    Serial.print(F(". Max: "));
+    Serial.println(panels[panelNumber]->getDiodeAmount());
+    return;
+  }
   
+  panels[panelNumber]->setDiodeBrightness(diodeNumber, brightness, smooth);
 }
 void    Trinity::setPanelDiodeVfx                (uint8_t panelNumber, uint16_t diodeNumber, VFXData vfxData)
 {
@@ -713,4 +769,124 @@ void Trinity::nextPresetAnimation()
   resetAnim_Wspt_Reset();
 
   playPresetAnimation(currentAnimation);
+}
+
+void Trinity::prepareCanvas()
+{
+  Serial.println(F("Prepping canvasWidth and canvasHeight"));
+  //Prepare the panel matrix x and y
+  for (uint8_t i = 0; i < panelAmount; i++)
+  {
+    if (panels[i]->getX() > canvasWidth)
+    {
+      canvasWidth = panels[i]->getX()+1;
+      Serial.print(F("New canvasWidth: "));
+      Serial.println(canvasWidth);
+    }
+    if (panels[i]->getY() > canvasHeight)
+    {
+      canvasHeight = panels[i]->getY()+1;
+      Serial.print(F("New canvasHeight: "));
+      Serial.println(canvasHeight);
+    }
+  }
+  
+  Serial.println(F("Allocating the panel matrix"));
+  // Allocate memory for the 2D array
+  panelMatrix = new Panel**[canvasWidth];
+  for(uint8_t i = 0; i < canvasWidth; ++i)
+  {
+    panelMatrix[i] = new Panel*[canvasHeight];
+  }
+
+  Serial.println(F("Setting all elements to nullptr"));
+  // Initialize all elements to nullptr
+  for(uint8_t i = 0; i < canvasWidth; ++i)
+  {
+    for(uint8_t j = 0; j < canvasHeight; ++j)
+    {
+      panelMatrix[i][j] = nullptr;
+    }
+  }
+
+  Serial.println(F("Adding all panels to the matrix"));
+  //Add all panels to their corresponding spots in the matrix
+  for (uint8_t i = 0; i < panelAmount; i++)
+  {
+    
+    Serial.println(F("Panel index out of bounds"));
+
+    Serial.print(F("Adding panel to position "));
+    Serial.print(panels[i]->getX());
+    Serial.print(F(","));
+    Serial.println(panels[i]->getY());
+    
+    if (panels[i]->getX() >= canvasWidth || panels[i]->getY() >= canvasHeight)
+    {
+      Serial.print(F("Panel index out of bounds: "));
+      Serial.print(panels[i]->getX());
+      Serial.print(F(","));
+      Serial.print(panels[i]->getY());
+
+      Serial.print(F("Canvas size: "));
+      Serial.print(canvasWidth);
+      Serial.print(F(","));
+      Serial.println(canvasHeight);
+    }
+    
+    panelMatrix[panels[i]->getX()][panels[i]->getY()] = panels[i];
+    
+  }
+
+
+
+  //Print the matrix
+  printCanvas();
+
+}
+
+
+void Trinity::printCanvas()
+{
+  int canvasSize = 10;
+
+
+
+    Serial.println();
+    Serial.println("Printing canvas:");
+
+    Serial.print("Columns");    
+        for(uint8_t j = 0; j < canvasSize; j++)
+        {
+            Serial.print(" ");
+            if(j<10) Serial.print(" ");
+            Serial.print(j);
+        }
+        Serial.println();
+
+
+    for (uint8_t i = 0; i < canvasSize; i++)
+    {
+        Serial.print("Row ");
+        Serial.print(i);
+        if(i<10) Serial.print(" ");
+        Serial.print(" [");
+
+
+        for (uint8_t j = 0; j < canvasSize; j++)
+        {
+            if (panelMatrix[j][i] != nullptr)
+            {
+              if (panelMatrix[j][i]->getNumber() < 10) Serial.print(" ");
+                Serial.print(panelMatrix[j][i]->getNumber());
+                
+            }
+            else
+            {
+                Serial.print("  ");
+            }
+            Serial.print(" ");
+        }
+        Serial.println(" ]");        
+    }
 }

@@ -1,27 +1,18 @@
 #include "Panel.h"
 
 //Constructor
-Panel::Panel                                (uint8_t number, uint8_t x, uint8_t y, uint8_t compassDir, bool clockDir, uint16_t diodeAmount)
+Panel::Panel                                (uint8_t number, uint8_t x, uint8_t y, uint8_t compassDir, bool clockDir, uint16_t diodeAmount, bool allowDetailed)
 {
-  if(number > 250) Serial.println("Watch out: Panel created with value higher than 250. Remember: This system only supports up to 255 panels.");
-
   if(DEBUGLEVEL >= DEBUG_OPERATIONS)
   {
     Serial.print(F("Creating Panel at adress "));
     Serial.println((int)this, DEC);
   }
 
-  if(ENABLE_DIODECONTROL)
-  {
-    diodes = (Diode**)malloc(sizeof(Diode*) * diodeAmount);
-    for (uint8_t i = 0; i < diodeAmount; i++)
-    {
-      diodes[i] = new Diode(i, &this->effect);
-    }
-  }
-
+  this->allowDetailed = allowDetailed;
+  detailed = allowDetailed;
+  
   this->number        = number;
-
   this->x             = x;
   this->y             = y;
   this->compassDir    = compassDir;
@@ -35,12 +26,20 @@ Panel::Panel                                (uint8_t number, uint8_t x, uint8_t 
   this->colour       = COLOUR_BLACK;
   this->offset       = 0;
   this->speed        = 1;
-  this->detailed     = false;
 
 
     this->effectVariables.r                   = 0;
   this->effectVariables.g                   = 0;
   this->effectVariables.b                   = 0;
+
+  if(allowDetailed)
+  {
+    diodes = (Diode**)malloc(sizeof(Diode*) * diodeAmount);
+    for (uint8_t i = 0; i < diodeAmount; i++)
+    {
+      diodes[i] = new Diode(i, &this->effect);
+    }
+  }
   
   resetFXProcessingVars();
 }
@@ -50,6 +49,10 @@ Panel::Panel                                (uint8_t number, uint8_t x, uint8_t 
 void      Panel::tick                       ()
 {
   if(DEBUGLEVEL >= DEBUG_DAYISRUINED)printDebug();
+
+  //Brightness
+  if      (brightness < goalBrightness) brightness++;
+  else if (brightness > goalBrightness) brightness--;
   
   if (offsetTimer < offset)
   {
@@ -100,18 +103,19 @@ void      Panel::tick                       ()
   }
 }
 //Effects
-void      Panel::setBrightness              (uint8_t brightness)
+void      Panel::setBrightness              (uint8_t brightness, bool smooth)
 {
-  this->brightness  = brightness;
+  if (smooth)
+  {
+    goalBrightness = brightness;
+  }
+  else
+  {
+    this->brightness = brightness;
+  }
 }
 void      Panel::setVfx                     (VFXData vfxData)
-{
-  if(DEBUGLEVEL >= DEBUG_OPERATIONS)
-  {
-    Serial.print(F("Panel.setVFX(); P"));
-    Serial.println(number);
-  }
-  
+{  
   this->effect      = vfxData.effect;
   this->colour      = vfxData.colour;
   this->offset      = vfxData.offset;
@@ -119,78 +123,52 @@ void      Panel::setVfx                     (VFXData vfxData)
   this->repeat      = vfxData.repeat;
   this->detailed    = false;
   resetFXProcessingVars();
-
-  if(DEBUGLEVEL >= DEBUG_DAYISRUINED)
-  {
-    Serial.println(F("Is now:"));
-    printDebug();
-  }
 }
 void      Panel::setDataCustom              (CustomPalette *customPaletteArg)
-{
-  if(DEBUGLEVEL >= DEBUG_OPERATIONS)
-  {
-    Serial.print(F("Panel.setDataCustom(); P"));
-    Serial.println(number);
-  }
-  
+{ 
   customPalette = customPaletteArg; 
   resetFXProcessingVars();
-
-  if(DEBUGLEVEL >= DEBUG_DAYISRUINED)
-  {
-    Serial.println(F("Is now:"));
-    printDebug();
-  }
 }
 //Diode Effects
-void      Panel::setDiodeBrightness         (uint16_t diodeNumber, uint8_t brightness)
+void      Panel::setDiodeBrightness         (uint16_t diodeNumber, uint8_t brightness, bool smooth)
 {
-  diodes[diodeNumber]->setBrightness(brightness);
+  if (diodeNumber > diodeAmount)
+  {
+    Serial.print(F("ERROR: Panel.setDiodeBrightness() Too high diode number requested: "));
+    Serial.print(diodeNumber);
+    Serial.print(F(". Max: "));
+    Serial.println(diodeAmount);
+    return;
+  }
+
+  diodes[diodeNumber]->setBrightness(brightness, smooth);
 }
 void      Panel::setDiodeVfx                (uint16_t diodeNumber, VFXData vfxData)
 {
-  if(DEBUGLEVEL >= DEBUG_OPERATIONS)
+  if(!allowDetailed)
   {
-    Serial.print(F("Panel.setDiodeVfx(); P"));
-    Serial.print(number);
-  }
-
-  if(!ENABLE_DIODECONTROL)
-  {
-    if(DEBUGLEVEL >= DEBUG_WARNINGS) Serial.println(F("Warning: Panel.setDiodeVfx() Diode control disabled in Setup.h, new effect applied to panel instead"));
+    Serial.println(F("WARNING: Panel.setDiodeVfx(): Detailed diode control not allowed. Effect applied to panel"));
     setVfx(vfxData);
     return;
   }
 
-  if (effect != vfxData.effect)
-  {
-    effect = vfxData.effect;
-    if(DEBUGLEVEL >= DEBUG_OPERATIONS)
-    {
-      Serial.print(F(" (Panel copied effect intended for diode)"));
-    }
-  }
+  detailed = true;
+  if (effect != vfxData.effect) effect = vfxData.effect; //Let panel copy effects intended for diodes. Panels always copy effect.
+  
   diodes[diodeNumber]->setVfx(vfxData);
-
 
   resetFXProcessingVars();
 }
 void      Panel::setDiodeDataCustom         (uint16_t diodeNumber, CustomPalette *customPalette)
 {
-  if(DEBUGLEVEL >= DEBUG_OPERATIONS)
+  if(!allowDetailed)
   {
-    Serial.print(F("Panel.setDiodeDataCustom(); P"));
-    Serial.print(number);
-  }
-
-  if(!ENABLE_DIODECONTROL)
-  {
-    if(DEBUGLEVEL >= DEBUG_WARNINGS) Serial.println(F("Warning: Panel.setDiodeVfx() Diode control disabled in Setup.h, new effect applied to panel instead"));
+    if(DEBUGLEVEL >= DEBUG_WARNINGS) Serial.println(F("WARNING: Panel.setDiodeDataCustom(): Detailed diode control not allowed. Effect applied to panel"));
     setDataCustom(customPalette);
     return;
   }
 
+  detailed = true;
   diodes[diodeNumber]->setDataCustom(customPalette);
 
 
@@ -202,7 +180,7 @@ void      Panel::setMaskPercentage          (uint8_t percentage)
   
 }
 //Technical
-uint8_t   Panel::getPanelNumber             ()
+uint8_t   Panel::getNumber                  ()
 {
   return number;
 }
@@ -214,12 +192,12 @@ uint8_t   Panel::getY                       ()
 {
   return y;
 }
-CRGB      Panel::getDiodeRGB                (uint8_t number, uint8_t sysBrightness) //Todo: Send own RGB if !detailed
+CRGB      Panel::getDiodeRGB                (uint16_t diodeNumber, uint8_t sysBrightness) //Todo: Send own RGB if !detailed
 {
-  if(number > diodeAmount)
+  if(diodeNumber > diodeAmount)
   {
-    Serial.print(F("Panel.getDiodeRGB() Too high diode number requested: "));
-    Serial.println(number);
+    Serial.print(F("Panel.getDiodeRGB() Too high diodeNumber requested: "));
+    Serial.println(diodeNumber);
     return CRGB(0);
   }
 
@@ -231,7 +209,7 @@ CRGB      Panel::getDiodeRGB                (uint8_t number, uint8_t sysBrightne
     return CRGB(r, g, b);
   }
 
-  return diodes[number]->getRGB(sysBrightness);
+  return diodes[diodeNumber]->getRGB(sysBrightness);
 
   /*
   uint8_t redValue    = (this->r * this->brightness)/255;
@@ -307,6 +285,32 @@ String    Panel::convertToTransmission      ()
 String    Panel::convertDiodeToTransmission (uint16_t diodeNumber)
 {
   return diodes[diodeNumber]->convertToTransmission();
+}
+String    Panel::converToJson               ()
+{
+  //Only send: number, brightness, effect, colour, offset, speed, 
+
+  String data = "{";
+  data += "\"number\":";
+  data += number;
+  data += ",";
+  data += "\"brightness\":";
+  data += brightness;
+  data += ",";
+  data += "\"effect\":";
+  data += effect;
+  data += ",";
+  data += "\"colour\":";
+  data += colour;
+  data += ",";
+  data += "\"offset\":";
+  data += offset;
+  data += ",";
+  data += "\"speed\":";
+  data += speed;
+  data += "}";
+  return data;
+  
 }
 //Debug
 void      Panel::printDebug                 ()

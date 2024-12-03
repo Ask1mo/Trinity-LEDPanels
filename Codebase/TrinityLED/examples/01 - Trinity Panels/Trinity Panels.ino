@@ -15,7 +15,7 @@ void handleComms()
     case TRANSMISSION_IN_LEDMANAGER:
     {
       Transmission_LedManager data = comms->getTransmission_LedManager();
-      trinity->setBrightness(data.brightness); 
+      trinity->setBrightness(data.brightness, true); 
       trinity->setSpeed(data.speed); 
     }
     break;
@@ -98,7 +98,7 @@ void handleLDR()
   {
     lightSensor->tick();
     if(trinity->getBrightness() != lightSensor->getRecommendedBrightness())
-    trinity->setBrightness(lightSensor->getRecommendedBrightness());
+    trinity->setBrightness(lightSensor->getRecommendedBrightness(), true);
   }
 }
 void handleButton()
@@ -111,21 +111,21 @@ void handleButton()
       {
         case BRIGHTNESS_0_OFF:
         {
-          trinity->setBrightness(BRIGHTNESS_1_DIM);
+          trinity->setBrightness(BRIGHTNESS_1_DIM, true);
           lightSensor->setEnabled(false);
           Serial.println(F("Changing sys brightness to DIM"));
         }
         break;
         case BRIGHTNESS_1_DIM:
         {
-          trinity->setBrightness(BRIGHTNESS_2_NOR);
+          trinity->setBrightness(BRIGHTNESS_2_NOR, true);
           lightSensor->setEnabled(false);
           Serial.println(F("Changing sys brightness to NORMAL"));
         }
         break;
         case BRIGHTNESS_2_NOR:
         {
-          trinity->setBrightness(BRIGHTNESS_3_MAX);
+          trinity->setBrightness(BRIGHTNESS_3_MAX, true);
           lightSensor->setEnabled(false);
           Serial.println(F("Changing sys brightness to MAX"));
 
@@ -133,14 +133,14 @@ void handleButton()
         break;
         case BRIGHTNESS_3_MAX:
         {
-          trinity->setBrightness(BRIGHTNESS_4_AUT);
+          trinity->setBrightness(BRIGHTNESS_4_AUT, true);
           lightSensor->setEnabled(true);
           Serial.println(F("Changing sys brightness to Automatic"));
         }
         break;
         default:
         {
-          trinity->setBrightness(BRIGHTNESS_0_OFF);
+          trinity->setBrightness(BRIGHTNESS_0_OFF, true);
           lightSensor->setEnabled(false);
           Serial.println(F("Changing sys brightness to OFF"));
         }
@@ -159,10 +159,10 @@ void setup()
 {
   Serial.begin(BAUDRATE);
 
-  button          = new AskButton   (PIN_BUTTON, 100);
+  button          = new AskButton   (PIN_BUTTON, 1000);
   lightSensor     = new LightSensor (PIN_LIGHTSENSOR);
   comms           = new Comms       ();
-  trinity         = new Trinity     (PIN_LEDS, 60);
+  trinity         = new Trinity     (PIN_LEDS, 60, true);
 
   
   #ifdef PANELSETUP_PROTO
@@ -217,41 +217,41 @@ void setup()
   #endif
   #ifdef PANELSETUP_WESTPOINT
   //Tower Base
-  trinity->addPanel(new Panel( 0, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel( 1, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      11));
-  trinity->addPanel(new Panel( 2, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel( 3, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      11));
-  trinity->addPanel(new Panel( 4, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel( 5, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel( 6, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      11));
-  trinity->addPanel(new Panel( 7, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel( 8, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel( 9, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel(10, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      11));
-  trinity->addPanel(new Panel(11, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel(12, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      11));
-  trinity->addPanel(new Panel(13, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel(14, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      9 ));
+  trinity->addPanel(10);
+  trinity->addPanel(11);
+  trinity->addPanel(10);
+  trinity->addPanel(11);
+  trinity->addPanel(10);
+  trinity->addPanel(10);
+  trinity->addPanel(11);
+  trinity->addPanel(10);
+  trinity->addPanel(10);
+  trinity->addPanel(10);
+  trinity->addPanel(11);
+  trinity->addPanel(10);
+  trinity->addPanel(11);
+  trinity->addPanel(10);
+  trinity->addPanel(9 );
   //Tower Top
-  trinity->addPanel(new Panel(15, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel(16, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      11));
-  trinity->addPanel(new Panel(17, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel(18, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel(19, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel(20, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel(21, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      11));
-  trinity->addPanel(new Panel(22, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel(23, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel(24, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      11));
-  trinity->addPanel(new Panel(25, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel(26, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      11));
-  trinity->addPanel(new Panel(27, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      10));
-  trinity->addPanel(new Panel(28, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      12));
+  trinity->addPanel(10);
+  trinity->addPanel(11);
+  trinity->addPanel(10);
+  trinity->addPanel(10);
+  trinity->addPanel(10);
+  trinity->addPanel(10);
+  trinity->addPanel(11);
+  trinity->addPanel(10);
+  trinity->addPanel(10);
+  trinity->addPanel(11);
+  trinity->addPanel(10);
+  trinity->addPanel(11);
+  trinity->addPanel(10);
+  trinity->addPanel(12);
   //Rigns
-  trinity->addPanel(new Panel(29, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      37));
-  trinity->addPanel(new Panel(30, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      37));
-  trinity->addPanel(new Panel(31, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      37));
-  trinity->addPanel(new Panel(32, 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      37));
+  trinity->addPanel(37);
+  trinity->addPanel(37);
+  trinity->addPanel(37);
+  trinity->addPanel(37);
   #endif
   #ifdef PANELSETUP_MINITOWER
   for (uint8_t i = 0; i < 4; i++) trinity->addPanel(new Panel(i, i, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 10));
@@ -264,15 +264,21 @@ void setup()
   trinity->addPanel(new Panel( 4, 4, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      6 ));
   #endif
   #ifdef PANELSETUP_TEST
-  trinity->addPanel(new Panel(0 0, 0, CLOCK_COUNTERWISE, COMPASS_SOUTH_EAST, 3));
-  trinity->addPanel(new Panel(1 0, 0, CLOCK_COUNTERWISE, COMPASS_SOUTH,      3));
-  trinity->addPanel(new Panel(2 0, 0, CLOCK_COUNTERWISE, COMPASS_SOUTH_WEST, 3));
-  trinity->addPanel(new Panel(3 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH_EAST, 3));
-  trinity->addPanel(new Panel(4 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH,      3));
-  trinity->addPanel(new Panel(5 0, 0, CLOCK_CLOCKWISE,   COMPASS_NORTH_WEST, 3));
+  trinity->addPanel(0, 0, COMPASS_NORTH, CLOCK_CLOCKWISE, 3);
+  trinity->addPanel(1, 0, COMPASS_NORTH, CLOCK_CLOCKWISE, 3);
+  trinity->addPanel(2, 0, COMPASS_NORTH, CLOCK_CLOCKWISE, 3);
+  trinity->addPanel(0, 1, COMPASS_NORTH, CLOCK_CLOCKWISE, 3);
+  trinity->addPanel(1, 1, COMPASS_NORTH, CLOCK_CLOCKWISE, 3);
+  trinity->addPanel(2, 1, COMPASS_NORTH, CLOCK_CLOCKWISE, 3);
   #endif
   #ifdef PANELSETUP_EYEOFTHESTORM
   for (uint8_t i = 0; i < 54; i++) trinity->addPanel(new Panel(i, i, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, 5));
+  #endif
+  #ifdef PANELSETUP_SHARKSALES
+  trinity->addPanel(3);
+  trinity->addPanel(10);
+  trinity->addPanel(3);
+  trinity->addPanel(10);
   #endif
 
   trinity->begin();

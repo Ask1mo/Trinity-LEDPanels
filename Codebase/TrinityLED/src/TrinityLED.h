@@ -29,7 +29,8 @@ class Trinity
 {
 private:
   uint8_t       panelAmount = 0;
-  uint8_t       brightness = 255;
+  uint8_t       goalBrightness = 255;
+  uint8_t       brightness = 0;
   uint8_t       speed = 1;
 
   uint64_t      prevFrameMillis;
@@ -44,6 +45,12 @@ private:
   CRGB          *leds;
   CustomPalette *customPalette[CUSTOMPALETTEAMOUNT];
   SleepTimer    *sleepTimer;
+
+  uint8_t                                 canvasWidth;
+  uint8_t                                 canvasHeight;
+  Panel                                   ***panelMatrix;
+
+  bool          allowDiodeControl = false;
 
 
   void resetAnim_Wspt_Reset();
@@ -70,8 +77,10 @@ private:
   
 
 public:
-  Trinity                                 (uint8_t ledPin, uint8_t maxFramerate);
+  Trinity                                 (uint8_t ledPin, uint8_t maxFramerate, bool diodeControl);
   void    addPanel                        (Panel *panel);
+  void    addPanel                        (uint8_t x, uint8_t y, uint8_t compassDir, bool clockDir, uint16_t diodeAmount);
+  void    addPanel                        (uint16_t diodeAmount);
   void    begin                           ();
   //Standard
   void    tick                            ();
@@ -80,13 +89,13 @@ public:
   void    print                           ();
   //Effects
   uint8_t getBrightness                   ();
-  void    setBrightness                   (uint8_t brightness);
+  void    setBrightness                   (uint8_t brightness, bool smooth);
   void    setSpeed                        (uint8_t speed);
   //Panel Effects
-  void    setPanelBrightness              (uint8_t panelNumber, uint8_t brightness);
+  void    setPanelBrightness              (uint8_t panelNumber, uint8_t brightness, bool smooth);
   void    setPanelVfx                     (uint8_t panelNumber, VFXData vfxData);
   //Diode Effects
-  void    setPanelBrightness              (uint8_t panelNumber, uint16_t diodeNumber, uint8_t brightness);
+  void    setPanelDiodeBrightness         (uint8_t panelNumber, uint16_t diodeNumber, uint8_t brightness, bool smooth);
   void    setPanelDiodeVfx                (uint8_t panelNumber, uint16_t diodeNumber, VFXData vfxData);
   //Technical
   uint8_t getPanelAmount                  ();
@@ -95,20 +104,23 @@ public:
   String  convertToTansmission            ();
   String  convertPanelToTransmission      (uint8_t panelNumber);
   String  convertPanelDiodeToTransmission (uint8_t panelNumber,uint16_t diodeNumber);
-
-  void setCustomPaletteColours(uint8_t slot, uint8_t colourRGBNumber, ColourRGB colourRGB);
-  void setCustomPaletteAvailableColours(uint8_t slot, uint8_t avalaibleColours);
-
+  //Custom Palettes
+  void    setCustomPaletteColours         (uint8_t slot, uint8_t colourRGBNumber, ColourRGB colourRGB);
+  void    setCustomPaletteAvailableColours(uint8_t slot, uint8_t avalaibleColours);
   //Preset animations
-    void setAnimationCyclingDuration(uint32_t duration); //0 = off, 0 < will cycle through all animations 
-    void playPresetAnimation(uint8_t animation);  //Play a preset animation. If cycling duration is set, it will cycle through all animations.
-    void nextPresetAnimation(); //Manually cycle to the next animation.
-
+  void    setAnimationCyclingDuration     (uint32_t duration); //0 = off, 0 < will cycle through all animations 
+  void    playPresetAnimation             (uint8_t animation);  //Play a preset animation. If cycling duration is set, it will cycle through all animations.
+  void    nextPresetAnimation             (); //Manually cycle to the next animation.
   //Sleep timer
-  void setTurnOnTime(uint8_t hour, uint8_t minute);
-  void setTurnOnEnabled(bool enabled);
-  void setTurnOffTime(uint8_t hour, uint8_t minute);
-  void setTurnOffEnabled(bool enabled);
+  void    setTurnOnTime                   (uint8_t hour, uint8_t minute);
+  void    setTurnOnEnabled                (bool enabled);
+  void    setTurnOffTime                  (uint8_t hour, uint8_t minute);
+  void    setTurnOffEnabled               (bool enabled);
+
+
+
+  void prepareCanvas();
+  void printCanvas();
 
 };  
 

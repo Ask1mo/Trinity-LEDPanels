@@ -11,7 +11,8 @@ class Diode
 private:
   uint16_t                                  number;
 
-  uint8_t                                   brightness;
+  uint8_t                                   brightness = 0;
+  uint8_t                                   goalBrightness = 255;
   uint8_t                                   *effect; //Points to the effect of the panel. I don't want to have panels running differing effects on it's diodes
   uint8_t                                   colour;
   uint16_t                                  offset;
@@ -27,7 +28,7 @@ public:
   //Standard
   void      tick                            ();
   //Effects
-  void      setBrightness                   (uint8_t brightness);
+  void      setBrightness                   (uint8_t brightness, bool smooth);
   void      setVfx                          (VFXData vfxData);
   void      setDataCustom                   (CustomPalette *customPalette);
   //Technical
