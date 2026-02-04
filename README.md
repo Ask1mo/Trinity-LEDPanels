@@ -61,11 +61,13 @@ Key Technical Challenges
 - Currently: porting the many different copies of said codebase into a reusable library with clean APIs and modular structure.
 
 Installation Instructions
+- I have not yet created installation instructions.
 
 Future Improvements
 - Check functionality of the codebase on supported hardware.
 - Complete the `MaskManager` module to provide 2D coordinate mapping and masking functionality. This will allow effects to be applied to specific shapes or areas of the LED installation.
 - Port more example sketches demonstrating various use cases and configurations.
+- Create documentation & instructions 
 
 
 Disclaimer
