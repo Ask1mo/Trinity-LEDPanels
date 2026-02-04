@@ -33,8 +33,8 @@
 
 
 /*---=== PUT YOUR SETTINGS HERE!!! ===---*/
-#define PANELSETUP_SHARKSALES
-#define PLATFORM_ESP32_FIREBEETLE2_DEBUG
+#define PANELSETUP_ATOS
+#define PLATFORM_ESP32_WROOMDEVKIT
 #define LEDTYPE_STANDARD
 #define LINKPROGRAM_MK2
 
@@ -74,7 +74,7 @@
 #endif
 #ifdef PLATFORM_ESP32_WROOMDEVKIT
     #define PIN_BUTTON      27          //On board button
-    #define PIN_LEDS        5           //On boadr LED
+    #define PIN_LEDS        15           //On boadr LED
     #define PIN_LIGHTSENSOR 15          //D?
     #define PIN_ERRORLED    2           //NOT BOUND YET
     #define ENABLE_WEBCONTROL false      //Controls via website enabled

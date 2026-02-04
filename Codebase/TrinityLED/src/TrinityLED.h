@@ -73,6 +73,7 @@ private:
   void playPresetAnim_Wspt_AppearThing3();    //16
   void playPresetAnim_Wspt_AppearThing4();    //17
   void playPresetAnim_Wspt_ColourBlink();     //18
+  void playPresetAnim_Atos_Default();       //19
   
   
 
@@ -109,7 +110,7 @@ public:
   void    setCustomPaletteAvailableColours(uint8_t slot, uint8_t avalaibleColours);
   //Preset animations
   void    setAnimationCyclingDuration     (uint32_t duration); //0 = off, 0 < will cycle through all animations 
-  void    playPresetAnimation             (uint8_t animation);  //Play a preset animation. If cycling duration is set, it will cycle through all animations.
+  void    playPresetAnimation             (uint8_t animation, bool cycling);  //Play a preset animation. If cycling duration is set, it will cycle through all animations.
   void    nextPresetAnimation             (); //Manually cycle to the next animation.
   //Sleep timer
   void    setTurnOnTime                   (uint8_t hour, uint8_t minute);

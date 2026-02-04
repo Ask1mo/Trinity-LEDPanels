@@ -162,7 +162,7 @@ void setup()
   button          = new AskButton   (PIN_BUTTON, 1000);
   lightSensor     = new LightSensor (PIN_LIGHTSENSOR);
   comms           = new Comms       ();
-  trinity         = new Trinity     (PIN_LEDS, 60, true);
+  trinity         = new Trinity     (PIN_LEDS, 20, true);
 
   
   #ifdef PANELSETUP_PROTO
@@ -174,7 +174,18 @@ void setup()
   trinity->addPanel(new Panel(5, 5, 0, CLOCK_CLOCKWISE, COMPASS_NORTH, LEDSAMOUNT_TRIANGLE));
   #endif
   #ifdef PANELSETUP_ATOS
-  trinity->addPanel(new Panel(0, 0, 0, CLOCK_COUNTERWISE, COMPASS_WEST, 38));
+  trinity->addPanel(14);
+  trinity->addPanel(10);
+  trinity->addPanel(14);
+
+  //trinity->addPanel(1);
+  //trinity->addPanel(1);
+  //trinity->addPanel(1);
+
+  trinity->setBrightness(255, false);
+  trinity->setPanelBrightness(0, 255, false);
+  trinity->setPanelBrightness(1, 255, false);
+  trinity->setPanelBrightness(2, 255, false);
   #endif
   #ifdef PANELSETUP_EVA
   trinity->addPanel(new Panel(0, 0, 0, CLOCK_COUNTERWISE, COMPASS_SOUTH_EAST, LEDSAMOUNT_TRIANGLE));
@@ -284,8 +295,8 @@ void setup()
   trinity->begin();
   Serial.println(F("---===SETUP COMPLETED===---"));
 
-  trinity->playPresetAnimation(9);
-  trinity->setAnimationCyclingDuration(10000);
+  trinity->playPresetAnimation(19, false);
+  //trinity->setAnimationCyclingDuration(10000);
 }
 
 void loop()

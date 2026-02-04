@@ -702,7 +702,32 @@ void Trinity::playPresetAnim_Wspt_ColourBlink()
   }
   forceTick_leds(64, false, 0);
 }
+void Trinity::playPresetAnim_Atos_Default()
+{
+  Serial.println(F("playPresetAnim_Atos_Default"));
+  setSpeed(1);
 
+  const int offset = 10;
+
+
+  setPanelVfx(0, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_BLACK, 10, 1, true});
+  for (uint8_t i = 0; i < getPanelDiodeAmount(0); i++)
+  {
+    setPanelDiodeVfx(0, i, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_BLACK, i*offset, 1, true});
+  }
+
+  setPanelVfx(1, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_BLACK, 10, 1, true});
+  for (uint8_t i = 0; i < getPanelDiodeAmount(1); i++)
+  {
+    setPanelDiodeVfx(1, i, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_BLACK, i*offset, 1, true});
+  }
+
+  setPanelVfx(2, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_BLACK, 10, 1, true});
+  for (uint8_t i = 0; i < getPanelDiodeAmount(2); i++)
+  {
+    setPanelDiodeVfx(2, i, (VFXData){EFFECT_SPECIAL_SYNTH, COLOUR_BLACK, i*offset, 1, true});
+  }
+}
 
 //Sleep timer
 void Trinity::setTurnOnEnabled(bool enabled)
@@ -728,9 +753,9 @@ void Trinity::setAnimationCyclingDuration(uint32_t duration)
 {
   durationMillis_animationCycle = duration;
 }
-void Trinity::playPresetAnimation(uint8_t animation)
+void Trinity::playPresetAnimation(uint8_t animation, bool cycling)
 {
-  animationCycling = true;
+  animationCycling = cycling;
   currentlyShowingAnimation = animation;
 
   switch (animation)
@@ -754,6 +779,7 @@ void Trinity::playPresetAnimation(uint8_t animation)
     case 16: playPresetAnim_Wspt_AppearThing3  (); break;
     case 17: playPresetAnim_Wspt_AppearThing4  (); break;
     case 18: playPresetAnim_Wspt_ColourBlink   (); break;
+    case 19: playPresetAnim_Atos_Default       (); break;
   }
 
   prevMillis_AnimationCycle = millis();
@@ -768,7 +794,7 @@ void Trinity::nextPresetAnimation()
 
   resetAnim_Wspt_Reset();
 
-  playPresetAnimation(currentAnimation);
+  playPresetAnimation(currentAnimation, true);
 }
 
 void Trinity::prepareCanvas()
