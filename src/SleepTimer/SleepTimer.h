@@ -2,8 +2,8 @@
 #ifndef SLEEPTIMER_H
 #define SLEEPTIMER_H
 
-#include <Arduino.h>
-#include "time.h"
+##include <Arduino.h>
+
 #include "../setup.h"
 
 #define TURN_OFF        0

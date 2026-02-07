@@ -23,5 +23,11 @@
     "atmelavr",
     "espressif32"
   ],
+  "dependencies": [
+    {
+      "name": "FastLED",
+      "version": "^3.4.0"
+    }
+  ],
   "license": "MIT"
 }

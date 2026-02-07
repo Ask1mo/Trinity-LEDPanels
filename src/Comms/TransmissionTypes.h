@@ -2,7 +2,7 @@
 #ifndef TRANSMISSIONTYPES_H
 #define TRANSMISSIONTYPES_H
 
-#include <TrinityLED.h>
+##include <TrinityLED.h>
 
 #define TRANSMISSION_IN_NONE                   0
 #define TRANSMISSION_IN_REQUEST                1
