@@ -1,0 +1,27 @@
+{
+  "name": "TrinityLED",
+  "version": "0.1.0",
+  "description": "Arduino/ESP32/PlatformIO library for driving addressable LED installations.",
+  "keywords": [
+    "led",
+    "arduino",
+    "esp32"
+  ],
+  "authors": [
+    {
+      "name": "Ask Blommaert",
+      "email": "ask.blommaert@gmail.com",
+      "maintainer": true
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ask1mo/TrinityLED.git"
+  },
+  "frameworks": "arduino",
+  "platforms": [
+    "atmelavr",
+    "espressif32"
+  ],
+  "license": "MIT"
+}
