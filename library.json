@@ -1,6 +1,6 @@
 {
   "name": "TrinityLED",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Arduino/ESP32/PlatformIO library for driving addressable LED installations.",
   "keywords": [
     "led",
