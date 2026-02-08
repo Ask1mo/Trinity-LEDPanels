@@ -3,6 +3,8 @@
 
 #include "Panel/Panel.h"
 #include "SleepTimer/SleepTimer.h"
+#include "LightSensor/LightSensor.h"
+#include "Comms/Comms.h"
 
 #define PRESETANIMATIONAMOUNT 19
 #define PRESETANIMATION_FULLWHITE        0

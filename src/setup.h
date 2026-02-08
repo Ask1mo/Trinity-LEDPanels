@@ -21,6 +21,8 @@
 //LINKPROGRAM_MK2
 //LINKPROGRAM_MK3
 
+#include "DataTypes.h"
+
 #define DEBUG_DISABLED              0
 #define DEBUG_ERRORS                1
 #define DEBUG_WARNINGS              2

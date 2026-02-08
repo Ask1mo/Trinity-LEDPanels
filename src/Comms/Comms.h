@@ -7,6 +7,25 @@
 #define IDENTLENGTH 5
 #define COMPLETEDBUFFERSIZE
 
+
+
+#define TRANSMISSION_IN_NONE                   0
+#define TRANSMISSION_IN_REQUEST                1
+#define TRANSMISSION_IN_IDENT                  2
+#define TRANSMISSION_IN_LEDMANAGER             3
+#define TRANSMISSION_IN_PANEL                  4
+#define TRANSMISSION_IN_DIODE                  5
+#define TRANSMISSION_IN_CUSTOMPALETTES         6
+#define TRANSMISSION_IN_SLEEPTIMER             7
+#define TRANSMISSION_IN_LIGHTSENSOR            8
+
+
+#define TRANSMISSION_OUT_NONE       0
+#define TRANSMISSION_OUT_IDENT      1
+#define TRANSMISSION_OUT_LEDMANAGER 2
+#define TRANSMISSION_OUT_PANEL      3
+#define TRANSMISSION_OUT_DIODE      4
+
 class Comms
 {
     private:

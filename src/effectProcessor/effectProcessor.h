@@ -1,9 +1,7 @@
 #ifndef EFFECTPROCESSOR_H
 #define EFFECTPROCESSOR_H
 
-##include <Arduino.h>
-##include <FastLED.h>
-#include "../setup.h"  
+#include "../setup.h"
 
 #define AMOUNTOFCOLOURS 7 //The amount of preset colours in the system, also functions as the amount of slots for custom colours
 
@@ -51,28 +49,7 @@
 #define FXSET_DEVUNBOUND_DELTIM 20
 #define FXSET_DEVUNBOUND_YLWVAL 100
 
-struct ColourRGB
-{
-  uint8_t r;
-  uint8_t g;
-  uint8_t b;
-};
 
-struct EffectVariables
-{
-  uint8_t                                   r;
-  uint8_t                                   g;
-  uint8_t                                   b;
-  uint8_t                                   d; //Dummy
-  uint8_t                                   c; //Current colour (Can cycle because of COLOUR_COLOURCYCLE)
-  uint8_t                                   fxProgression; //Current part of the effect
-};
-
-struct CustomPalette 
-{
-    uint8_t                                   customRGBSlots; //Actually used amount of slots.
-  ColourRGB                                 customRGB[AMOUNTOFCOLOURS];
-};
 
 bool processEffect(uint8_t effect, EffectVariables *effectVariables, CustomPalette *customPalette);
 bool getColourClearance(uint8_t colourToClear, uint8_t colourChannel);

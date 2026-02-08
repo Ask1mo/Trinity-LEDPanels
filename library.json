@@ -1,6 +1,6 @@
 {
   "name": "TrinityLED",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Arduino/ESP32/PlatformIO library for driving addressable LED installations.",
   "keywords": [
     "led",
@@ -27,6 +27,11 @@
     {
       "name": "FastLED",
       "version": "^3.4.0"
+    },
+    {
+      "name": "AskButton",
+      "version": "^0.1.0",
+      "url": "https://github.com/Ask1mo/AskButton.git"
     }
   ],
   "license": "MIT"

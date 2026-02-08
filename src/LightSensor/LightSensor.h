@@ -1,8 +1,7 @@
 #ifndef LIGHTSENSOR_H
 #define LIGHTSENSOR_H
 
-##include <Arduino.h>
-//#include "../../setup.h"
+#include <Arduino.h>
 
 #define BRIGHTNESS_0_OFF 1
 #define BRIGHTNESS_1_DIM 10

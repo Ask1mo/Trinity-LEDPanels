@@ -1,6 +1,4 @@
-#include "AskButton/AskButton.h"
-#include "LightSensor/LightSensor.h"
-#include "Comms/Comms.h"
+#include <TrinityLED.h>
 
 Trinity     *trinity;
 AskButton   *button;
